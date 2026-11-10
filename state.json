@@ -1,5 +1,5 @@
 {
- "_savedAt": "2026-11-10T14:10:02.922Z",
+ "_savedAt": "2026-11-10T14:17:03.904Z",
  "cities": [
   {
    "id": "0joobpf",
@@ -158,9 +158,48 @@
      "overlays": []
     }
    ]
+  },
+  {
+   "id": "fwa3aa9",
+   "name": "Varnhold",
+   "terrain": "Plains",
+   "cd": 0,
+   "mi": {},
+   "districts": [
+    {
+     "borders": {
+      "n": "land",
+      "e": "land",
+      "s": "land",
+      "w": "land"
+     },
+     "wall": {
+      "n": 0,
+      "e": 0,
+      "s": 0,
+      "w": 0
+     },
+     "gate": {
+      "n": 0,
+      "e": 0,
+      "s": 0,
+      "w": 0
+     },
+     "moat": {
+      "n": 0,
+      "e": 0,
+      "s": 0,
+      "w": 0
+     },
+     "paved": 0,
+     "sewer": 0,
+     "buildings": [],
+     "overlays": []
+    }
+   ]
   }
  ],
- "cur": "0ombioe",
+ "cur": "fwa3aa9",
  "kingdom": {
   "name": "Moje království",
   "players": "",
