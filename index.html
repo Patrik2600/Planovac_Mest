@@ -560,25 +560,9 @@ function magicHTML(city, cc) {
   var h = '<section class="card mi"><div class="row" style="justify-content:space-between"><div class="h3">Magic itemy, které město generuje</div>';
   h += '<span class="row"><button class="btn primary" data-act="migen" title="Vygeneruje itemy do prázdných slotů podle budov města; v každém tieru střídá Greater a Lesser rank jako donjon Pathfinder">🎲 Generate Magic Items</button>';
   h += '<button class="btn" data-act="mupkeep"' + (sl.length ? '' : ' disabled') + '>Upkeep: hodit pro districty</button></span></div>';
-  h += '<button class="mitiles" data-act="mitoggle" aria-expanded="' + UI.miOpen + '" title="Rozkliknout sloty"><span style="display:contents" id="micounts">' + miCounts(city) + '</span></button>';
-  h += '<button class="btn mitoggle" data-act="mitoggle">' + (UI.miOpen ? '▾ Skrýt sloty a odkazy' : '▸ Rozkliknout sloty a odkazy (' + sl.length + ')') + '</button>';
-  if (!UI.miOpen) return h + '</section>';
-  h += '<p class="note">Upkeep hodí d% jednou za district s prázdným slotem (náhodný slot): 51–100 = předmět daného typu je k dispozici, cena nejvýše ' + cc.bvEff + ' gp (base value města). Název a odkaz si do slotu napiš nebo vlož; slot s názvem se považuje za zaplněný.</p>';
+  h += '<div class="mitiles" style="margin-top:8px" id="micounts">' + miCounts(city) + '</div>';
   if (!sl.length) h += '<p class="note">Zatím žádná budova ve městě slot nedává (např. Alchemist, Herbalist, Shrine, Market, Temple, Magic Shop).</p>';
-  var cur = null;
-  sl.forEach(function (x) {
-    if (cur !== x.b.uid) { if (cur) h += '</div>'; cur = x.b.uid; h += '<div class="mib"><div class="mih"><b>' + esc(DEF[x.b.type].name) + '</b><span class="lotn" style="font-family:var(--mono);font-size:12px;color:var(--ink-2)">D' + (x.di + 1) + ' ' + lotName(x.b.r, x.b.c) + '</span></div>'; }
-    var st = getSlot(city, x.key), T0 = TIERS.filter(function (t) { return t[0] === x.tier; })[0][1];
-    h += '<div class="slot t-' + x.tier + '"><span class="tier">' + T0 + '</span>';
-    h += '<input class="mi-in" data-mi="' + x.key + '" data-f="name" placeholder="Název předmětu" aria-label="Název předmětu (' + T0 + ')" value="' + esc(st.name) + '" maxlength="120">';
-    h += '<input class="mi-in" data-mi="' + x.key + '" data-f="url" placeholder="Odkaz (https://…)" aria-label="Odkaz na předmět" value="' + esc(st.url) + '" maxlength="500">';
-    h += '<a class="lnk" data-lnk="' + x.key + '" target="_blank" rel="noopener" title="Otevřít odkaz"' + (safeUrl(st.url) ? ' href="' + esc(st.url.trim()) + '"' : ' hidden') + '>↗</a>';
-    h += '<button class="btn" data-act="mroll" data-key="' + x.key + '" title="Hodit d% pro tento slot">d%</button><button class="btn" data-act="mclear" data-key="' + x.key + '" title="Vyprázdnit slot" aria-label="Vyprázdnit slot">×</button>';
-    h += '<span class="kinds">' + esc(x.kinds === 'any' ? 'libovolný typ' : x.kinds) + '</span>';
-    if (st.roll != null) h += st.roll > 50 ? '<span class="mres hit">d% ' + st.roll + ': k dispozici ' + esc(st.kind) + ', cena do ' + cc.bvEff + ' gp</span>' : '<span class="mres">d% ' + st.roll + ': teď nic</span>';
-    h += '</div>';
-  });
-  if (cur) h += '</div>';
+  h += '<p class="note" style="margin:8px 0 0">Vygenerované itemy se vypisují v záložce <b>Království</b>, rozdělené na minor / medium / major. Slot se zaplněným itemem se při generování nepřepisuje; Upkeep hodí d% jednou za district s prázdným slotem (51–100 = předmět daného typu k dispozici, cena nejvýše ' + cc.bvEff + ' gp).</p>';
   return h + '</section>';
 }
 
@@ -602,13 +586,120 @@ var WPNS = [['Dagger',2],['Greataxe',20],['Greatsword',50],['Longsword',15],['Sh
 var ARMORS = [['Padded Armor',5],['Leather Armor',10],['Studded Leather',25],['Chain Shirt',100],['Scale Mail',50],['Chainmail',150],['Breastplate',200],['Splint Mail',250],['Banded Mail',250],['Half-Plate',600],['Full Plate',1500],['Buckler',15],['Heavy Steel Shield',20],['Tower Shield',30]];
 var WAB = [['Flaming',1],['Frost',1],['Shock',1],['Corrosive',1],['Keen',1],['Ghost Touch',1],['Seeking',1],['Spell Storing',1],['Defending',1],['Bane',1],['Mighty Cleaving',1],['Flaming Burst',2],['Icy Burst',2],['Shocking Burst',2],['Thundering',2],['Holy',2],['Unholy',2],['Anarchic',2],['Axiomatic',2],['Speed',3],['Dancing',4],['Vorpal',5]];
 var AAB = [['Shadow',1],['Slick',1],['Silent Moves',1],['Glamoured',1],['Light Fortification',1],['Moderate Fortification',2],['Heavy Fortification',3],['Ghost Touch',3]];
-var RINGS = [['Ring of Protection +1',2000],['Ring of Protection +2',8000],['Ring of Protection +3',18000],['Ring of Protection +4',32000],['Ring of Protection +5',50000],['Ring of Climbing',2500],['Ring of Jumping',2500],['Ring of Swimming',2500],['Ring of Sustenance',2500],['Ring of Counterspells',4000],['Ring of Energy Resistance (lesser)',12000],['Ring of Energy Resistance (greater)',28000],['Ring of Invisibility',20000],['Ring of Wizardry I',20000],['Ring of Wizardry II',36000],['Ring of Freedom of Movement',40000],['Ring of Spell Storing',50000]];
-var RODS = [['Lesser Metamagic Rod of Extend Spell',3000],['Metamagic Rod of Extend Spell',11000],['Greater Metamagic Rod of Extend Spell',24500],['Rod of Metal and Mineral Detection',10500],['Rod of Cancellation',11000],['Lesser Metamagic Rod of Quicken Spell',35000],['Metamagic Rod of Quicken Spell',79000],['Rod of the Aboleth',29000],['Rod of Lordly Might',70000]];
-var WOND = [['Universal Solvent',50],['Feather Token (Anchor)',50],['Feather Token (Fan)',50],['Everburning Torch',110],['Elixir of Hiding',250],['Elixir of Sneaking',250],['Elixir of Love',300],['Elixir of Swiftness',300],['Dust of Tracelessness',250],['Cloak of Resistance +1',1000],['Pearl of Power (1st)',1000],['Bag of Holding (Type I)',1000],['Bracers of Armor +1',1000],['Hat of Disguise',1800],['Handy Haversack',2000],['Amulet of Natural Armor +1',2000],['Amulet of Mighty Fists +1',2000],['Cloak of Elvenkind',2500],['Boots of Elvenkind',2500],['Bag of Holding (Type II)',2500],['Bracers of Armor +2',4000],['Pearl of Power (2nd)',4000],['Amulet of Natural Armor +2',8000],['Amulet of Mighty Fists +2',8000],['Cloak of Resistance +2',4000],['Belt of Giant Strength +2',4000],['Belt of Incredible Dexterity +2',4000],['Belt of Mighty Constitution +2',4000],['Headband of Alluring Charisma +2',4000],['Headband of Inspired Wisdom +2',4000],['Headband of Vast Intelligence +2',4000],['Amulet of Health +2',4000],['Rope of Climbing',3000],['Slippers of Spider Climbing',4800],['Boots of Striding and Springing',5500],['Necklace of Fireballs (Type I)',1650],['Figurine of Wondrous Power (Silver Raven)',6000],['Figurine of Wondrous Power (Bronze Griffon)',8000],['Bracers of Armor +3',9000],['Pearl of Power (3rd)',9000],['Cloak of Resistance +3',9000],['Cape of the Mountebank',7300],['Immovable Rod',5000],['Glove of Storing',10000],['Robe of Useful Items',9000],['Necklace of Adaptation',9000],['Amulet of Natural Armor +3',18000],['Amulet of Mighty Fists +3',18000],['Cloak of Resistance +4',16000],['Bracers of Armor +4',16000],['Pearl of Power (4th)',16000],['Amulet of Health +4',16000],['Vest of the Cockroach',16000],['Winged Boots',16000],['Stone of Good Luck',20000],['Portable Hole',20000],['Cloak of Resistance +5',25000],['Bracers of Armor +5',25000],['Robe of Scintillating Colors',27000],['Getaway Boots',30000],['Amulet of Natural Armor +4',32000],['Crystal Ball',42000],['Boots of Teleportation',49000],['Amulet of Natural Armor +5',50000]];
-/* odvozené konstanty a generátory níže */
+var RINGS = [['Ring of Protection +1',2000],['Ring of Protection +2',8000],['Ring of Protection +3',18000],['Ring of Protection +4',32000],['Ring of Protection +5',50000],['Ring of Climbing',2500],['Ring of Jumping',2500],['Ring of Swimming',2500],['Ring of Sustenance',2500],['Ring of Counterspells',4000],['Ring of Energy Resistance (lesser)',12000],['Ring of Energy Resistance (greater)',28000],['Ring of Invisibility',20000],['Ring of Wizardry I',20000],['Ring of Wizardry II',40000],['Ring of Freedom of Movement',40000],['Ring of Spell Storing',50000]];
+var RODS = [['Lesser Metamagic Rod of Extend Spell',3000],['Metamagic Rod of Extend Spell',11000],['Greater Metamagic Rod of Extend Spell',24500],['Rod of Metal and Mineral Detection',10500],['Rod of Cancellation',11000],['Lesser Metamagic Rod of Quicken Spell',35000],['Metamagic Rod of Quicken Spell',75500],['Rod of the Aboleth',29000],['Rod of Lordly Might',70000]];
+var WOND = [['Universal Solvent',50],['Feather Token (Anchor)',50],['Feather Token (Fan)',200],['Elixir of Hiding',250],['Elixir of Love',300],['Elixir of Swimming',250],['Elixir of Vision',250],['Dust of Tracelessness',250],['Cloak of Resistance +1',1000],['Pearl of Power (1st)',1000],['Bracers of Armor +1',1000],['Hat of Disguise',1800],['Handy Haversack',2000],['Amulet of Natural Armor +1',2000],['Amulet of Mighty Fists +1',2000],['Cloak of Elvenkind',2500],['Boots of Elvenkind',2500],['Everburning Lantern',3000],['Rope of Climbing',3000],['Bag of Holding (Type I)',2500],['Elixir of Luck',3600],['Bag of Holding (Type II)',5000],['Bracers of Armor +2',4000],['Pearl of Power (2nd)',4000],['Amulet of Natural Armor +2',8000],['Amulet of Mighty Fists +2',8000],['Cloak of Resistance +2',4000],['Belt of Giant Strength +2',4000],['Belt of Incredible Dexterity +2',4000],['Belt of Mighty Constitution +2',4000],['Headband of Alluring Charisma +2',4000],['Headband of Inspired Wisdom +2',4000],['Headband of Vast Intelligence +2',4000],['Periapt of Health',7500],['Slippers of Spider Climbing',4800],['Boots of Striding and Springing',5500],['Necklace of Fireballs (Type I)',1650],['Figurine of Wondrous Power (Bronze Griffon)',8000],['Figurine of Wondrous Power (Silver Raven)',6000],['Bracers of Armor +3',9000],['Pearl of Power (3rd)',9000],['Cloak of Resistance +3',9000],['Cape of the Mountebank',7300],['Immovable Rod',5000],['Glove of Storing',10000],['Robe of Useful Items',9000],['Necklace of Adaptation',9000],['Amulet of Natural Armor +3',18000],['Amulet of Mighty Fists +3',18000],['Cloak of Resistance +4',16000],['Bracers of Armor +4',16000],['Pearl of Power (4th)',16000],['Vest of the Cockroach',16000],['Winged Boots',16000],['Stone of Good Luck',20000],['Portable Hole',20000],['Cloak of Resistance +5',25000],['Bracers of Armor +5',25000],['Robe of Scintillating Colors',27000],['Getaway Boots',30000],['Amulet of Natural Armor +4',32000],['Bag of Holding (Type III)',7400],['Periapt of Wound Closure',15000],['Crystal Ball',42000],['Boots of Teleportation',49000],['Amulet of Natural Armor +5',50000]];
+/* Odkazy na Archives of Nethys (fungují přes ?FinalName=): [stránka, FinalName] */
+var AONMAP = {
+  'Universal Solvent':['MagicWondrousDisplay.aspx','Universal Solvent'],
+  'Feather Token (Anchor)':['MagicWondrousDisplay.aspx','Feather TokenAnchor'],
+  'Feather Token (Fan)':['MagicWondrousDisplay.aspx','Feather TokenFan'],
+  'Elixir of Hiding':['MagicWondrousDisplay.aspx','Elixir of Hiding'],
+  'Elixir of Love':['MagicWondrousDisplay.aspx','Elixir of Love'],
+  'Elixir of Swimming':['MagicWondrousDisplay.aspx','Elixir of Swimming'],
+  'Elixir of Vision':['MagicWondrousDisplay.aspx','Elixir of Vision'],
+  'Elixir of Luck':['MagicWondrousDisplay.aspx','Elixir of Luck'],
+  'Dust of Tracelessness':['MagicWondrousDisplay.aspx','Dust of Tracelessness'],
+  'Cloak of Resistance +1':['MagicWondrousDisplay.aspx','Cloak of Resistance1'],
+  'Cloak of Resistance +2':['MagicWondrousDisplay.aspx','Cloak of Resistance2'],
+  'Cloak of Resistance +3':['MagicWondrousDisplay.aspx','Cloak of Resistance3'],
+  'Cloak of Resistance +4':['MagicWondrousDisplay.aspx','Cloak of Resistance4'],
+  'Cloak of Resistance +5':['MagicWondrousDisplay.aspx','Cloak of Resistance5'],
+  'Pearl of Power (1st)':['MagicWondrousDisplay.aspx','Pearl of Power1st'],
+  'Pearl of Power (2nd)':['MagicWondrousDisplay.aspx','Pearl of Power2nd'],
+  'Pearl of Power (3rd)':['MagicWondrousDisplay.aspx','Pearl of Power3rd'],
+  'Pearl of Power (4th)':['MagicWondrousDisplay.aspx','Pearl of Power4th'],
+  'Bag of Holding (Type I)':['MagicWondrousDisplay.aspx','Bag of HoldingType I'],
+  'Bag of Holding (Type II)':['MagicWondrousDisplay.aspx','Bag of HoldingType II'],
+  'Bag of Holding (Type III)':['MagicWondrousDisplay.aspx','Bag of HoldingType III'],
+  'Bracers of Armor +1':['MagicWondrousDisplay.aspx','Bracers of Armor1'],
+  'Bracers of Armor +2':['MagicWondrousDisplay.aspx','Bracers of Armor2'],
+  'Bracers of Armor +3':['MagicWondrousDisplay.aspx','Bracers of Armor3'],
+  'Bracers of Armor +4':['MagicWondrousDisplay.aspx','Bracers of Armor4'],
+  'Bracers of Armor +5':['MagicWondrousDisplay.aspx','Bracers of Armor5'],
+  'Hat of Disguise':['MagicWondrousDisplay.aspx','Hat of Disguise'],
+  'Handy Haversack':['MagicWondrousDisplay.aspx','Handy Haversack'],
+  'Amulet of Natural Armor +1':['MagicWondrousDisplay.aspx','Amulet of Natural Armor1'],
+  'Amulet of Natural Armor +2':['MagicWondrousDisplay.aspx','Amulet of Natural Armor2'],
+  'Amulet of Natural Armor +3':['MagicWondrousDisplay.aspx','Amulet of Natural Armor3'],
+  'Amulet of Natural Armor +4':['MagicWondrousDisplay.aspx','Amulet of Natural Armor4'],
+  'Amulet of Natural Armor +5':['MagicWondrousDisplay.aspx','Amulet of Natural Armor5'],
+  'Amulet of Mighty Fists +1':['MagicWondrousDisplay.aspx','Amulet of Mighty Fists1'],
+  'Amulet of Mighty Fists +2':['MagicWondrousDisplay.aspx','Amulet of Mighty Fists2'],
+  'Amulet of Mighty Fists +3':['MagicWondrousDisplay.aspx','Amulet of Mighty Fists3'],
+  'Cloak of Elvenkind':['MagicWondrousDisplay.aspx','Cloak of Elvenkind'],
+  'Boots of Elvenkind':['MagicWondrousDisplay.aspx','Boots of Elvenkind'],
+  'Everburning Lantern':['MagicWondrousDisplay.aspx','Everburning Lantern'],
+  'Everburning Torch':['MagicWondrousDisplay.aspx','Everburning Lantern'],
+  'Rope of Climbing':['MagicWondrousDisplay.aspx','Rope of Climbing'],
+  'Belt of Giant Strength +2':['MagicWondrousDisplay.aspx','Belt of Giant Strength2'],
+  'Belt of Giant Strength +4':['MagicWondrousDisplay.aspx','Belt of Giant Strength4'],
+  'Belt of Incredible Dexterity +2':['MagicWondrousDisplay.aspx','Belt of Incredible Dexterity2'],
+  'Belt of Mighty Constitution +2':['MagicWondrousDisplay.aspx','Belt of Mighty Constitution2'],
+  'Headband of Alluring Charisma +2':['MagicWondrousDisplay.aspx','Headband of Alluring Charisma2'],
+  'Headband of Inspired Wisdom +2':['MagicWondrousDisplay.aspx','Headband of Inspired Wisdom2'],
+  'Headband of Vast Intelligence +2':['MagicWondrousDisplay.aspx','Headband of Vast Intelligence2'],
+  'Periapt of Health':['MagicWondrousDisplay.aspx','Periapt of Health'],
+  'Periapt of Wound Closure':['MagicWondrousDisplay.aspx','Periapt of Wound Closure'],
+  'Slippers of Spider Climbing':['MagicWondrousDisplay.aspx','Slippers of Spider Climbing'],
+  'Boots of Striding and Springing':['MagicWondrousDisplay.aspx','Boots of Striding and Springing'],
+  'Necklace of Fireballs (Type I)':['MagicWondrousDisplay.aspx','Necklace of FireballsType I'],
+  'Figurine of Wondrous Power (Bronze Griffon)':['MagicWondrousDisplay.aspx','Figurine of Wondrous PowerBronze Griffon'],
+  'Figurine of Wondrous Power (Silver Raven)':['MagicWondrousDisplay.aspx','Figurine of Wondrous PowerSilver Raven'],
+  'Cape of the Mountebank':['MagicWondrousDisplay.aspx','Cape of the Mountebank'],
+  'Glove of Storing':['MagicWondrousDisplay.aspx','Glove of Storing'],
+  'Robe of Useful Items':['MagicWondrousDisplay.aspx','Robe of Useful Items'],
+  'Necklace of Adaptation':['MagicWondrousDisplay.aspx','Necklace of Adaptation'],
+  'Vest of the Cockroach':['MagicWondrousDisplay.aspx','Vest of the Cockroach'],
+  'Winged Boots':['MagicWondrousDisplay.aspx','Winged Boots'],
+  'Stone of Good Luck':['MagicWondrousDisplay.aspx','Stone of Good Luck (Luckstone)'],
+  'Portable Hole':['MagicWondrousDisplay.aspx','Portable Hole'],
+  'Robe of Scintillating Colors':['MagicWondrousDisplay.aspx','Robe of Scintillating Colors'],
+  'Getaway Boots':['MagicWondrousDisplay.aspx','Getaway Boots'],
+  'Crystal Ball':['MagicWondrousDisplay.aspx','Crystal BallNormal'],
+  'Boots of Teleportation':['MagicWondrousDisplay.aspx','Boots of Teleportation'],
+  'Ring of Protection +1':['MagicRingsDisplay.aspx','Ring of Protection1'],
+  'Ring of Protection +2':['MagicRingsDisplay.aspx','Ring of Protection2'],
+  'Ring of Protection +3':['MagicRingsDisplay.aspx','Ring of Protection3'],
+  'Ring of Protection +4':['MagicRingsDisplay.aspx','Ring of Protection4'],
+  'Ring of Protection +5':['MagicRingsDisplay.aspx','Ring of Protection5'],
+  'Ring of Climbing':['MagicRingsDisplay.aspx','Ring of Climbing'],
+  'Ring of Jumping':['MagicRingsDisplay.aspx','Ring of Jumping'],
+  'Ring of Swimming':['MagicRingsDisplay.aspx','Ring of Swimming'],
+  'Ring of Sustenance':['MagicRingsDisplay.aspx','Ring of Sustenance'],
+  'Ring of Counterspells':['MagicRingsDisplay.aspx','Ring of Counterspells'],
+  'Ring of Energy Resistance (lesser)':['MagicRingsDisplay.aspx','Ring of Energy Resistanceminor'],
+  'Ring of Energy Resistance (greater)':['MagicRingsDisplay.aspx','Ring of Energy Resistancegreater'],
+  'Ring of Invisibility':['MagicRingsDisplay.aspx','Ring of Invisibility'],
+  'Ring of Wizardry I':['MagicRingsDisplay.aspx','Ring of Wizardrytype I'],
+  'Ring of Wizardry II':['MagicRingsDisplay.aspx','Ring of Wizardrytype II'],
+  'Ring of Freedom of Movement':['MagicRingsDisplay.aspx','Ring of Freedom of Movement'],
+  'Ring of Spell Storing':['MagicRingsDisplay.aspx','Ring of Spell Storing'],
+  'Lesser Metamagic Rod of Extend Spell':['MagicRodsDisplay.aspx','Rod of Metamagic, Extendlesser'],
+  'Metamagic Rod of Extend Spell':['MagicRodsDisplay.aspx','Rod of Metamagic, Extendnormal'],
+  'Greater Metamagic Rod of Extend Spell':['MagicRodsDisplay.aspx','Rod of Metamagic, Extendgreater'],
+  'Lesser Metamagic Rod of Quicken Spell':['MagicRodsDisplay.aspx','Rod of Metamagic, Quickenlesser'],
+  'Metamagic Rod of Quicken Spell':['MagicRodsDisplay.aspx','Rod of Metamagic, Quickennormal'],
+  'Rod of Metal and Mineral Detection':['MagicRodsDisplay.aspx','Rod of Metal and Mineral Detection'],
+  'Rod of Cancellation':['MagicRodsDisplay.aspx','Rod of Cancellation'],
+  'Rod of the Aboleth':['MagicRodsDisplay.aspx','Rod of the Aboleth'],
+  'Rod of Lordly Might':['MagicRodsDisplay.aspx','Rod of Lordly Might']
+};
+var PRICEEND = / \([\d.,]+\.\d+ gp\)$| \([\d.,]+ gp\)$/;
 function ri(a, b) { return a + Math.floor(Math.random() * (b - a + 1)); }
 function gpf(n) { return n % 1 ? n.toFixed(1) : String(n); }
-function miUrl(n) { return 'https://www.aonprd.com/Search.aspx?q=' + encodeURIComponent(n); }
+function bareName(s) { return String(s || '').replace(PRICEEND, ''); }
+function miUrl(n) {
+  n = bareName(n);
+  var m = AONMAP[n];
+  if (m) return 'https://www.aonprd.com/' + m[0] + '?FinalName=' + encodeURIComponent(m[1]);
+  var sp = /^(Potion|Oil|Scroll|Wand) of (.+)$/.exec(String(n));
+  if (sp) return 'https://www.aonprd.com/SpellDisplay.aspx?ItemName=' + encodeURIComponent(sp[2].replace(/ \(CL \d+\)$/, '').replace(/ [IVX]{1,4}$/, function (r) { var RV = {'I':1,'II':2,'III':3,'IV':4,'V':5,'VI':6,'VII':7,'VIII':8,'IX':9,'X':10}; return RV[r.trim()] ? ' ' + RV[r.trim()] : r; }));
+  if (/ \(\+\d+ weapon/.test(n)) return 'https://www.aonprd.com/MagicWeapons.aspx';
+  if (/^\+\d/.test(n)) return 'https://www.aonprd.com/MagicArmor.aspx';
+  return 'https://www.aonprd.com/MagicWondrous.aspx';
+}
+function dispUrl(st) { return safeUrl(st.url) && !/Search\.aspx\?q=/i.test(st.url) ? st.url : miUrl(st.name); }
 function pickKind(tier, ks) {
   var w = {}, src = ks && ks.length ? ks : Object.keys(KINDW[tier]);
   src.forEach(function (k) { w[k] = ks ? (KINDW[tier][k] || 1) : KINDW[tier][k]; });
@@ -635,12 +726,12 @@ function genPotion() {
 function genScroll(tier) {
   var lv = tier === 'minor' ? ri(0, 3) : tier === 'major' ? ri(4, 6) : ri(2, 5), sp = spOf(lv);
   var cost = sp[1] === 'd' ? 12.5 : 25, cl = Math.max(1, lv + ri(0, 3));
-  return {n: 'Scroll of ' + sp[0] + ' (CL ' + cl + ')', p: cl * Math.max(1, lv) * cost};
+  return {n: 'Scroll of ' + sp[0] + (lv > 0 ? ' (CL ' + cl + ')' : ''), p: cl * Math.max(1, lv) * cost};
 }
 function genWand() {
   var r = ri(1, 12), lv = r <= 2 ? 0 : r <= 6 ? 1 : r <= 9 ? 2 : r <= 11 ? 3 : 4, sp = spOf(lv);
   var cl = Math.max(1, lv) + ri(0, 2), p = lv === 0 ? 375 : cl * lv * 750;
-  return {n: 'Wand of ' + sp[0] + (lv === 0 ? '' : ' (CL ' + cl + ')'), p: p};
+  return {n: 'Wand of ' + sp[0] + (lv > 0 ? ' (CL ' + cl + ')' : ''), p: p};
 }
 function genWeapon(cap) {
   var wp = WPNS[ri(0, WPNS.length - 1)], base = wp[1];
@@ -679,7 +770,7 @@ function genPiece(kind, tier, greater, cap) {
   if (kind === 'ring') return pickList(RINGS, cap, greater);
   if (kind === 'rod') return pickList(RODS, cap, greater);
   if (kind === 'wondrous item') return pickList(WOND, cap, greater);
-  return null; /* staff: nemáme sestavené culty, nechá se přetáhnout jiný druh */
+  return null; /* staffy necháme přetáhnout jiný druh */
 }
 function genItem(tier, greater, kinds) {
   var ks = kinds === 'any' || !kinds ? null : kinds.split(', ');
@@ -713,7 +804,6 @@ function doGenItems(city) {
   if (t.minor + t.medium + t.major === 0) toast('Žádné prázdné magic item sloty (sloty se zaplněnými itemy se nepřepisují).');
   else toast('Magic itemy vygenerovány: ' + t.minor + ' minor, ' + t.medium + ' medium, ' + t.major + ' major. V každém tieru střídavě Greater a Lesser rank (jako donjon).');
 }
-
 /* ---------- calculation ---------- */
 function touchesEdge(b, sd) { return sd === 'n' ? b.r === 0 : sd === 's' ? b.r + b.h === 6 : sd === 'w' ? b.c === 0 : b.c + b.w === 6; }
 function calcCity(city) {
@@ -952,7 +1042,7 @@ function kingdomHTML() {
   h += '</div><div class="row"><button class="btn" data-act="tradeadd">+ Přidat trasu</button><span class="note" style="margin:0">Total BP celkem: <b>' + fmt(tsum) + '</b></span></div>';
   h += '<p class="note">Trade edikt: investice nejméně 5 BP. Trasy se zapisují ručně a neovlivňují součty automaticky (případné bonusy zapiš do ruční úpravy).</p></section>';
 
-  h += '<section class="card"><div class="h3">Status &amp; Resources</div><div class="row" style="margin-top:8px"><button class="btn primary" data-act="migen" data-scope="kingdom" title="Vygeneruje itemy do prázdných slotů ve všech městech podle jejich budov; v každém tieru střídá Greater a Lesser rank (styl donjon Pathfinder)">🎲 Generate Magic Items</button><span class="note" style="margin:0">Vyplní prázdné magic item sloty podle budov (počty minor/medium/major), střídavě Greater a Lesser rank. Zaplněné sloty se nepřepisují.</span></div><div style="margin-top:8px">';
+  h += '<section class="card"><div class="h3">Status &amp; Resources</div><div style="margin-top:8px">';
   S.cities.forEach(function (c, i) {
     var cc = X.cs[i], m = miTotals(c);
     h += '<div class="kv"><span><b>' + esc(c.name) + '</b> · ' + cc.size + ', ' + c.districts.length + ' d., ' + cc.pop.toLocaleString('cs-CZ') + ' obyv.</span><b>' + fmt(cc.total) + ' BP · magic ' + m.tot.minor + '/' + m.tot.medium + '/' + m.tot.major + '</b></div>';
@@ -960,7 +1050,34 @@ function kingdomHTML() {
   var gt = {minor:0, medium:0, major:0}; S.cities.forEach(function (c) { var m = miTotals(c); gt.minor += m.tot.minor; gt.medium += m.tot.medium; gt.major += m.tot.major; });
   h += '<div class="kv" style="margin-top:8px"><span><b>Magické itemy království celkem</b></span><b>' + (gt.minor + gt.medium + gt.major) + '</b></div><p class="note">Minor / medium / major: <b>' + gt.minor + ' / ' + gt.medium + ' / ' + gt.major + '</b>.</p></div>';
   h += '<label class="field">Poznámky, zdroje<textarea class="kin" data-kf="notes" data-t="s" aria-label="Poznámky" maxlength="4000">' + esc(K.notes) + '</textarea></label></section>';
+  h += kingdomMagicHTML();
   return h + '</div>';
+}
+function kingdomMagicHTML() {
+  var h = '<section class="card mi"><div class="row" style="justify-content:space-between"><div class="h3">Vygenerované magic itemy</div>';
+  h += '<span class="row"><button class="btn primary" data-act="migen" data-scope="kingdom" title="Vygeneruje itemy do prázdných slotů ve všech městech podle jejich budov; v každém tieru střídá Greater a Lesser rank (styl donjon Pathfinder)">🎲 Generate Magic Items</button><span class="note" style="margin:0">Vyplní prázdné sloty podle budov měst, zaplněné se nepřepisují.</span></span></div>';
+  var gt = {minor:0, medium:0, major:0};
+  TIERS.forEach(function (T) {
+    var tid = T[0], n = 0, cap = 0, rows = '';
+    S.cities.forEach(function (c) {
+      var sl = slotsOf(c).filter(function (x) { return x.tier === tid; });
+      cap += sl.length;
+      sl.forEach(function (x) {
+        var st = getSlot(c, x.key);
+        if (!st.name.trim()) return;
+        n++; gt[tid]++;
+        var u = dispUrl(st);
+        rows += '<div class="slot t-' + tid + '"><span class="tier" style="width:auto;min-width:58px;font-weight:600;color:var(--ink)">' + esc(c.name) + '</span>';
+        rows += (u ? '<a class="lnk" href="' + esc(u.trim()) + '" target="_blank" rel="noopener" title="Otevřít na Archives of Nethys">' + esc(st.name) + ' ↗</a>' : '<b>' + esc(st.name) + '</b>');
+        rows += '<small style="font-family:var(--mono);font-size:12px;color:var(--ink-2)">' + esc(DEF[x.b.type].name) + ' · D' + (x.di + 1) + ' ' + lotName(x.b.r, x.b.c) + '</small>';
+        rows += '<button class="btn danger" data-act="mclear" data-city="' + esc(c.id) + '" data-key="' + esc(x.key) + '" title="Vyprázdnit slot (item zmizí ze seznamu)" aria-label="Vyprázdnit slot: ' + esc(st.name) + '">×</button></div>';
+      });
+    });
+    h += '<div style="margin-top:10px"><b class="t-' + tid + '">' + T[1] + '</b> <small style="color:var(--ink-2)">· zaplněno ' + n + ' z ' + cap + ' slotů</small></div>';
+    h += n ? '<div>' + rows + '</div>' : '<p class="note" style="margin:4px 0 0">Žádné zaplněné sloty. Klikni na 🎲 Generate Magic Items.</p>';
+  });
+  h += '<p class="note" style="margin-bottom:0">Celkem zaplněno ' + gt.minor + ' minor, ' + gt.medium + ' medium, ' + gt.major + ' major. Sloty dávají budovy (Alchemist, Herbalist, Shrine, Market, Temple, Magic Shop…); počty jsou u každého města.</p>';
+  return h + '</section>';
 }
 function kset(path, v) {
   var p = path.split('.'), o = S.kingdom;
@@ -1353,7 +1470,6 @@ function act(a, t) {
     case 'brk': UI.modal = {type:'brk', k:ds.k}; renderModal(); break;
     case 'kbrk': UI.modal = {type:'brk', k:ds.k, scope:'kingdom'}; renderModal(); break;
     case 'kingdom': UI.king = true; closeModal(); render(); break;
-    case 'mitoggle': UI.miOpen = !UI.miOpen; render(); break;
     case 'rolestoggle': UI.rolesOpen = !UI.rolesOpen; render(); break;
     case 'save': if (DBN) saveShared(); else ghSave(); break;
     case 'ghtoken': if (ghSetToken()) { toast('Token uložen v tomto prohlížeči.'); render(); } break;
@@ -1373,8 +1489,7 @@ function act(a, t) {
       render(); break;
     case 'incomeadd': if (UI.income) { S.kingdom.treasury = (+S.kingdom.treasury || 0) + UI.income.bp; UI.income = null; refresh(); } break;
     case 'migen': doGenItems(ds.scope === 'kingdom' ? null : city); break;
-    case 'mroll': var ms = slotsOf(city).filter(function (x) { return x.key === ds.key; })[0]; if (ms) rollSlot(city, ms); refresh(); break;
-    case 'mclear': if (city.mi) city.mi[ds.key] = {name:'', url:'', roll:null, kind:''}; refresh(); break;
+    case 'mclear': var mcc = S.cities.filter(function (x) { return x.id === ds.city; })[0] || city; if (mcc.mi) mcc.mi[ds.key] = {name:'', url:'', roll:null, kind:''}; refresh(); break;
     case 'mupkeep':
       var sl = slotsOf(city), res = [];
       city.districts.forEach(function (dd, di) {
