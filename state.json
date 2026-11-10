@@ -1,5 +1,5 @@
 {
- "_savedAt": "2026-11-10T14:22:56.855Z",
+ "_savedAt": "2026-11-10T14:42:00.300Z",
  "cities": [
   {
    "id": "0joobpf",
@@ -300,22 +300,22 @@
   {
    "id": "3qc6jt7",
    "name": "Basgiat",
-   "terrain": "Plains",
+   "terrain": "Mountains",
    "cd": 0,
    "mi": {},
    "districts": [
     {
      "borders": {
       "n": "land",
-      "e": "land",
+      "e": "water",
       "s": "land",
       "w": "land"
      },
      "wall": {
-      "n": 0,
+      "n": 1,
       "e": 0,
-      "s": 0,
-      "w": 0
+      "s": 1,
+      "w": 1
      },
      "gate": {
       "n": 0,
