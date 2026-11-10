@@ -1,13 +1,53 @@
 {
- "_savedAt": "2026-11-10T14:08:35.343Z",
+ "_savedAt": "2026-11-10T14:10:02.922Z",
  "cities": [
   {
    "id": "0joobpf",
-   "name": "Ukázkové město",
+   "name": "Techiov",
    "terrain": "Plains",
    "cd": 0,
    "mi": {},
    "districts": [
+    {
+     "borders": {
+      "n": "land",
+      "e": "land",
+      "s": "land",
+      "w": "water"
+     },
+     "wall": {
+      "n": 1,
+      "e": 1,
+      "s": 1,
+      "w": 0
+     },
+     "gate": {
+      "n": 0,
+      "e": 0,
+      "s": 0,
+      "w": 0
+     },
+     "moat": {
+      "n": 0,
+      "e": 0,
+      "s": 0,
+      "w": 0
+     },
+     "paved": 0,
+     "sewer": 0,
+     "buildings": [
+      {
+       "uid": "d0ptj2i",
+       "type": "castle",
+       "r": 2,
+       "c": 2,
+       "w": 2,
+       "h": 2,
+       "disc": false
+      }
+     ],
+     "overlays": []
+    },
     {
      "borders": {
       "n": "land",
@@ -35,113 +75,83 @@
      },
      "paved": 0,
      "sewer": 0,
+     "buildings": [],
+     "overlays": []
+    },
+    {
+     "borders": {
+      "n": "land",
+      "e": "land",
+      "s": "land",
+      "w": "land"
+     },
+     "wall": {
+      "n": 0,
+      "e": 0,
+      "s": 0,
+      "w": 0
+     },
+     "gate": {
+      "n": 0,
+      "e": 0,
+      "s": 0,
+      "w": 0
+     },
+     "moat": {
+      "n": 0,
+      "e": 0,
+      "s": 0,
+      "w": 0
+     },
+     "paved": 0,
+     "sewer": 0,
+     "buildings": [],
+     "overlays": []
+    }
+   ]
+  },
+  {
+   "id": "0ombioe",
+   "name": "Rybárna",
+   "terrain": "Plains",
+   "cd": 0,
+   "mi": {},
+   "districts": [
+    {
+     "borders": {
+      "n": "land",
+      "e": "land",
+      "s": "water",
+      "w": "land"
+     },
+     "wall": {
+      "n": 0,
+      "e": 0,
+      "s": 0,
+      "w": 0
+     },
+     "gate": {
+      "n": 0,
+      "e": 0,
+      "s": 0,
+      "w": 0
+     },
+     "moat": {
+      "n": 0,
+      "e": 0,
+      "s": 0,
+      "w": 0
+     },
+     "paved": 0,
+     "sewer": 0,
      "buildings": [
       {
-       "uid": "y8r6cbn",
-       "type": "house",
-       "r": 2,
-       "c": 2,
-       "w": 1,
-       "h": 1,
-       "disc": false
-      },
-      {
-       "uid": "6roymwq",
-       "type": "house",
+       "uid": "p3jtbay",
+       "type": "waterfront",
        "r": 4,
        "c": 2,
-       "w": 1,
-       "h": 1,
-       "disc": false
-      },
-      {
-       "uid": "5xhpqyq",
-       "type": "house",
-       "r": 1,
-       "c": 1,
-       "w": 1,
-       "h": 1,
-       "disc": false
-      },
-      {
-       "uid": "0qdgxfc",
-       "type": "tavern",
-       "r": 2,
-       "c": 3,
-       "w": 1,
-       "h": 1,
-       "disc": false
-      },
-      {
-       "uid": "ieweas9",
-       "type": "shop",
-       "r": 3,
-       "c": 2,
-       "w": 1,
-       "h": 1,
-       "disc": false
-      },
-      {
-       "uid": "lx4nbxr",
-       "type": "inn",
-       "r": 1,
-       "c": 2,
-       "w": 1,
-       "h": 1,
-       "disc": false
-      },
-      {
-       "uid": "op7us6n",
-       "type": "shrine",
-       "r": 3,
-       "c": 3,
-       "w": 1,
-       "h": 1,
-       "disc": false
-      },
-      {
-       "uid": "dptww1j",
-       "type": "watchtower",
-       "r": 1,
-       "c": 3,
-       "w": 1,
-       "h": 1,
-       "disc": false
-      },
-      {
-       "uid": "i9gbebj",
-       "type": "park",
-       "r": 4,
-       "c": 3,
-       "w": 1,
-       "h": 1,
-       "disc": false
-      },
-      {
-       "uid": "xc0hqlq",
-       "type": "market",
-       "r": 4,
-       "c": 4,
        "w": 2,
-       "h": 1,
-       "disc": false
-      },
-      {
-       "uid": "kemac7q",
-       "type": "house",
-       "r": 3,
-       "c": 4,
-       "w": 1,
-       "h": 1,
-       "disc": false
-      },
-      {
-       "uid": "b1m9mhi",
-       "type": "house",
-       "r": 3,
-       "c": 5,
-       "w": 1,
-       "h": 1,
+       "h": 2,
        "disc": false
       }
      ],
@@ -150,7 +160,7 @@
    ]
   }
  ],
- "cur": "0joobpf",
+ "cur": "0ombioe",
  "kingdom": {
   "name": "Moje království",
   "players": "",
