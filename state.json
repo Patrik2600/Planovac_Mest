@@ -1,0 +1,266 @@
+{
+ "_savedAt": "2026-11-10T14:08:35.343Z",
+ "cities": [
+  {
+   "id": "0joobpf",
+   "name": "Ukázkové město",
+   "terrain": "Plains",
+   "cd": 0,
+   "mi": {},
+   "districts": [
+    {
+     "borders": {
+      "n": "land",
+      "e": "land",
+      "s": "land",
+      "w": "land"
+     },
+     "wall": {
+      "n": 0,
+      "e": 0,
+      "s": 0,
+      "w": 0
+     },
+     "gate": {
+      "n": 0,
+      "e": 0,
+      "s": 0,
+      "w": 0
+     },
+     "moat": {
+      "n": 0,
+      "e": 0,
+      "s": 0,
+      "w": 0
+     },
+     "paved": 0,
+     "sewer": 0,
+     "buildings": [
+      {
+       "uid": "y8r6cbn",
+       "type": "house",
+       "r": 2,
+       "c": 2,
+       "w": 1,
+       "h": 1,
+       "disc": false
+      },
+      {
+       "uid": "6roymwq",
+       "type": "house",
+       "r": 4,
+       "c": 2,
+       "w": 1,
+       "h": 1,
+       "disc": false
+      },
+      {
+       "uid": "5xhpqyq",
+       "type": "house",
+       "r": 1,
+       "c": 1,
+       "w": 1,
+       "h": 1,
+       "disc": false
+      },
+      {
+       "uid": "0qdgxfc",
+       "type": "tavern",
+       "r": 2,
+       "c": 3,
+       "w": 1,
+       "h": 1,
+       "disc": false
+      },
+      {
+       "uid": "ieweas9",
+       "type": "shop",
+       "r": 3,
+       "c": 2,
+       "w": 1,
+       "h": 1,
+       "disc": false
+      },
+      {
+       "uid": "lx4nbxr",
+       "type": "inn",
+       "r": 1,
+       "c": 2,
+       "w": 1,
+       "h": 1,
+       "disc": false
+      },
+      {
+       "uid": "op7us6n",
+       "type": "shrine",
+       "r": 3,
+       "c": 3,
+       "w": 1,
+       "h": 1,
+       "disc": false
+      },
+      {
+       "uid": "dptww1j",
+       "type": "watchtower",
+       "r": 1,
+       "c": 3,
+       "w": 1,
+       "h": 1,
+       "disc": false
+      },
+      {
+       "uid": "i9gbebj",
+       "type": "park",
+       "r": 4,
+       "c": 3,
+       "w": 1,
+       "h": 1,
+       "disc": false
+      },
+      {
+       "uid": "xc0hqlq",
+       "type": "market",
+       "r": 4,
+       "c": 4,
+       "w": 2,
+       "h": 1,
+       "disc": false
+      },
+      {
+       "uid": "kemac7q",
+       "type": "house",
+       "r": 3,
+       "c": 4,
+       "w": 1,
+       "h": 1,
+       "disc": false
+      },
+      {
+       "uid": "b1m9mhi",
+       "type": "house",
+       "r": 3,
+       "c": 5,
+       "w": 1,
+       "h": 1,
+       "disc": false
+      }
+     ],
+     "overlays": []
+    }
+   ]
+  }
+ ],
+ "cur": "0joobpf",
+ "kingdom": {
+  "name": "Moje království",
+  "players": "",
+  "gm": "",
+  "align": "N",
+  "size": 1,
+  "treasury": 0,
+  "famebase": 1,
+  "infbase": 0,
+  "tax": "none",
+  "hol": "none",
+  "pro": "none",
+  "consAdj": 0,
+  "other": {
+   "e": 0,
+   "l": 0,
+   "s": 0,
+   "u": 0
+  },
+  "ruler": [
+   "e"
+  ],
+  "spy": "e",
+  "roles": {
+   "ruler": {
+    "on": true,
+    "name": "",
+    "mod": 0,
+    "feat": false
+   },
+   "consort": {
+    "on": false,
+    "name": "",
+    "mod": 0,
+    "feat": false
+   },
+   "councilor": {
+    "on": true,
+    "name": "",
+    "mod": 0,
+    "feat": false
+   },
+   "general": {
+    "on": true,
+    "name": "",
+    "mod": 0,
+    "feat": false
+   },
+   "diplomat": {
+    "on": true,
+    "name": "",
+    "mod": 0,
+    "feat": false
+   },
+   "heir": {
+    "on": false,
+    "name": "",
+    "mod": 0,
+    "feat": false
+   },
+   "priest": {
+    "on": true,
+    "name": "",
+    "mod": 0,
+    "feat": false
+   },
+   "magister": {
+    "on": true,
+    "name": "",
+    "mod": 0,
+    "feat": false
+   },
+   "marshal": {
+    "on": true,
+    "name": "",
+    "mod": 0,
+    "feat": false
+   },
+   "enforcer": {
+    "on": false,
+    "name": "",
+    "mod": 0,
+    "feat": false
+   },
+   "spymaster": {
+    "on": true,
+    "name": "",
+    "mod": 0,
+    "feat": false
+   },
+   "treasurer": {
+    "on": true,
+    "name": "",
+    "mod": 0,
+    "feat": false
+   },
+   "viceroy": {
+    "on": false,
+    "name": "",
+    "mod": 0,
+    "feat": false
+   },
+   "warden": {
+    "on": true,
+    "name": "",
+    "mod": 0,
+    "feat": false
+   }
+  },
+  "trade": [],
+  "notes": ""
+ }
+}
