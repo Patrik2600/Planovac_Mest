@@ -1,5 +1,5 @@
 {
- "_savedAt": "2026-11-10T15:57:09.902Z",
+ "_savedAt": "2026-11-10T16:12:51.371Z",
  "cities": [
   {
    "id": "0joobpf",
@@ -263,14 +263,39 @@
    "name": "Ellenmar",
    "terrain": "Forest",
    "cd": 0,
-   "mi": {},
+   "mi": {
+    "4aps6f4_medium0": {
+     "name": "",
+     "url": "",
+     "roll": 68,
+     "kind": "potion"
+    },
+    "4aps6f4_minor0": {
+     "name": "",
+     "url": "",
+     "roll": 91,
+     "kind": "potion"
+    },
+    "4aps6f4_minor1": {
+     "name": "",
+     "url": "",
+     "roll": 58,
+     "kind": "wondrous item"
+    },
+    "4aps6f4_minor2": {
+     "name": "",
+     "url": "",
+     "roll": 70,
+     "kind": "scroll"
+    }
+   },
    "districts": [
     {
      "borders": {
-      "n": "land",
-      "e": "land",
-      "s": "land",
-      "w": "land"
+      "n": "water",
+      "e": "water",
+      "s": "water",
+      "w": "water"
      },
      "wall": {
       "n": 0,
@@ -307,6 +332,249 @@
        "type": "park",
        "r": 3,
        "c": 3,
+       "w": 1,
+       "h": 1,
+       "disc": false
+      },
+      {
+       "uid": "4aps6f4",
+       "type": "magacad",
+       "r": 0,
+       "c": 4,
+       "w": 2,
+       "h": 1,
+       "disc": false
+      },
+      {
+       "uid": "tk1b4i6",
+       "type": "library",
+       "r": 1,
+       "c": 5,
+       "w": 1,
+       "h": 1,
+       "disc": false
+      },
+      {
+       "uid": "b2gwcwz",
+       "type": "caster",
+       "r": 1,
+       "c": 4,
+       "w": 1,
+       "h": 1,
+       "disc": false
+      },
+      {
+       "uid": "i7rs5a6",
+       "type": "university",
+       "r": 2,
+       "c": 4,
+       "w": 2,
+       "h": 2,
+       "disc": false
+      },
+      {
+       "uid": "lhhhu37",
+       "type": "pier",
+       "r": 0,
+       "c": 2,
+       "w": 1,
+       "h": 1,
+       "disc": false
+      },
+      {
+       "uid": "5hb4b6m",
+       "type": "house",
+       "r": 0,
+       "c": 3,
+       "w": 1,
+       "h": 1,
+       "disc": false
+      },
+      {
+       "uid": "kjyp6sk",
+       "type": "granary",
+       "r": 1,
+       "c": 2,
+       "w": 1,
+       "h": 1,
+       "disc": false
+      },
+      {
+       "uid": "wqdmmq2",
+       "type": "inn",
+       "r": 1,
+       "c": 3,
+       "w": 1,
+       "h": 1,
+       "disc": false
+      },
+      {
+       "uid": "9xfzvzn",
+       "type": "shrine",
+       "r": 3,
+       "c": 2,
+       "w": 1,
+       "h": 1,
+       "disc": false
+      },
+      {
+       "uid": "56w7plr",
+       "type": "house",
+       "r": 0,
+       "c": 0,
+       "w": 1,
+       "h": 1,
+       "disc": false
+      },
+      {
+       "uid": "uxgka3k",
+       "type": "herbalist",
+       "r": 0,
+       "c": 1,
+       "w": 1,
+       "h": 1,
+       "disc": false
+      },
+      {
+       "uid": "tnbr93i",
+       "type": "theater",
+       "r": 1,
+       "c": 0,
+       "w": 2,
+       "h": 1,
+       "disc": false
+      },
+      {
+       "uid": "i6szl4s",
+       "type": "artisan",
+       "r": 2,
+       "c": 1,
+       "w": 1,
+       "h": 1,
+       "disc": false
+      },
+      {
+       "uid": "3z4onui",
+       "type": "house",
+       "r": 2,
+       "c": 0,
+       "w": 1,
+       "h": 1,
+       "disc": false
+      },
+      {
+       "uid": "betib0h",
+       "type": "house",
+       "r": 3,
+       "c": 0,
+       "w": 1,
+       "h": 1,
+       "disc": false
+      },
+      {
+       "uid": "h8chcrg",
+       "type": "luxury",
+       "r": 3,
+       "c": 1,
+       "w": 1,
+       "h": 1,
+       "disc": false
+      },
+      {
+       "uid": "5y4wxj2",
+       "type": "townhall",
+       "r": 4,
+       "c": 4,
+       "w": 2,
+       "h": 1,
+       "disc": false
+      },
+      {
+       "uid": "tk38bfx",
+       "type": "house",
+       "r": 5,
+       "c": 4,
+       "w": 1,
+       "h": 1,
+       "disc": false
+      },
+      {
+       "uid": "apmmwlq",
+       "type": "tradeshop",
+       "r": 5,
+       "c": 5,
+       "w": 1,
+       "h": 1,
+       "disc": false
+      },
+      {
+       "uid": "wq0oe41",
+       "type": "magicshop",
+       "r": 4,
+       "c": 3,
+       "w": 1,
+       "h": 1,
+       "disc": false
+      },
+      {
+       "uid": "qxq3w40",
+       "type": "house",
+       "r": 4,
+       "c": 2,
+       "w": 1,
+       "h": 1,
+       "disc": false
+      },
+      {
+       "uid": "m1tv5ly",
+       "type": "house",
+       "r": 5,
+       "c": 3,
+       "w": 1,
+       "h": 1,
+       "disc": false
+      },
+      {
+       "uid": "fzmly5b",
+       "type": "watchtower",
+       "r": 5,
+       "c": 2,
+       "w": 1,
+       "h": 1,
+       "disc": false
+      },
+      {
+       "uid": "uppbdzu",
+       "type": "tavern",
+       "r": 4,
+       "c": 1,
+       "w": 1,
+       "h": 1,
+       "disc": false
+      },
+      {
+       "uid": "cw2i3ib",
+       "type": "house",
+       "r": 4,
+       "c": 0,
+       "w": 1,
+       "h": 1,
+       "disc": false
+      },
+      {
+       "uid": "8zt2gft",
+       "type": "house",
+       "r": 5,
+       "c": 1,
+       "w": 1,
+       "h": 1,
+       "disc": false
+      },
+      {
+       "uid": "mecwycz",
+       "type": "stable",
+       "r": 5,
+       "c": 0,
        "w": 1,
        "h": 1,
        "disc": false
