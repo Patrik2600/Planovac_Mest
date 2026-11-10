@@ -1,5 +1,5 @@
 {
- "_savedAt": "2026-11-10T14:17:03.904Z",
+ "_savedAt": "2026-11-10T14:22:56.855Z",
  "cities": [
   {
    "id": "0joobpf",
@@ -156,6 +156,66 @@
       }
      ],
      "overlays": []
+    },
+    {
+     "borders": {
+      "n": "land",
+      "e": "land",
+      "s": "water",
+      "w": "land"
+     },
+     "wall": {
+      "n": 0,
+      "e": 0,
+      "s": 0,
+      "w": 0
+     },
+     "gate": {
+      "n": 0,
+      "e": 0,
+      "s": 0,
+      "w": 0
+     },
+     "moat": {
+      "n": 0,
+      "e": 0,
+      "s": 0,
+      "w": 0
+     },
+     "paved": 0,
+     "sewer": 0,
+     "buildings": [],
+     "overlays": []
+    },
+    {
+     "borders": {
+      "n": "land",
+      "e": "land",
+      "s": "water",
+      "w": "land"
+     },
+     "wall": {
+      "n": 0,
+      "e": 0,
+      "s": 0,
+      "w": 0
+     },
+     "gate": {
+      "n": 0,
+      "e": 0,
+      "s": 0,
+      "w": 0
+     },
+     "moat": {
+      "n": 0,
+      "e": 0,
+      "s": 0,
+      "w": 0
+     },
+     "paved": 0,
+     "sewer": 0,
+     "buildings": [],
+     "overlays": []
     }
    ]
   },
@@ -197,9 +257,142 @@
      "overlays": []
     }
    ]
+  },
+  {
+   "id": "2n3mwzt",
+   "name": "Elfí město",
+   "terrain": "Plains",
+   "cd": 0,
+   "mi": {},
+   "districts": [
+    {
+     "borders": {
+      "n": "land",
+      "e": "land",
+      "s": "land",
+      "w": "land"
+     },
+     "wall": {
+      "n": 0,
+      "e": 0,
+      "s": 0,
+      "w": 0
+     },
+     "gate": {
+      "n": 0,
+      "e": 0,
+      "s": 0,
+      "w": 0
+     },
+     "moat": {
+      "n": 0,
+      "e": 0,
+      "s": 0,
+      "w": 0
+     },
+     "paved": 0,
+     "sewer": 0,
+     "buildings": [],
+     "overlays": []
+    }
+   ]
+  },
+  {
+   "id": "3qc6jt7",
+   "name": "Basgiat",
+   "terrain": "Plains",
+   "cd": 0,
+   "mi": {},
+   "districts": [
+    {
+     "borders": {
+      "n": "land",
+      "e": "land",
+      "s": "land",
+      "w": "land"
+     },
+     "wall": {
+      "n": 0,
+      "e": 0,
+      "s": 0,
+      "w": 0
+     },
+     "gate": {
+      "n": 0,
+      "e": 0,
+      "s": 0,
+      "w": 0
+     },
+     "moat": {
+      "n": 0,
+      "e": 0,
+      "s": 0,
+      "w": 0
+     },
+     "paved": 0,
+     "sewer": 0,
+     "buildings": [
+      {
+       "uid": "hp340zr",
+       "type": "castle",
+       "r": 2,
+       "c": 2,
+       "w": 2,
+       "h": 2,
+       "disc": false
+      },
+      {
+       "uid": "gtyxyn1",
+       "type": "milacad",
+       "r": 0,
+       "c": 2,
+       "w": 2,
+       "h": 1,
+       "disc": false
+      },
+      {
+       "uid": "4v4e89y",
+       "type": "garrison",
+       "r": 0,
+       "c": 0,
+       "w": 2,
+       "h": 1,
+       "disc": false
+      },
+      {
+       "uid": "ni184rs",
+       "type": "smithy",
+       "r": 1,
+       "c": 5,
+       "w": 1,
+       "h": 1,
+       "disc": false
+      },
+      {
+       "uid": "f4n9t1q",
+       "type": "house",
+       "r": 0,
+       "c": 5,
+       "w": 1,
+       "h": 1,
+       "disc": false
+      },
+      {
+       "uid": "effs4fg",
+       "type": "tavern",
+       "r": 0,
+       "c": 4,
+       "w": 1,
+       "h": 1,
+       "disc": false
+      }
+     ],
+     "overlays": []
+    }
+   ]
   }
  ],
- "cur": "fwa3aa9",
+ "cur": "3qc6jt7",
  "kingdom": {
   "name": "Moje království",
   "players": "",
