@@ -1,5 +1,5 @@
 {
- "_savedAt": "2026-11-10T14:42:00.300Z",
+ "_savedAt": "2026-11-10T15:57:09.902Z",
  "cities": [
   {
    "id": "0joobpf",
@@ -260,8 +260,8 @@
   },
   {
    "id": "2n3mwzt",
-   "name": "Elfí město",
-   "terrain": "Plains",
+   "name": "Ellenmar",
+   "terrain": "Forest",
    "cd": 0,
    "mi": {},
    "districts": [
@@ -292,7 +292,26 @@
      },
      "paved": 0,
      "sewer": 0,
-     "buildings": [],
+     "buildings": [
+      {
+       "uid": "o3tn4kj",
+       "type": "villa",
+       "r": 2,
+       "c": 2,
+       "w": 2,
+       "h": 1,
+       "disc": false
+      },
+      {
+       "uid": "0wd5ybs",
+       "type": "park",
+       "r": 3,
+       "c": 3,
+       "w": 1,
+       "h": 1,
+       "disc": false
+      }
+     ],
      "overlays": []
     }
    ]
@@ -392,7 +411,7 @@
    ]
   }
  ],
- "cur": "3qc6jt7",
+ "cur": "2n3mwzt",
  "kingdom": {
   "name": "Moje království",
   "players": "",
