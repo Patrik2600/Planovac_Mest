@@ -433,13 +433,13 @@ var DISC = {
 
 /* ---------- state ---------- */
 var KEY = 'mestsky-planovac-v1';
-var S, UI = {modal:null, confirm:null, king:false, miOpen:false, income:null, rolesOpen:true};
+var S, UI = {modal:null, confirm:null, king:false, econ:false, miOpen:false, income:null, rolesOpen:true};
 var DBN = null, HAD_LOCAL = false, SH = {cur:null, prev:null, loading:false, newer:false, busy:false};
 function uid() { return Math.random().toString(36).slice(2, 9); }
 function newDistrict() { return {borders:{n:'land',e:'land',s:'land',w:'land'}, wall:{n:0,e:0,s:0,w:0}, gate:{n:0,e:0,s:0,w:0}, moat:{n:0,e:0,s:0,w:0}, paved:0, sewer:0, buildings:[], overlays:[]}; }
 function newKingdom() {
   var K = {name:'Moje království', players:'', gm:'', align:'N', size:1, treasury:0, famebase:1, infbase:0, tax:'none', hol:'none', pro:'none', consAdj:0,
-    other:{e:0, l:0, s:0, u:0}, ruler:['e'], spy:'e', roles:{}, trade:[], notes:''};
+    other:{e:0, l:0, s:0, u:0}, ruler:['e'], spy:'e', roles:{}, trade:[], notes:'', soldBP:0, incomeBP:0, bought:0, sold:[], gp:[]};
   ROLES.forEach(function (R) { K.roles[R.id] = {on:!R.opt, name:'', mod:0, feat:false}; });
   return K;
 }
@@ -450,6 +450,7 @@ function norm(s) {
   K.roles = K.roles || {};
   ROLES.forEach(function (R) { if (!K.roles[R.id]) K.roles[R.id] = {on:!R.opt, name:'', mod:0, feat:false}; });
   K.ruler = (K.ruler && K.ruler.length) ? K.ruler : ['e']; K.trade = K.trade || [];
+  K.soldBP = +K.soldBP || 0; K.incomeBP = +K.incomeBP || 0; K.bought = +K.bought || 0; K.sold = K.sold || []; K.gp = K.gp || [];
   s.kingdom = K; return s;
 }
 function newCity(name) { return {id:uid(), name:name, terrain:'Plains', cd:0, mi:{}, districts:[newDistrict()]}; }
@@ -477,6 +478,13 @@ function sg(n) { return (n > 0 ? '+' : n < 0 ? '−' : '') + Math.abs(n); }
 function T(r) { return r + Math.floor(r / 2); }
 function lotName(r, c) { return String.fromCharCode(65 + c) + (r + 1); }
 function bpOf(b) { return DEF[b.type].bp * (b.disc ? 0.5 : 1); }
+var TIERBP = {minor:2, medium:8, major:15};
+function cityBPs(city) {
+  var full = 0, save = 0;
+  city.districts.forEach(function (d) { d.buildings.forEach(function (b) { var D = DEF[b.type]; full += D.bp; if (b.disc) save += D.bp * 0.5; }); });
+  return {full:full, save:save};
+}
+function bpTotal(X) { var K = S.kingdom; return (+K.treasury || 0) - X.spent + (+K.soldBP || 0) + (+K.incomeBP || 0); }
 function fmt(n) { return (Math.round(n * 10) / 10).toString().replace('.', ','); }
 function occ(d) {
   var g = []; for (var r = 0; r < 6; r++) { g.push([null, null, null, null, null, null]); }
@@ -988,20 +996,13 @@ function kingdomHTML() {
 
   h += '<section class="card"><div class="pan">';
   h += '<div><div class="h3">Unrest</div><button class="tot big2" data-act="kbrk" data-k="u" style="background:none;border:0;padding:0;color:' + (X.unrest >= 11 ? 'var(--bad)' : 'inherit') + '">' + X.unrest + ' ▸</button>' + (X.unrest >= 20 ? '<div class="note">Anarchie!</div>' : X.unrest >= 11 ? '<div class="note" style="color:var(--bad)">11+: království ztrácí hexy.</div>' : '') + (X.upUp ? '<div class="note">Neobsazené role: při Upkeepu Unrest +' + X.upUp + '.</div>' : '') + '<label class="field" style="margin-top:6px">Ruční úprava ' + kin('other.u', K.other.u, {t:'n', label:'Ruční úprava Unrest'}) + '</label></div>';
-  var left = (+K.treasury || 0) - X.spent;
-  h += '<div><div class="h3">Treasury (BP)</div>' + kin('treasury', K.treasury, {t:'n', label:'Treasury'}) + '<div class="note">Města stála ' + fmt(X.spent) + ' BP; zbývá ' + fmt(left) + ' BP.</div></div>';
+  var left = bpTotal(X);
+  h += '<div><div class="h3">Treasury (BP)</div>' + kin('treasury', K.treasury, {t:'n', label:'Treasury'}) + '<div class="note">Vlastní nastavení. Stavba stála ' + fmt(X.spent) + ' BP, prodané itemy +' + fmt(+K.soldBP || 0) + ' BP, daně +' + fmt(+K.incomeBP || 0) + ' BP → BP celkem <b>' + fmt(left) + '</b> (rozpad v záložce Economy).</div></div>';
   h += '<div><div class="h3">Consumption</div><div class="big2">' + X.cons + '</div><label class="field" style="margin-top:6px">Úprava (Farmy −2…) ' + kin('consAdj', K.consAdj, {t:'n', label:'Úprava Consumption'}) + '</label><div class="note">Size + Holiday + Promotion + úprava, min. 0.</div></div>';
   h += '<div><div class="h3">Fame</div><button class="tot big2" data-act="kbrk" data-k="f" style="background:none;border:0;padding:0;color:inherit">' + X.fame + ' ▸</button><label class="field" style="margin-top:6px">Základ ' + kin('famebase', K.famebase, {t:'n', label:'Základ Fame'}) + '</label></div>';
   h += '<div><div class="h3">Infamy</div><div class="big2">' + X.inf + '</div><label class="field" style="margin-top:6px">Základ ' + kin('infbase', K.infbase, {t:'n', label:'Základ Infamy'}) + '</label></div>';
   h += '<div><div class="h3">Population</div><div class="big2">' + X.pop.toLocaleString('cs-CZ') + '</div><div class="note">Součet měst.</div></div>';
   h += '</div></section>';
-
-  h += '<section class="card"><div class="h3">Příjem (Income): Economy check</div>';
-  h += '<div class="row" style="margin-top:8px"><button class="btn primary" data-act="income">Hodit d20 pro daně</button>';
-  if (UI.income) h += '<button class="btn" data-act="incomeadd">Přičíst ' + UI.income.bp + ' BP do Treasury</button>';
-  h += '</div>';
-  if (UI.income) h += '<div class="incres">d20 = ' + UI.income.r + ' ' + sg(UI.income.e) + ' Economy − ' + UI.income.u + ' Unrest = ' + UI.income.tot + (UI.income.treasurer ? ' → daně ⌊' + UI.income.tot + ' / 5⌋ = ' + UI.income.bp + ' BP' : ' → bez Treasurera se daně nevybírají (0 BP)') + '</div>';
-  h += '<p class="note">Pravidlo: Economy check = d20 + Economy − Unrest; do Treasury jde výsledek ÷ 5 (dolů).</p></section>';
 
   h += '<section class="card"><div class="h3">Edicts</div><div class="edicts" style="margin-top:8px">';
   h += fld('Taxation', ksel('tax', K.tax, Object.keys(TAX).map(function (k) { return [k, TAX[k][2] + ' · Eco ' + sg(TAX[k][0]) + ', Loy ' + sg(TAX[k][1])]; }), 'Taxation'));
@@ -1070,7 +1071,8 @@ function kingdomMagicHTML() {
         rows += '<div class="slot t-' + tid + '"><span class="tier" style="width:auto;min-width:58px;font-weight:600;color:var(--ink)">' + esc(c.name) + '</span>';
         rows += (u ? '<a class="lnk" href="' + esc(u.trim()) + '" target="_blank" rel="noopener" title="Otevřít na Archives of Nethys">' + esc(st.name) + ' ↗</a>' : '<b>' + esc(st.name) + '</b>');
         rows += '<small style="font-family:var(--mono);font-size:12px;color:var(--ink-2)">' + esc(DEF[x.b.type].name) + ' · D' + (x.di + 1) + ' ' + lotName(x.b.r, x.b.c) + '</small>';
-        rows += '<button class="btn danger" data-act="mclear" data-city="' + esc(c.id) + '" data-key="' + esc(x.key) + '" title="Vyprázdnit slot (item zmizí ze seznamu)" aria-label="Vyprázdnit slot: ' + esc(st.name) + '">×</button></div>';
+        rows += '<button class="btn" data-act="misell" data-city="' + esc(c.id) + '" data-key="' + esc(x.key) + '" data-tier="' + tid + '" title="Prodat za ' + TIERBP[tid] + ' BP (připíše se k BP a item zmizí, slot se uvolní)">Prodat +' + TIERBP[tid] + ' BP</button>';
+        rows += '<button class="btn" data-act="mibuy" data-city="' + esc(c.id) + '" data-key="' + esc(x.key) + '" data-tier="' + tid + '" title="Koupit: nic nestojí, item zmizí a slot se uvolní">Koupit</button></div>';
       });
     });
     h += '<div style="margin-top:10px"><b class="t-' + tid + '">' + T[1] + '</b> <small style="color:var(--ink-2)">· zaplněno ' + n + ' z ' + cap + ' slotů</small></div>';
@@ -1078,6 +1080,59 @@ function kingdomMagicHTML() {
   });
   h += '<p class="note" style="margin-bottom:0">Celkem zaplněno ' + gt.minor + ' minor, ' + gt.medium + ' medium, ' + gt.major + ' major. Sloty dávají budovy (Alchemist, Herbalist, Shrine, Market, Temple, Magic Shop…); počty jsou u každého města.</p>';
   return h + '</section>';
+}
+function econHTML() {
+  var K = S.kingdom, X = calcKingdom(), h = '<div class="kview">';
+  var soldBP = +K.soldBP || 0, incBP = +K.incomeBP || 0, bpT = bpTotal(X);
+  h += '<section class="card"><h2 style="font-size:24px">Economy</h2><p class="note" style="margin-bottom:0">BP celkem = vlastní nastavení − stavba (počítá se samo z plánů měst, včetně slev na související budovy) + prodané magic itemy + daně z Economy checků.</p></section>';
+
+  h += '<section class="card"><div class="h3">BP: z čeho to máme</div>';
+  h += '<label class="field" style="margin-top:8px">Vlastní nastavení BP (kolik BP mám ručně)' + kin('treasury', K.treasury, {t:'n', label:'Vlastní nastavení BP'}) + '</label>';
+  h += '<div style="margin-top:8px">';
+  h += '<div class="kv"><span>Vlastní nastavení</span><b>' + fmt(+K.treasury || 0) + '</b></div>';
+  S.cities.forEach(function (c, i) {
+    var cc = X.cs[i], cb = cityBPs(c);
+    h += '<div class="kv"><span>· ' + esc(c.name) + ' — budovy (se slevou)</span><b>−' + fmt(cc.bBP) + '</b></div>';
+    if (cb.save) h += '<div class="kv"><span>· ' + esc(c.name) + ' — slevy na budovy (související budovy ve městě)</span><b style="color:var(--ok, #6c6)">(+ sleva ' + fmt(cb.save) + ' BP)</b></div>';
+    var extra = cc.oBP + cc.fBP + cc.iBP;
+    if (extra) h += '<div class="kv"><span>· ' + esc(c.name) + ' — vodní cesty, zdi, Město, kanalizace…</span><b>−' + fmt(extra) + '</b></div>';
+    if (cc.prep) h += '<div class="kv"><span>· ' + esc(c.name) + ' — příprava terénu / districty</span><b>−' + fmt(cc.prep) + '</b></div>';
+  });
+  h += '<div class="kv"><span>Stavba celkem (automaticky)</span><b>−' + fmt(X.spent) + '</b></div>';
+  h += '<div class="kv"><span>+ Prodané magic itemy (minor 2 / medium 8 / major 15 BP)</span><b>+' + fmt(soldBP) + '</b></div>';
+  h += '<div class="kv"><span>+ Daně z Economy checků</span><b>+' + fmt(incBP) + '</b></div>';
+  h += '<div class="kv" style="margin-top:6px"><span><b>BP celkem</b></span><b style="font-family:var(--mono);font-size:22px">' + fmt(bpT) + '</b></div>';
+  h += '</div>';
+  h += '<p class="note" style="margin-bottom:0">Sleva ½ BP se počítá automaticky při stavbě, pokud ve městě už stojí související budova (např. Academy vedle Caster’s Tower / Library / Magic Shop). Ručně ji jde pak ještě přepnout v detailu stavby.</p></section>';
+
+  h += '<section class="card"><div class="h3">Peníze (gp): zdroje</div><div style="margin-top:8px">';
+  h += '<div class="trow" style="font-size:12px;color:var(--ink-2);text-transform:uppercase;grid-template-columns:minmax(0,2fr) minmax(0,1.2fr) 110px auto"><span>Zdroj (sawmill, doly…)</span><span>Kde</span><span>gp</span><span></span></div>';
+  var gsum = 0;
+  K.gp.forEach(function (r, i) {
+    gsum += +r.gp || 0;
+    h += '<div class="trow" style="grid-template-columns:minmax(0,2fr) minmax(0,1.2fr) 110px auto">' + kin('gp.' + i + '.src', r.src, {ph:'Sawmill, stříbrný důl…', label:'Zdroj peněz'}) + kin('gp.' + i + '.where', r.where, {ph:'hex / město', label:'Kde'}) + kin('gp.' + i + '.gp', r.gp, {t:'n', label:'gp'}) + '<button class="btn danger" data-act="gpdel" data-i="' + i + '" aria-label="Smazat zdroj peněz">×</button></div>';
+  });
+  h += '</div><div class="row"><button class="btn" data-act="gpadd">+ Přidat zdroj</button><span class="note" style="margin:0">gp celkem: <b>' + fmt(gsum) + '</b></span></div>';
+  h += '<p class="note" style="margin-bottom:0">Zdroje peněz (sawmill, doly, farmy, celnice…) zapiš ručně; suma se počítá sama. BP ze zdrojů se zapisují přes stavby a daně výše.</p></section>';
+
+  h += '<section class="card"><div class="h3">Příjem (Income): Economy check</div>';
+  h += '<div class="row" style="margin-top:8px"><button class="btn primary" data-act="income">Hodit d20 pro daně</button>';
+  if (UI.income) h += '<button class="btn" data-act="incomeadd">Přičíst ' + UI.income.bp + ' BP k BP</button>';
+  h += '</div>';
+  if (UI.income) h += '<div class="incres">d20 = ' + UI.income.r + ' ' + sg(UI.income.e) + ' Economy − ' + UI.income.u + ' Unrest = ' + UI.income.tot + (UI.income.treasurer ? ' → daně ⌊' + UI.income.tot + ' / 5⌋ = ' + UI.income.bp + ' BP' : ' → bez Treasurera se daně nevybírají (0 BP)') + '</div>';
+  h += '<p class="note" style="margin-bottom:0">Pravidlo: Economy check = d20 + Economy − Unrest; výsledek ÷ 5 (dolů) jde do BP. Přičtené BP se připíšou do řádku „Daně z Economy checků“ výše.</p></section>';
+
+  h += '<section class="card"><div class="h3">Magic itemy: prodáno / koupeno</div>';
+  var sold = K.sold || [];
+  if (sold.length) {
+    sold.slice().reverse().forEach(function (s2, i) {
+      var t2 = TIERS.filter(function (T2) { return T2[0] === s2.tier; })[0];
+      h += '<div class="kv"><span>' + (t2 ? esc(t2[1]) : '') + ': ' + esc(s2.n) + '</span><b>+' + fmt(s2.bp) + ' BP</b></div>';
+    });
+    h += '<div class="kv" style="margin-top:6px"><span><b>Prodat celkem</b></span><b>+' + fmt(soldBP) + ' BP</b></div>';
+  } else h += '<p class="note" style="margin:8px 0 0">Zatím nic prodáno.</p>';
+  h += '<p class="note" style="margin-bottom:0">Koupeno itemů: <b>' + (+K.bought || 0) + '</b> (koupení nic nestojí). Prodat/koupit najdeš u každého itemu v záložce Království.</p></section>';
+  return h + '</div>';
 }
 function kset(path, v) {
   var p = path.split('.'), o = S.kingdom;
@@ -1265,12 +1320,14 @@ function render() {
   all.forEach(function (c) { K.bp += c.total; K.e += c.A.e; K.l += c.A.l; K.s += c.A.s; K.u += c.A.u; });
   var h = '';
   h += '<div class="top"><div><h1>Plánovač měst</h1><div class="sub">Mřížka districtu z Pathfinder Kingdom Building: 9 bloků po 4 lotech</div></div>';
-  h += '<div class="kingdom" title="Součet všech měst"><span class="kpill">Města <b>' + S.cities.length + '</b></span><span class="kpill">BP <b>' + fmt(K.bp) + '</b></span><span class="kpill">Economy <b>' + sg(K.e) + '</b></span><span class="kpill">Loyalty <b>' + sg(K.l) + '</b></span><span class="kpill">Stability <b>' + sg(K.s) + '</b></span><span class="kpill">Unrest <b>' + sg(K.u) + '</b></span></div></div>';
+  h += '<div class="kingdom" title="Součet všech měst"><span class="kpill">Města <b>' + S.cities.length + '</b></span><span class="kpill" title="Celková cena postaveného (stavba, districty, zdi…). Skutečný zůstatek BP najdeš v záložce Economy.">Stavba BP <b>' + fmt(K.bp) + '</b></span><span class="kpill">Economy <b>' + sg(K.e) + '</b></span><span class="kpill">Loyalty <b>' + sg(K.l) + '</b></span><span class="kpill">Stability <b>' + sg(K.s) + '</b></span><span class="kpill">Unrest <b>' + sg(K.u) + '</b></span></div></div>';
   h += saveHTML();
   h += '<div class="tabs" role="group" aria-label="Města">';
   S.cities.forEach(function (c) { h += '<button class="tab" data-act="city" data-id="' + c.id + '" aria-pressed="' + (!UI.king && c.id === S.cur) + '">' + esc(c.name) + '</button>'; });
   h += '<button class="tab king" data-act="kingdom" aria-pressed="' + UI.king + '">♛ Království</button>';
+  h += '<button class="tab king" data-act="economy" aria-pressed="' + UI.econ + '">💰 Economy</button>';
   h += '<button class="tab add" data-act="addcity">+ Nové město</button></div>';
+  if (UI.econ) { h += econHTML(); commit(h); return; }
   if (UI.king) { h += kingdomHTML(); commit(h); return; }
 
   h += '<div class="layout"><div class="col">';
@@ -1448,8 +1505,8 @@ function act(a, t) {
   var city = curCity(), d = curD(), ds = t.dataset;
   if (a !== 'delcity' && a !== 'deldist') UI.confirm = null;
   switch (a) {
-    case 'city': S.cur = ds.id; UI.king = false; refresh(); break;
-    case 'addcity': var c = newCity('Město ' + (S.cities.length + 1)); S.cities.push(c); S.cur = c.id; refresh(); toast('Nové město přidáno (příprava ' + TERR[c.terrain][1] + ' BP)'); break;
+    case 'city': S.cur = ds.id; UI.king = false; UI.econ = false; refresh(); break;
+    case 'addcity': var c = newCity('Město ' + (S.cities.length + 1)); S.cities.push(c); S.cur = c.id; UI.econ = false; refresh(); toast('Nové město přidáno (příprava ' + TERR[c.terrain][1] + ' BP)'); break;
     case 'delcity':
       if (UI.confirm !== 'city') { UI.confirm = 'city'; render(); return; }
       UI.confirm = null; S.cities = S.cities.filter(function (x) { return x.id !== city.id; }); S.cur = S.cities[0].id; refresh(); break;
@@ -1469,7 +1526,8 @@ function act(a, t) {
     case 'close': closeModal(); break;
     case 'brk': UI.modal = {type:'brk', k:ds.k}; renderModal(); break;
     case 'kbrk': UI.modal = {type:'brk', k:ds.k, scope:'kingdom'}; renderModal(); break;
-    case 'kingdom': UI.king = true; closeModal(); render(); break;
+    case 'kingdom': UI.king = true; UI.econ = false; closeModal(); render(); break;
+    case 'economy': UI.econ = true; UI.king = false; refresh(); break;
     case 'rolestoggle': UI.rolesOpen = !UI.rolesOpen; render(); break;
     case 'save': if (DBN) saveShared(); else ghSave(); break;
     case 'ghtoken': if (ghSetToken()) { toast('Token uložen v tomto prohlížeči.'); render(); } break;
@@ -1487,9 +1545,27 @@ function act(a, t) {
       var XK = calcKingdom(), rr = 1 + Math.floor(Math.random() * 20), tt = rr + XK.total.e - XK.unrest;
       UI.income = {r:rr, e:XK.total.e, u:XK.unrest, tot:tt, treasurer:XK.treasurerOn, bp:XK.treasurerOn ? Math.max(0, Math.floor(tt / 5)) : 0};
       render(); break;
-    case 'incomeadd': if (UI.income) { S.kingdom.treasury = (+S.kingdom.treasury || 0) + UI.income.bp; UI.income = null; refresh(); } break;
+    case 'incomeadd': if (UI.income) { var ibp = UI.income.bp; S.kingdom.incomeBP = (+S.kingdom.incomeBP || 0) + ibp; UI.income = null; refresh(); toast('Daně připsány: +' + ibp + ' BP k BP celkem.'); } break;
     case 'migen': doGenItems(ds.scope === 'kingdom' ? null : city); break;
-    case 'mclear': var mcc = S.cities.filter(function (x) { return x.id === ds.city; })[0] || city; if (mcc.mi) mcc.mi[ds.key] = {name:'', url:'', roll:null, kind:''}; refresh(); break;
+    case 'misell':
+      var sc2 = S.cities.filter(function (x) { return x.id === ds.city; })[0] || city;
+      var st2 = sc2.mi && sc2.mi[ds.key], nm2 = st2 ? st2.name : '', bp2 = TIERBP[ds.tier] || 0;
+      S.kingdom.soldBP = (+S.kingdom.soldBP || 0) + bp2;
+      (S.kingdom.sold = S.kingdom.sold || []).push({n:nm2, tier:ds.tier, bp:bp2});
+      delete sc2.mi[ds.key];
+      refresh();
+      toast('Prodat: ' + nm2 + ' → +' + bp2 + ' BP (slot uvolněn).');
+      break;
+    case 'mibuy':
+      var sc3 = S.cities.filter(function (x) { return x.id === ds.city; })[0] || city;
+      var nm3 = sc3.mi && sc3.mi[ds.key] ? sc3.mi[ds.key].name : '';
+      S.kingdom.bought = (+S.kingdom.bought || 0) + 1;
+      delete sc3.mi[ds.key];
+      refresh();
+      toast('Koupit: ' + nm3 + ' → nic nestojí, slot uvolněn.');
+      break;
+    case 'gpadd': S.kingdom.gp.push({src:'', where:'', gp:0}); refresh(); break;
+    case 'gpdel': S.kingdom.gp.splice(+ds.i, 1); refresh(); break;
     case 'mupkeep':
       var sl = slotsOf(city), res = [];
       city.districts.forEach(function (dd, di) {
@@ -1505,11 +1581,13 @@ function act(a, t) {
     case 'orient': UI.modal.orient = ds.v; pickInner(); break;
     case 'place':
       var D = DEF[ds.id], m = UI.modal;
+      var cdisc = calcCity(city), autosave = !!(DISC[ds.id] && DISC[ds.id].some(function (t) { return cdisc.types[t]; }));
       if (D.kind === 'overlay') { d.overlays.push({uid:uid(), type:D.id, r:m.r, c:m.c}); }
       else {
         var fp = findFit(d, D, m.r, m.c, m.orient);
         if (!fp) { toast('Sem se nevejde'); return; }
-        d.buildings.push({uid:uid(), type:D.id, r:fp.r, c:fp.c, w:fp.w, h:fp.h, disc:false});
+        d.buildings.push({uid:uid(), type:D.id, r:fp.r, c:fp.c, w:fp.w, h:fp.h, disc:autosave});
+        if (autosave) toast(D.name + ': sleva ½ BP (' + fmt(D.bp * 0.5) + ' BP), ve městě už stojí související budova.');
       }
       closeModal(); refresh(); break;
     case 'disc': var g = occ(d), bb = g[UI.modal.r][UI.modal.c]; if (bb) bb.disc = !bb.disc; refresh(); break;
