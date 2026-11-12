@@ -433,13 +433,15 @@ var DISC = {
 
 /* ---------- state ---------- */
 var KEY = 'mestsky-planovac-v1';
-var S, UI = {modal:null, confirm:null, king:false, econ:false, miOpen:false, income:null, rolesOpen:true};
+var S, UI = {modal:null, confirm:null, king:false, econ:false, turn:false, miOpen:false, income:null, rolesOpen:true};
 var DBN = null, HAD_LOCAL = false, SH = {cur:null, prev:null, loading:false, newer:false, busy:false};
 function uid() { return Math.random().toString(36).slice(2, 9); }
 function newDistrict() { return {borders:{n:'land',e:'land',s:'land',w:'land'}, wall:{n:0,e:0,s:0,w:0}, gate:{n:0,e:0,s:0,w:0}, moat:{n:0,e:0,s:0,w:0}, paved:0, sewer:0, buildings:[], overlays:[]}; }
 function newKingdom() {
   var K = {name:'Moje království', players:'', gm:'', align:'N', size:1, treasury:0, famebase:1, infbase:0, tax:'none', hol:'none', pro:'none', consAdj:0,
-    other:{e:0, l:0, s:0, u:0}, ruler:['e'], spy:'e', roles:{}, trade:[], notes:'', soldBP:0, incomeBP:0, bought:0, sold:[], gp:[]};
+    other:{e:0, l:0, s:0, u:0}, ruler:['e'], spy:'e', roles:{}, trade:[], notes:'', soldBP:0, incomeBP:0, bought:0, sold:[], gp:[],
+    turn:{y:1, m:1}, evLast:0, held:-1, log:[], farms:0, fish:0, mods:{e:0, l:0, s:0}, temp:{e:0, l:0, s:0, ec:0, sc:0, lc:0},
+    tempM:{cor:0, cri:0, law:0, lor:0, pro:0, soc:0}, smods:{cor:0, cri:0, law:0, lor:0, pro:0, soc:0}, foodNext:1, lastEv:null, taxdiv:'3'};
   ROLES.forEach(function (R) { K.roles[R.id] = {on:!R.opt, name:'', mod:0, feat:false}; });
   return K;
 }
@@ -452,6 +454,15 @@ function norm(s) {
   K.ruler = (K.ruler && K.ruler.length) ? K.ruler : ['e']; K.trade = K.trade || [];
   K.soldBP = +K.soldBP || 0; K.incomeBP = +K.incomeBP || 0; K.bought = +K.bought || 0; K.sold = K.sold || []; K.gp = K.gp || [];
   K.gp.forEach(function (r) { r.cur = r.cur === 'bp' ? 'bp' : 'gp'; r.gp = +r.gp || 0; });
+  K.turn = K.turn || {y:1, m:1}; K.turn.y = +K.turn.y || 1; K.turn.m = Math.min(12, Math.max(1, +K.turn.m || 1));
+  K.evLast = K.evLast ? 1 : 0; K.held = K.held == null ? -1 : K.held; K.log = K.log || [];
+  K.farms = +K.farms || 0; K.fish = +K.fish || 0; K.foodNext = +K.foodNext || 1; K.taxdiv = K.taxdiv === '5' ? '5' : '3';
+  K.mods = K.mods || {e:0, l:0, s:0}; K.temp = K.temp || {e:0, l:0, s:0, ec:0, sc:0, lc:0};
+  K.tempM = K.tempM || {cor:0, cri:0, law:0, lor:0, pro:0, soc:0}; K.smods = K.smods || {cor:0, cri:0, law:0, lor:0, pro:0, soc:0};
+  ['e','l','s'].forEach(function (k) { K.mods[k] = +K.mods[k] || 0; K.temp[k] = +K.temp[k] || 0; });
+  ['ec','sc','lc'].forEach(function (k) { K.temp[k] = +K.temp[k] || 0; });
+  ['cor','cri','law','lor','pro','soc'].forEach(function (k) { K.tempM[k] = +K.tempM[k] || 0; K.smods[k] = +K.smods[k] || 0; });
+  K.lastEv = K.lastEv || null;
   s.kingdom = K; return s;
 }
 function newCity(name) { return {id:uid(), name:name, terrain:'Plains', cd:0, mi:{}, districts:[newDistrict()]}; }
@@ -944,6 +955,8 @@ function calcKingdom() {
   var tx = TAX[trOn ? K.tax : 'none'] || TAX.none, ho = HOL[coOn ? K.hol : 'none'] || HOL.none, pr = PRO[K.pro] || PRO.none;
   addM('e', 'Taxation: ' + tx[2], tx[0]); addM('l', 'Taxation: ' + tx[2], tx[1]);
   addM('l', 'Holiday: ' + ho[2], ho[0]); addM('s', 'Promotion: ' + pr[2], pr[0]);
+  ['e','l','s'].forEach(function (k) { addM(k, 'Události (trvalé)', +K.mods[k] || 0); });
+  ['e','l','s'].forEach(function (k) { addM(k, 'Dočasné (do příští Event fáze)', +K.temp[k] || 0); });
   ['e','l','s'].forEach(function (k) { addB(k, 'Ruční úprava', +K.other[k] || 0); });
   var sums = {u:0, f:0, cor:0, cri:0, law:0, lor:0, pro:0, soc:0}, pop = 0, spent = 0, districts = 0;
   cs.forEach(function (c, i) {
@@ -952,12 +965,17 @@ function calcKingdom() {
     Object.keys(sums).forEach(function (k) { sums[k] += c.A[k]; rec(k, nm, c.A[k]); });
     pop += c.pop; spent += c.total; districts += S.cities[i].districts.length;
   });
+  ['cor','cri','law','lor','pro','soc'].forEach(function (k) {
+    if (K.smods[k]) { sums[k] += K.smods[k]; rec(k, 'Události (trvalé)', K.smods[k]); }
+    if (K.tempM[k]) { sums[k] += K.tempM[k]; rec(k, 'Dočasné (události)', K.tempM[k]); }
+  });
   sums.u += +K.other.u || 0; rec('u', 'Ruční úprava', +K.other.u || 0);
   var fame = (+K.famebase || 0) + sums.f; rec('f', 'Základ (ručně)', +K.famebase || 0);
   var size = Math.max(0, Math.floor(+K.size || 0));
-  var cons = Math.max(0, size + ho[1] + pr[1] + (+K.consAdj || 0));
+  var consRaw = size + S.cities.length + ho[1] + pr[1] + (+K.consAdj || 0) - 2 * (+K.farms || 0) - (+K.fish || 0);
+  var cons = Math.max(0, consRaw);
   return {base:base, mod:mod, total:{e:base.e + mod.e, l:base.l + mod.l, s:base.s + mod.s}, unrest:Math.max(0, sums.u), unrestRaw:sums.u, upUp:upUp, vac:vac,
-    ctrl:20 + size + districts, cons:cons, fame:fame, inf:+K.infbase || 0, pop:pop, spent:spent, districts:districts, mods:sums, src:SRC, tx:tx, ho:ho, pr:pr,
+    ctrl:20 + size + districts, cons:cons, consRaw:consRaw, fame:fame, inf:+K.infbase || 0, pop:pop, spent:spent, districts:districts, mods:sums, src:SRC, tx:tx, ho:ho, pr:pr,
     treasurerOn:trOn, councilorOn:coOn, rulerN:rn, size:size, cs:cs};
 }
 function kin(path, val, o) {
@@ -1124,6 +1142,280 @@ function econHTML() {
   h += '</div>';
   if (UI.income) h += '<div class="incres">d20 = ' + UI.income.r + ' ' + sg(UI.income.e) + ' Economy − ' + UI.income.u + ' Unrest = ' + UI.income.tot + (UI.income.treasurer ? ' → daně ⌊' + UI.income.tot + ' / 5⌋ = ' + UI.income.bp + ' BP' : ' → bez Treasurera se daně nevybírají (0 BP)') + '</div>';
   h += '<p class="note" style="margin-bottom:0">Pravidlo: Economy check = d20 + Economy − Unrest; výsledek ÷ 5 (dolů) jde do BP. Přičtené BP se připíšou do řádku „Daně z Economy checků“ výše.</p></section>';
+  return h + '</div>';
+}
+/* ---------- Turn: celý rok království (1 turn = 1 měsíc) ---------- */
+var MONTHS = ['Abadius', 'Calistril', 'Pharast', 'Gozran', 'Desnus', 'Sarenith', 'Erastus', 'Arodus', 'Rova', 'Lamashan', 'Neth', 'Kuthona'];
+function dN(n) { return 1 + Math.floor(Math.random() * n); }
+function rollX(n) { var t = 0, r; do { r = dN(n); t += r; } while (r === n); return t; }
+function tlog(t) { var K = S.kingdom; K.log = K.log || []; K.log.push({y:K.turn.y, m:K.turn.m, t:t}); if (K.log.length > 400) K.log = K.log.slice(-400); }
+function addU(n, why) { S.kingdom.other.u = (+S.kingdom.other.u || 0) + n; tlog('Unrest ' + sg(n) + (why ? ' — ' + why : '')); }
+function EB(n, why) { S.kingdom.treasury = (+S.kingdom.treasury || 0) + n; tlog('BP ' + sg(n) + (why ? ' — ' + why : '')); }
+function addAttr(o, temp) { var K = S.kingdom, T = temp ? K.temp : K.mods; ['e','l','s'].forEach(function (k) { if (o[k]) T[k] = (+T[k] || 0) + o[k]; }); }
+function addMod(o, temp) { var K = S.kingdom, T = temp ? K.tempM : K.smods; ['cor','cri','law','lor','pro','soc'].forEach(function (k) { if (o[k]) T[k] = (+T[k] || 0) + o[k]; }); }
+function fmtAtt(o) { var a = []; if (o.e) a.push('Eco ' + sg(o.e)); if (o.l) a.push('Loy ' + sg(o.l)); if (o.s) a.push('Stab ' + sg(o.s)); return a.join(', '); }
+function fmtMod(o) { var N = {cor:'Corruption', cri:'Crime', law:'Law', lor:'Lore', pro:'Productivity', soc:'Society'}, a = []; for (var k in o) if (o[k]) a.push(N[k] + ' ' + sg(o[k])); return a.join(', '); }
+function EA(o, temp, why) { addAttr(o, temp); tlog((temp ? 'Dočasně: ' : '') + fmtAtt(o) + (why ? ' — ' + why : '')); }
+function EM(o, temp, why) { addMod(o, temp); tlog((temp ? 'Dočasně: ' : '') + fmtMod(o) + (why ? ' — ' + why : '')); }
+function EF(n, why) { S.kingdom.famebase = (+S.kingdom.famebase || 0) + n; tlog('Fame ' + sg(n) + (why ? ' — ' + why : '')); }
+function EI(n, why) { S.kingdom.infbase = (+S.kingdom.infbase || 0) + n; tlog('Infamy ' + sg(n) + (why ? ' — ' + why : '')); }
+function EFOOD(m) { S.kingdom.foodNext = m; tlog('Příští Upkeep: Consumption ×' + m); }
+function ENOTE(t) { tlog(t); }
+function ECHK(att, label, opts, pen, cont) {
+  var K = S.kingdom, X = calcKingdom(), r = dN(20);
+  var bonus = (att === 'l' ? (+K.temp.lc || 0) : att === 's' ? (+K.temp.sc || 0) : (+K.temp.ec || 0)) + (cont ? (+K.temp.lc || 0) : 0) + (pen || 0);
+  var total = r + X.total[att] - X.unrest + bonus;
+  var ok = r === 20 ? true : r === 1 ? false : total >= X.ctrl;
+  tlog(label + ': d20=' + r + (bonus ? ' (' + sg(bonus) + ')' : '') + ' → ' + total + ' vs DC ' + X.ctrl + ' → ' + (ok ? 'ÚSPĚCH' : 'SELHÁNÍ'));
+  if (ok) { if (opts && opts.ok) opts.ok(); } else if (opts && opts.fail) opts.fail();
+  return ok;
+}
+function ecoCount(city) { var n = 0; city.districts.forEach(function (d) { d.buildings.forEach(function (b) { var D = DEF[b.type]; if (D && (D.e || 0) > 0) n++; }); }); return n; }
+function plagueMods(city) {
+  var pen = 0, bon = 0;
+  city.districts.forEach(function (d) { d.buildings.forEach(function (b) {
+    if (['inn','pier','stable','stockyard','tenement','waterfront','foreign'].indexOf(b.type) >= 0) pen++;
+    if (['alchemist','cathedral','herbalist','hospital','temple'].indexOf(b.type) >= 0) bon++;
+  }); });
+  return pen - bon;
+}
+function cityAllB(city) { var all = []; city.districts.forEach(function (d, di) { (d.buildings || []).forEach(function (b) { all.push({d:d, b:b, di:di}); }); }); return all; }
+function destroyB(city, why) {
+  var all = cityAllB(city);
+  if (!all.length) { ENOTE('Nic ke zničení (město nemá budovy).'); return; }
+  var x = all[Math.floor(Math.random() * all.length)];
+  var lots = (DEF[x.b.type] && DEF[x.b.type].size) || 1;
+  x.d.buildings = x.d.buildings.filter(function (b) { return b.uid !== x.b.uid; });
+  addU(lots);
+  tlog('Zničena budova ' + DEF[x.b.type].name + ' (' + lots + ' lotů) · Unrest +' + lots + (why ? ' — ' + why : ''));
+}
+function evKingdomFeud(c) {
+  ECHK('l', 'Feud – Loyalty check', {ok:function () { addU(1, 'Feud ukončen, ale lidé jsou rozčileni'); },
+    fail:function () { EM({cor:1}); addU(rollX(6), 'Feud'); ENOTE('Feud pokračuje i příští Event fázi (kontinuální).'); }}, 0, true);
+}
+function evInquisition(c) {
+  ECHK('l', 'Inkvizice – Loyalty check', {fail:function () { EI(1); EM({law:1, lor:-2, pro:-2}); EA({l:-2, s:-2}); ENOTE('Inkvizice pokračuje (kontinuální; 2 úspěchy v řadě ji ukončí).'); },
+    ok:function () { EM({lor:-1, pro:-1}); EA({l:-1, s:-1}); ENOTE('Zealoti potlačeni (inkvizice pokračuje; 2 úspěchy v řadě ji ukončí).'); }}, 0, true);
+}
+function evPlague(c) {
+  var pen = c ? plagueMods(c) : 0;
+  var r1 = ECHK('s', 'Mor – 1. Stability check' + (pen ? ' (mod ' + sg(pen) + ')' : ''), {}, pen), r2 = ECHK('s', 'Mor – 2. Stability check' + (pen ? ' (mod ' + sg(pen) + ')' : ''), {}, pen);
+  if (r1 && r2) { EA({s:-2}); EB(-dN(3)); }
+  else if (r1 || r2) { EA({s:-4}); EB(-rollX(6)); addU(dN(3)); }
+  else { EA({s:-4}); EB(-rollX(6)); addU(rollX(6)); ENOTE('Mor se rozšířil na sousední hex – příští Event fázi opakuj.'); }
+  ENOTE('Kontinuální: dokud trvá, nelze ve městě stavět.');
+}
+function evMonster(c) {
+  ECHK('s', 'Monster attack – Stability check', {ok:function () { ENOTE('Monster odraženo (nebo osobně vyřešeno).'); },
+    fail:function () { addU(4, 'Monster attack nevyřešen'); var X = calcKingdom(); if (X.unrest >= 5) ENOTE('Unrest ≥ 5: hex s monstrem ztracen – sniž Size o 1.'); }}, 0, true);
+  ENOTE('Alternativa: osobní výprava / naverbovaní dobrodruzi (Loyalty/Stability bonus, 4/8/16 BP).');
+}
+var EVENTS = [
+  {id:'arch', cat:'kben', lo:1, hi:7, w:0, nm:'Archaeological find', d:'Well-preserved ruin: Lore +1. S Museum: dárci věnují historické artefakty za 10 000 gp.', run:function () { EM({lor:1}); ENOTE('Museum: artefakty za 10 000 gp do sbírky.'); }},
+  {id:'diplo', cat:'kben', lo:8, hi:12, w:0, nm:'Diplomatic overture', d:'Sousední království posílá vyslance (embassy/treaty/alliance).', run:function () { EB(rollX(4), 'dary vyslance'); ENOTE('Nabídka diplomatických vztahů – zvládni jako Diplomatic edikt (volitelná pravidla).'); }},
+  {id:'discover', cat:'kben', lo:13, hi:20, w:0, nm:'Discovery', d:'Učenec objeví starověké poznatky: Fame +1, Lore +1d4.', run:function () { EF(1); EM({lor:dN(4)}); }},
+  {id:'boom', cat:'kben', lo:21, hi:31, w:0, nm:'Economic boom', d:'Obchod kvete: Treasury +1d6 BP (šestka se hodí znovu).', run:function () { EB(rollX(6)); }},
+  {id:'festive', cat:'kben', lo:32, hi:39, w:0, nm:'Festive invitation', d:'Pozvání na festival. Pokud se zúčastníte (−1d4 BP darů), na rok Society +1 a Fame +1, +2 na edikty vůči tomu království. Uprav ručně (BP v Economy, Society/Fame v Království).', run:function () { ENOTE('Zúčastníš-li se: −1d4 BP, Society +1 a Fame +1 na rok (ručně).'); }},
+  {id:'foodsur', cat:'kben', lo:40, hi:53, w:0, nm:'Food surplus', d:'Neočekávaná úroda: příští Upkeep Consumption půlená.', run:function () { EFOOD(0.5); }},
+  {id:'goodw', cat:'kben', lo:54, hi:66, w:0, nm:'Good weather', d:'Dobrá úroda počasí: do příští Event fáze Economy +2, Loyalty +2, Productivity +2.', run:function () { EA({e:2, l:2}, true); EM({pro:2}, true); }},
+  {id:'landrush', cat:'kben', lo:67, hi:75, w:0, nm:'Land rush', d:'Osadníci si přisvojí hex: Productivity/Society/Stability −1. Loyalty check: úspěch Unrest +1, selhání Unrest +1d4.', run:function () { EM({pro:-1, soc:-1}); EA({s:-1});
+    ECHK('l', 'Land rush – Loyalty check', {ok:function () { addU(1); }, fail:function () { addU(rollX(4)); }});
+    ENOTE('Postavíš-li stejné vylepšení v sousedním hexu, efekty se zruší (ručně).'); }},
+  {id:'natb', cat:'kben', lo:76, hi:85, w:0, nm:'Natural blessing', d:'Dobré znamení: +4 na Stability checky do příští Event fáze.', run:function () { S.kingdom.temp.sc = (+S.kingdom.temp.sc || 0) + 4; ENOTE('+4 na Stability checky do příští Event fáze.'); }},
+  {id:'newsub', cat:'kben', lo:86, hi:90, w:0, nm:'New subjects', d:'Noví poddaní: Society +1, Stability +1, Unrest −1, Treasury +1d6 BP.', run:function () { EM({soc:1}); EA({s:1}); addU(-1); EB(rollX(6)); }},
+  {id:'polcalm', cat:'kben', lo:91, hi:100, w:0, nm:'Political calm', d:'Klid v politice: Unrest −1d6, +2 na checky k vyřešení kontinuálních událostí. Pokud Unrest=0: Loyalty +1, Stability +1, Law +1.', run:function () { addU(-rollX(6)); S.kingdom.temp.lc = (+S.kingdom.temp.lc || 0) + 2; var X = calcKingdom(); if (X.unrest === 0) { EA({l:1, s:1}); EM({law:1}); } }},
+  {id:'assass', cat:'kdang', lo:1, hi:5, w:0, nm:'Assassination attempt', d:'Pokus o atentát na náhodného lídra. Stability check: selhání = atentát: Unrest +1d6 a role je neobsazená.', run:function () {
+    var K = S.kingdom, on = ROLES.filter(function (R) { return K.roles[R.id] && K.roles[R.id].on; });
+    var t = on.length ? on[Math.floor(Math.random() * on.length)] : null;
+    ECHK('s', 'Atentát – Stability check', {fail:function () { addU(rollX(6)); ENOTE('Atentát se vydařil: ' + (t ? t.name : 'lídr') + ' mrtvý – odškrtni roli v Království (vacancy penalty).'); },
+      ok:function () { ENOTE('Atentát odražen.'); }}); }},
+  {id:'bandit', cat:'kdang', lo:6, hi:18, w:0, nm:'Bandit activity', d:'Banditi v království. Stability check: selhání = Treasury −1d6 BP (šestka se hodí znovu).', run:function () { ECHK('s', 'Banditi – Stability check', {fail:function () { EB(-rollX(6)); }}); }},
+  {id:'feud', cat:'kdang', lo:19, hi:28, w:0, nm:'Feud', d:'Šlechtické rozbroje. Loyalty check: úspěch = konec (Unrest +1); selhání = Corruption +1, Unrest +1d6, kontinuální.', run:evKingdomFeud},
+  {id:'foodshort', cat:'kdang', lo:29, hi:41, w:0, nm:'Food shortage', d:'Nedostatek jídla. Stability check: úspěch = Consumption +50 % příští upkeep, selhání = +100 %.', run:function () { ECHK('s', 'Food shortage – Stability check', {ok:function () { EFOOD(1.5); }, fail:function () { EFOOD(2); }}); }},
+  {id:'impdem', cat:'kdang', lo:42, hi:51, w:0, nm:'Improvement demand', d:'Lidé žádají stavbu/likvidaci vylepšení v hexu. Loyalty check potlačí (Loyalty −2, Unrest +1), jinak kontinuální: nesplněno → Unrest +1.', run:function () {
+    ECHK('l', 'Improvement demand – potlačit?', {ok:function () { EA({l:-2}); addU(1); ENOTE('Požadavek potlačen.'); }, fail:function () { ENOTE('Kontinuální: splň požadavek (stavby/vylepšení), jinak příští Event fázi Unrest +1 (ručně).'); }}, 0, true); }},
+  {id:'inquis', cat:'kdang', lo:52, hi:59, w:0, nm:'Inquisition', d:'Zealoti proti skupině obyvatel. Loyalty check: selhání = Infamy+1, Law+1, Lore/Loyalty/Productivity/Stability −2; úspěch = Lore/Loyalty/Productivity/Stability −1. 2 úspěchy = konec.', run:evInquisition},
+  {id:'bigdis', cat:'kdang', lo:60, hi:64, w:0, nm:'Large disaster', d:'Katastrofa: 1–5 poškodí 1 vylepšený hex, 6 → +1d6 hexů. Stability check za hex: selhání = zničené vylepšení, Unrest +1.', run:function () {
+    var r = dN(6), n = r === 6 ? 1 + rollX(6) : 1;
+    for (var i = 0; i < n; i++) { var ii = i; ECHK('s', 'Katastrofa – hex ' + (ii + 1) + '/' + n, {fail:function () { addU(1); ENOTE('Zničeno vylepšení terénu – uprav Farmy/Doly/Jiné ručně.'); }}); } }},
+  {id:'monster', cat:'kdang', lo:65, hi:76, w:0, nm:'Monster attack', d:'Monster útočí (CR = APL +1d4−1). Stability check: selhání = Unrest +4; při Unrest ≥ 5 je hex ztracen.', run:evMonster},
+  {id:'plague', cat:'kdang', lo:77, hi:84, w:0, nm:'Plague', d:'Mor! 2 Stability checky (− za each Inn/Pier/Stable/…, + za Alchemist/Temple/…). 2 úspěchy: Stab −2, BP −1d3; 1 selhání: Stab −4, BP −1d6, Unrest +1d3; 2 selhání: Stab −4, BP −1d6, Unrest +1d6, šíří se.', run:evPlague},
+  {id:'scandal', cat:'kdang', lo:85, hi:92, w:0, nm:'Public scandal', d:'Skandál lídra: Infamy +1. Loyalty check: selhání = Unrest +2, −4 na Loyalty checky do příští Event fáze.', run:function () { EI(1); ECHK('l', 'Skandál – Loyalty check', {fail:function () { addU(2); S.kingdom.temp.lc = (+S.kingdom.temp.lc || 0) - 4; ENOTE('−4 na Loyalty checky do příští Event fáze.'); }}); }},
+  {id:'smugg', cat:'kdang', lo:93, hi:100, w:0, nm:'Smugglers', d:'Pašeráci. Loyalty + Stability check (− za Piers/Waterfronts/obchodní cesty). 1 selhání: Corruption +1d2, Crime +1, Productivity −1d3, BP −1d3; 2 selhání: Corruption +1d4, BP −1d6, kontinuální.', run:function () {
+    var pen = 0; S.cities.forEach(function (c) { cityAllB(c).forEach(function (x) { if (x.b.type === 'pier' || x.b.type === 'waterfront') pen++; }); });
+    var okl = ECHK('l', 'Pašeráci – Loyalty check', {}, pen), oks = ECHK('s', 'Pašeráci – Stability check', {}, pen);
+    if (okl && oks) return;
+    if (okl || oks) { EM({cor:rollX(2), cri:1, pro:-rollX(3)}); EB(-dN(3)); }
+    else { EM({cor:rollX(4), cri:1, pro:-rollX(6)}); EB(-rollX(6)); ENOTE('Kontinuální.'); } }},
+  {id:'boomtown', cat:'sben', lo:1, hi:14, w:1, nm:'Boomtown', d:'Obchodní boom ve městě: do příští Event fáze Economy + (počet budov s Economy bonusem ve městě), Corruption +1d4.', run:function (c) { EA({e:ecoCount(c)}, true); EM({cor:dN(4)}, true); ENOTE('Boom ve městě ' + c.name + '.'); }},
+  {id:'discover2', cat:'sben', lo:15, hi:26, w:1, nm:'Discovery', d:'Fame +1, Lore +1d4.', run:function (c) { EF(1); EM({lor:dN(4)}); ENOTE('Ve městě ' + c.name + '.'); }},
+  {id:'justice', cat:'sben', lo:27, hi:40, w:1, nm:'Justice prevails', d:'Spravedlnost: Law +1, Loyalty +1, Crime −1, Unrest −1.', run:function (c) { EM({law:1, cri:-1}); EA({l:1}); addU(-1); ENOTE('Ve městě ' + c.name + '.'); }},
+  {id:'noblesse', cat:'sben', lo:41, hi:46, w:1, nm:'Noblesse oblige', d:'Šlechtic postaví zdarma Monument (50 %) nebo Park (51 %). Přidej budovu do města – šlechtic platí.', run:function (c) { var t = dN(100) <= 50 ? 'Monument' : 'Park'; ENOTE('Do města ' + c.name + ' přidej zdarma ' + t + '.'); }},
+  {id:'outsucc', cat:'sben', lo:47, hi:58, w:1, nm:'Outstanding success', d:'Mimořádný úspěch občana: Fame +1, Treasury +1d6 BP, Unrest −2, +4 na Economy checky do příští Event fáze.', run:function (c) { EF(1); EB(rollX(6)); addU(-2); S.kingdom.temp.ec = (+S.kingdom.temp.ec || 0) + 4; ENOTE('Ve městě ' + c.name + '.'); }},
+  {id:'pilgrim', cat:'sben', lo:59, hi:66, w:1, nm:'Pilgrimage', d:'Poutníci slaví festival ve městě s Cathedral/ Shrine/ Temple – bez BP nákladů.', run:function (c) {
+    var has = cityAllB(c).some(function (x) { return ['cathedral','temple','shrine'].indexOf(x.b.type) >= 0; });
+    ENOTE(has ? 'Pouť ve městě ' + c.name + ' (žádné efekty, jen sláva).' : 'Pouť neuskutečnila – ve městě není chrám (událost neplatná).'); }},
+  {id:'remtreas', cat:'sben', lo:67, hi:72, w:1, nm:'Remarkable treasure', d:'Prázdný slot se zaplní výjimečným itemem (minor→medium, medium→major), base value +50 % pro cenu itemu.', run:function (c) { ENOTE('Ve městě ' + c.name + ': vygeneruj item do prázdného slotu a zvaž vylepšení tieru (ručně).'); }},
+  {id:'unexfind', cat:'sben', lo:73, hi:81, w:1, nm:'Unexpected find', d:'Občané najdou zapomenutý magic item: dočasný minor (70 %) / medium (30 %) slot, plní se příští Upkeep; zmizí při koupi itemu nebo v příští Event fázi.', run:function (c) { ENOTE('Město ' + c.name + ': dočasný slot – při příštím Upkeepu si item vygeneruj a pak ručně smaž.'); }},
+  {id:'celeb', cat:'sben', lo:82, hi:93, w:1, nm:'Visiting celebrity', d:'Celebrita navštíví město: Fame +1, Treasury +1d6 BP.', run:function (c) { EF(1); EB(rollX(6)); ENOTE('Ve městě ' + c.name + '.'); }},
+  {id:'wealimm', cat:'sben', lo:94, hi:100, w:1, nm:'Wealthy immigrant', d:'Bohatý imigrant postaví zdarma Mansion (75 %) nebo Noble Villa. Přidej budovu do města.', run:function (c) { ENOTE('Do města ' + c.name + ' přidej zdarma ' + (dN(100) <= 75 ? 'Mansion' : 'Noble Villa') + '.'); }},
+  {id:'bdemand', cat:'sdang', lo:1, hi:10, w:1, nm:'Building demand', d:'Lidé žádají postavit (75 %) nebo zbourat (25 %) konkrétní budovu. Loyalty check potlačí (Loyalty −2, Unrest +1), jinak kontinuální: nesplněno → Unrest +1.', run:function (c) {
+    ECHK('l', 'Building demand (' + c.name + ') – potlačit?', {ok:function () { EA({l:-2}); addU(1); ENOTE('Požadavek potlačen.'); }, fail:function () { ENOTE('Kontinuální: splň požadavek, jinak příští Event fázi Unrest +1 (ručně).'); }}, 0, true); }},
+  {id:'cropfail', cat:'sdang', lo:11, hi:17, w:1, nm:'Crop failure', d:'Spatná úroda ve městě i okolí. 2 Stability checky: 2 úspěchy = nic; 1 = farmy −1 BP; 0 = farmy neuspokojují vůbec (příští Upkeep).', run:function (c) {
+    var r1 = ECHK('s', 'Crop failure – 1. Stability check', {}), r2 = ECHK('s', 'Crop failure – 2. Stability check', {});
+    if (r1 && r2) ENOTE('Úroda zachráněna ve městě ' + c.name + '.');
+    else if (r1 || r2) ENOTE('Město ' + c.name + ': farmy příští Upkeep snižují Consumption jen o 1 BP za farmu (ručně: dočasně +1 BP na farmu).');
+    else ENOTE('Město ' + c.name + ': farmy příští Upkeep nesnižují Consumption vůbec (ručně: +2 BP na farmu).'); }},
+  {id:'cult', cat:'sdang', lo:18, hi:25, w:1, nm:'Cult activity', d:'Kult v městě. Loyalty + Stability checky: každé selhání = Unrest +1, Productivity/Society/Stability −1; 2 selhání = kontinuální.', run:function (c) {
+    var okl = ECHK('l', 'Kult – Loyalty check', {}), oks = ECHK('s', 'Kult – Stability check', {});
+    var nf = (okl ? 0 : 1) + (oks ? 0 : 1);
+    if (nf) { for (var i = 0; i < nf; i++) addU(1); EM({pro:-1, soc:-1}); EA({s:-1}); }
+    if (nf === 2) ENOTE('Kult pokračuje (kontinuální) ve městě ' + c.name + '.'); }},
+  {id:'drugden', cat:'sdang', lo:26, hi:33, w:1, nm:'Drug den', d:'Drogový doupě v městě. Loyalty + Stability checky (− za Tenements/Waterfronts). 1 selhání: Crime +1, Unrest +1; 2 selhání: + Economy/Loyalty/Stability −1, kontinuální.', run:function (c) {
+    var pen = 0; cityAllB(c).forEach(function (x) { if (x.b.type === 'tenement' || x.b.type === 'waterfront') pen++; });
+    var okl = ECHK('l', 'Drug den – Loyalty check', {}, pen), oks = ECHK('s', 'Drug den – Stability check', {}, pen);
+    if (okl && oks) { ENOTE('Doupě vyčištěno ve městě ' + c.name + '.'); return; }
+    EM({cri:1}); addU(1);
+    if (!okl && !oks) { EA({e:-1, l:-1, s:-1}); ENOTE('Kontinuální (město ' + c.name + ').'); } }},
+  {id:'feud2', cat:'sdang', lo:34, hi:41, w:1, nm:'Feud', d:'Rozbroje ve městě: Loyalty check (úspěch = konec, Unrest +1; selhání = Corruption +1, Unrest +1d6, kontinuální).', run:evKingdomFeud},
+  {id:'inquis2', cat:'sdang', lo:42, hi:49, w:1, nm:'Inquisition', d:'Zealoti ve městě (viz kingdom Inquisition).', run:evInquisition},
+  {id:'locdis', cat:'sdang', lo:50, hi:54, w:1, nm:'Localized disaster', d:'Katastrofa ve městě: 1d6 lotů (šestka = +1d6 dalších). Stability check za lot: selhání = budova zničena (Unrest + za loty).', run:function (c) {
+    var r = dN(6), n = r === 6 ? dN(6) + rollX(6) : r;
+    for (var i = 0; i < n; i++) { var ii = i; ECHK('s', 'Katastrofa – lot ' + (ii + 1) + '/' + n + ' (' + c.name + ')', {fail:function () { destroyB(c, 'katastrofa'); }}); } }},
+  {id:'monster2', cat:'sdang', lo:55, hi:61, w:1, nm:'Monster attack', d:'Monster útočí na město. Stability check: selhání = Unrest +4.', run:evMonster},
+  {id:'plague2', cat:'sdang', lo:62, hi:66, w:1, nm:'Plague', d:'Mor ve městě (viz kingdom Plague).', run:evPlague},
+  {id:'sencrim', cat:'sdang', lo:67, hi:74, w:1, nm:'Sensational crime', d:'Sériový zločinec. 2 Stability checky (+Law −Crime města). 1 selhání: Unrest +1, kontinuální; 2: Law/Loyalty −1, BP −1d4, Unrest +2, kontinuální.', run:function (c) {
+    var A = calcCity(c).A, bon = (A.law || 0) - (A.cri || 0);
+    var r1 = ECHK('s', 'Zločinec – 1. Stability check', {}, bon), r2 = ECHK('s', 'Zločinec – 2. Stability check', {}, bon);
+    if (r1 && r2) { ENOTE('Zločinec dopaden (město ' + c.name + ').'); return; }
+    if (r1 || r2) { addU(1); ENOTE('Kontinuální (město ' + c.name + ').'); }
+    else { EM({law:-1}); EA({l:-1}); EB(-rollX(4)); addU(2); ENOTE('Kontinuální (město ' + c.name + ').'); } }},
+  {id:'slavers', cat:'sdang', lo:75, hi:80, w:1, nm:'Slavers', d:'Otrokáři. Loyalty + Stability checky (− za Tenements/Waterfronts). 1 selhání: Loyalty/Stability −1, Unrest −1; 2 selhání: Loyalty/Stability −2, Unrest −2, kontinuální.', run:function (c) {
+    var pen = 0; cityAllB(c).forEach(function (x) { if (x.b.type === 'tenement' || x.b.type === 'waterfront') pen++; });
+    var okl = ECHK('l', 'Otrokáři – Loyalty check', {}, pen), oks = ECHK('s', 'Otrokáři – Stability check', {}, pen);
+    if (okl && oks) { ENOTE('Otrokáři chyceni (město ' + c.name + ').'); return; }
+    var nf = (okl ? 0 : 1) + (oks ? 0 : 1);
+    EA(nf === 1 ? {l:-1, s:-1} : {l:-2, s:-2}); addU(nf === 1 ? -1 : -2);
+    if (nf === 2) ENOTE('Kontinuální (město ' + c.name + ').'); }},
+  {id:'squatters', cat:'sdang', lo:81, hi:90, w:1, nm:'Squatters', d:'Squatteři obsadí prázdný lot: Fame/Stability −1, Unrest +2. Stability check je rozprasí; úspěch, ale House/Tenement příští turn, jinak Infamy +1, Unrest +2.', run:function (c) {
+    EF(-1); EA({s:-1}); addU(2);
+    ECHK('s', 'Squatteři – Stability check (rozprášit)', {ok:function () { ENOTE('Rozprášeni ve městě ' + c.name + ': postav tam House/Tenement, jinak Infamy +1 a Unrest +2.'); },
+      fail:function () { ENOTE('Kontinuální (město ' + c.name + ').'); }}, 0, true); }},
+  {id:'vandals', cat:'sdang', lo:91, hi:100, w:1, nm:'Vandals', d:'Vandali ničí majetek. Loyalty + Stability checky: 1 selhání = Society −1, budova poškozena; 2 selhání = budova zničena (Unrest + loty), 1d3 dalších poškozeno.', run:function (c) {
+    var okl = ECHK('l', 'Vandali – Loyalty check', {}), oks = ECHK('s', 'Vandali – Stability check', {});
+    if (okl && oks) { ENOTE('Vandali zastaveni (město ' + c.name + ').'); return; }
+    if (okl || oks) { EM({soc:-1}); ENOTE('Poškozena budova ve městě ' + c.name + ' (oprava = ½ ceny).'); }
+    else { destroyB(c, 'vandali'); ENOTE('Poškozeno dalších 1d3 budov (oprava = ½ ceny).'); } }}
+];
+function byEv(id) { return EVENTS.filter(function (e) { return e.id === id; })[0] || null; }
+function rollCat(cat, excl) {
+  var r = dN(100), ev = EVENTS.filter(function (e) { return e.cat === cat && r >= e.lo && r <= e.hi && e.id !== excl; })[0];
+  return ev || null;
+}
+function runEv(ev, prefCid) {
+  if (!ev) return;
+  var K = S.kingdom, c = null;
+  if (ev.w) {
+    if (prefCid) c = S.cities.filter(function (x) { return x.id === prefCid; })[0];
+    if (!c) c = S.cities.length ? S.cities[Math.floor(Math.random() * S.cities.length)] : null;
+    if (!c) { ENOTE('Událost ' + ev.nm + ' přeskočena – království nemá města.'); return; }
+  }
+  ENOTE('UDÁLOST: ' + ev.nm + (c ? ' · ' + c.name : ''));
+  ev.run(c);
+  K.lastEv = {id:ev.id, cid:c ? c.id : null};
+}
+function doEventPhase() {
+  var K = S.kingdom, chance = K.evLast ? 25 : 75, r = dN(100);
+  if (r > chance) { K.held = 0; ENOTE('Event fáze: žádná událost (hod ' + r + ' > ' + chance + ' %).'); toast('Žádná událost tentokrát.'); return; }
+  K.held = 1;
+  var pick47 = function (excl) {
+    var r2 = dN(100), out = [];
+    if (r2 <= 2) out = [byEv('natb'), rollCat(null, 'natb')];
+    else if (r2 <= 4) out = [byEv('goodw'), rollCat(null, 'goodw')];
+    else if (r2 <= 25) out = [rollCat('kben', excl)];
+    else if (r2 <= 50) out = [rollCat('kdang', excl)];
+    else if (r2 <= 75) out = [rollCat('sben', excl)];
+    else if (r2 <= 96) out = [rollCat('sdang', excl)];
+    else if (r2 === 97) out = [byEv('bandit'), rollCat(null, 'bandit')];
+    else if (r2 === 98) out = [byEv('squatters'), rollCat(null, 'squatters')];
+    else if (r2 === 99) out = [byEv('monster'), rollCat(null, 'monster')];
+    else out = [byEv('vandals'), rollCat(null, 'vandals')];
+    return out.filter(Boolean).filter(function (e, i, a) { return a.indexOf(e) === i; });
+  };
+  var evs = pick47(null);
+  ENOTE('Event fáze: hod ' + r + ' ≤ ' + chance + ' % → událost.');
+  evs.forEach(function (e) { runEv(e, null); });
+  toast('Event fáze proběhla.');
+}
+function effCons() {
+  var X = calcKingdom(), K = S.kingdom;
+  var m = +K.foodNext || 1;
+  return Math.max(0, Math.round(X.cons * m));
+}
+function turnHTML() {
+  var K = S.kingdom, X = calcKingdom(), h = '<div class="kview">';
+  var div = K.taxdiv === '5' ? 5 : 3;
+  h += '<section class="card"><div class="row" style="justify-content:space-between"><div><h2 style="font-size:24px">📅 Turn — Rok ' + esc(K.turn.y) + ', ' + esc(MONTHS[K.turn.m - 1]) + ' (měsíc ' + K.turn.m + '/12)</h2>'
+    + '<p class="note" style="margin:4px 0 0">1 turn = 1 měsíc. Fáze v pořadí: Upkeep → Edict → Income → Event. Pravidla: Pathfinder Ultimate Campaign (Kingmaker Kingdom Building).</p></div>'
+    + '<div class="row"><button class="btn primary" data-act="turnnext">Nový turn (měsíc) →</button><button class="btn danger" data-act="turnreset">Reset roku</button></div></div>';
+  h += '<div class="kv" style="margin-top:8px"><span>Control DC (20 + Size + districty)</span><b>' + X.ctrl + '</b></div>';
+  h += '<div class="kv"><span>Economy / Loyalty / Stability (− Unrest ' + X.unrest + ')</span><b>' + (X.total.e - X.unrest) + ' / ' + (X.total.l - X.unrest) + ' / ' + (X.total.s - X.unrest) + '</b></div>';
+  h += '<div class="kv"><span>BP celkem (Economy tab)</span><b>' + fmt(bpTotal(X)) + '</b></div>';
+  h += '</section>';
+
+  /* Upkeep */
+  h += '<section class="card"><div class="h3">Fáze 1 — Upkeep</div><div style="margin-top:8px">';
+  h += '<div class="kv"><span>Consumption: Size ' + X.size + ' + města ' + S.cities.length + ' + Holiday +' + X.ho[1] + ' + Promotion +' + X.pr[1] + (X.consAdj ? ' + jiné ' + X.consAdj : '') + ' − farmy −' + 2 * K.farms + ' − rybníky −' + K.fish + '</span><b>' + X.cons + '</b></div>';
+  if ((+K.foodNext || 1) !== 1) h += '<div class="kv"><span>× Food efekt (příští upkeep)</span><b>×' + K.foodNext + ' → ' + effCons() + ' BP</b></div>';
+  h += '<div class="row" style="margin-top:6px"><button class="btn primary" data-act="turnpay">Zaplatit Consumption (−' + effCons() + ' BP)</button>';
+  h += '<span class="note" style="margin:0">Záporný Treasury → Unrest +2.</span></div>';
+  h += '<div class="row" style="margin-top:10px;align-items:end">' + '<label class="field">Farmy (−2 BP/ka)' + kin('farms', K.farms, {t:'n', label:'Počet farm'}) + '</label>'
+    + '<label class="field">Fisheries (−1 BP/ta)' + kin('fish', K.fish, {t:'n', label:'Počet fisheries'}) + '</label>'
+    + '<label class="field">Jiné (forty, ambasády…)' + kin('consAdj', K.consAdj, {t:'n', label:'Jiné Consumption'}) + '</label></div>';
+  h += '<div class="row" style="margin-top:10px"><button class="btn" data-act="turnstab">Hodit Stability check (krok 1)</button><button class="btn" data-act="turnitems">Vyplnit magic item sloty (krok 3, 50 %)</button></div>';
+  var negs = ['e','l','s'].filter(function (k) { return X.total[k] < 0; });
+  h += '<div class="row" style="margin-top:10px"><span class="note" style="margin:0">Krok 4 – Unrest:' + (negs.length ? ' negativní atributy ' + negs.map(function (k) { return ATT3[k]; }).join(', ') + ' → Unrest +1 za každý.' : ' žádné negativní atributy.') + '</span>'
+    + (negs.length ? '<button class="btn" data-act="turnuneg">Aplikovat Unrest +' + negs.length + '</button>' : '')
+    + (K.roles.enforcer && K.roles.enforcer.on ? '<button class="btn" data-act="turnenuf">Royal Enforcer: Unrest −1</button>' : '') + '</div>';
+  if (X.unrest >= 20) h += '<p class="note" style="color:var(--warn)"><b>ANARCHIE!</b> Království ovládneš jen questy. Všechny checky se počítají jako 0.</p>';
+  else if (X.unrest >= 11) h += '<p class="note" style="color:var(--warn)"><b>Unrest ≥ 11:</b> království ztrácí 1 hex za turn (mapa – sniž Size o 1 ručně) a hexy hrozí odtržením.</p>';
+  h += '</div></section>';
+
+  /* Edict */
+  var LIM = X.size <= 10 ? [1, 1, 2, 1] : X.size <= 25 ? [1, 3, 2, 2] : X.size <= 50 ? [1, 5, 5, 3] : X.size <= 100 ? [2, 10, 7, 4] : X.size <= 200 ? [3, 20, 9, 8] : [4, 999, 12, 12];
+  h += '<section class="card"><div class="h3">Fáze 2 — Edict</div><div style="margin-top:8px">';
+  h += '<div class="kv"><span>Taxation: ' + X.tx[2] + ' (Eco ' + sg(X.tx[0]) + ', Loy ' + sg(X.tx[1]) + ')</span><b></b></div>';
+  h += '<div class="kv"><span>Holiday: ' + X.ho[2] + ' (Loy ' + sg(X.ho[0]) + ', Cons +' + X.ho[1] + ')</span><b></b></div>';
+  h += '<div class="kv"><span>Promotion: ' + X.pr[2] + ' (Stab ' + sg(X.pr[0]) + ', Cons +' + X.pr[1] + ')</span><b></b></div>';
+  h += '<p class="note" style="margin-top:6px">Edikty nastavuješ v záložce Království (sekce Edicts).</p>';
+  h += '<div class="h3" style="margin-top:10px">Limity (Table 4-4, Size ' + X.size + '): ' + LIM[0] + ' osada/armáda, ' + (LIM[1] > 100 ? 'bez limitu' : LIM[1]) + ' budov (první House/Mansion/Villa/Tenement zdarma), ' + LIM[2] + ' vylepšení terénu, ' + LIM[3] + ' hex claims (mapa – přeskočeno).</div>';
+  h += '</div></section>';
+
+  /* Income */
+  h += '<section class="card"><div class="h3">Fáze 3 — Income</div><div style="margin-top:8px">';
+  h += '<div class="row"><label class="field">Dělitel daní' + ksel('taxdiv', K.taxdiv, [['3', '÷3 (Ultimate Campaign)'], ['5', '÷5 (Kingmaker AP)']], 'Dělitel daní') + '</label></div>';
+  h += '<div class="row"><button class="btn primary" data-act="income">Hodit d20 pro daně</button>';
+  if (UI.income) h += '<button class="btn" data-act="incomeadd">Přičíst ' + UI.income.bp + ' BP</button></div>';
+  if (UI.income) h += '<div class="incres">d20 = ' + UI.income.r + ' ' + sg(UI.income.e) + ' Economy − ' + UI.income.u + ' Unrest = ' + UI.income.tot + (UI.income.treasurer ? ' → ⌊' + UI.income.tot + ' / ' + UI.income.div + '⌋ = ' + UI.income.bp + ' BP' : ' → bez Treasurera se daně nevybírají (0 BP)') + '</div>';
+  h += '<div class="row" style="margin-top:10px;align-items:end">'
+    + '<label class="field">Vybrat BP osobně (1 BP = 2 000 gp, Unrest +1/BP)' + kin('wd', K.wd, {t:'n', label:'Vybrat BP'}) + '</label><button class="btn" data-act="turnwd">Vybrat</button>'
+    + '<label class="field">Vložit gp (1 BP / 4 000 gp)' + kin('dep', K.dep, {t:'n', label:'Vložit gp'}) + '</label><button class="btn" data-act="turndep">Vložit</button>'
+    + '<label class="field">Prodat item (cena gp; ½ ÷ 4 000 = BP; 1/měsíc/district)' + kin('sellg', K.sellg, {t:'n', label:'Cena itemu'}) + '</label><button class="btn" data-act="turnsell">Prodat</button></div>';
+  h += '</div></section>';
+
+  /* Event */
+  h += '<section class="card"><div class="h3">Fáze 4 — Event</div><div style="margin-top:8px">';
+  h += '<p class="note" style="margin:0 0 6px">Šance na událost: <b>' + (K.evLast ? 25 : 75) + ' %</b>' + (K.evLast ? ' (minulý turn byla událost)' : ' (minulý turn žádná událost)') + '. Tabulky 4-7 až 4-11 (Ultimate Campaign); efekty se aplikují automaticky a zapisují do historie.</p>';
+  h += '<button class="btn primary" data-act="turnevent">Hodit Event fázi</button>';
+  if (K.lastEv) { var ev = byEv(K.lastEv.id), c = K.lastEv.cid ? S.cities.filter(function (x) { return x.id === K.lastEv.cid; })[0] : null;
+    if (ev) h += '<div class="incres" style="margin-top:8px"><b>' + esc(ev.nm) + '</b>' + (c ? ' · ' + esc(c.name) : '') + '<br>' + esc(ev.d) + '</div>'; }
+  h += '</div></section>';
+
+  /* Historie */
+  h += '<section class="card"><div class="row" style="justify-content:space-between"><div class="h3">Historie turnů</div><button class="btn danger" data-act="turnlogclr">Vymazat historii</button></div><div style="margin-top:8px">';
+  if (K.log.length) { K.log.slice().reverse().slice(0, 120).forEach(function (l) { h += '<div class="kv"><span style="font-family:var(--mono);font-size:12px">' + l.y + '.' + (l.m < 10 ? '0' : '') + l.m + '</span><span style="text-align:right">' + esc(l.t) + '</span></div>'; }); }
+  else h += '<p class="note" style="margin:0">Zatím žádné záznamy.</p>';
+  h += '</div></section>';
   return h + '</div>';
 }
 function kset(path, v) {
@@ -1318,8 +1610,10 @@ function render() {
   S.cities.forEach(function (c) { h += '<button class="tab" data-act="city" data-id="' + c.id + '" aria-pressed="' + (!UI.king && c.id === S.cur) + '">' + esc(c.name) + '</button>'; });
   h += '<button class="tab king" data-act="kingdom" aria-pressed="' + UI.king + '">♛ Království</button>';
   h += '<button class="tab king" data-act="economy" aria-pressed="' + UI.econ + '">💰 Economy</button>';
+  h += '<button class="tab king" data-act="turn" aria-pressed="' + UI.turn + '">📅 Turn</button>';
   h += '<button class="tab add" data-act="addcity">+ Nové město</button></div>';
   if (UI.econ) { h += econHTML(); commit(h); return; }
+  if (UI.turn) { h += turnHTML(); commit(h); return; }
   if (UI.king) { h += kingdomHTML(); commit(h); return; }
 
   h += '<div class="layout"><div class="col">';
@@ -1495,10 +1789,10 @@ function toast(msg) { var t = document.getElementById('toast'); t.textContent = 
 function refresh() { save(); render(); if (UI.modal && UI.modal.type === 'insp') inspRender(); }
 function act(a, t) {
   var city = curCity(), d = curD(), ds = t.dataset;
-  if (a !== 'delcity' && a !== 'deldist') UI.confirm = null;
+  if (a !== 'delcity' && a !== 'deldist' && a !== 'turnreset' && a !== 'turnlogclr') UI.confirm = null;
   switch (a) {
-    case 'city': S.cur = ds.id; UI.king = false; UI.econ = false; refresh(); break;
-    case 'addcity': var c = newCity('Město ' + (S.cities.length + 1)); S.cities.push(c); S.cur = c.id; UI.econ = false; refresh(); toast('Nové město přidáno (příprava ' + TERR[c.terrain][1] + ' BP)'); break;
+    case 'city': S.cur = ds.id; UI.king = false; UI.econ = false; UI.turn = false; refresh(); break;
+    case 'addcity': var c = newCity('Město ' + (S.cities.length + 1)); S.cities.push(c); S.cur = c.id; UI.econ = false; UI.turn = false; refresh(); toast('Nové město přidáno (příprava ' + TERR[c.terrain][1] + ' BP)'); break;
     case 'delcity':
       if (UI.confirm !== 'city') { UI.confirm = 'city'; render(); return; }
       UI.confirm = null; S.cities = S.cities.filter(function (x) { return x.id !== city.id; }); S.cur = S.cities[0].id; refresh(); break;
@@ -1518,8 +1812,9 @@ function act(a, t) {
     case 'close': closeModal(); break;
     case 'brk': UI.modal = {type:'brk', k:ds.k}; renderModal(); break;
     case 'kbrk': UI.modal = {type:'brk', k:ds.k, scope:'kingdom'}; renderModal(); break;
-    case 'kingdom': UI.king = true; UI.econ = false; closeModal(); render(); break;
-    case 'economy': UI.econ = true; UI.king = false; refresh(); break;
+    case 'kingdom': UI.king = true; UI.econ = false; UI.turn = false; closeModal(); render(); break;
+    case 'economy': UI.econ = true; UI.king = false; UI.turn = false; refresh(); break;
+    case 'turn': UI.turn = true; UI.king = false; UI.econ = false; refresh(); break;
     case 'rolestoggle': UI.rolesOpen = !UI.rolesOpen; render(); break;
     case 'save': if (DBN) saveShared(); else ghSave(); break;
     case 'ghtoken': if (ghSetToken()) { toast('Token uložen v tomto prohlížeči.'); render(); } break;
@@ -1535,7 +1830,8 @@ function act(a, t) {
     case 'tradedel': S.kingdom.trade.splice(+ds.i, 1); refresh(); break;
     case 'income':
       var XK = calcKingdom(), rr = 1 + Math.floor(Math.random() * 20), tt = rr + XK.total.e - XK.unrest;
-      UI.income = {r:rr, e:XK.total.e, u:XK.unrest, tot:tt, treasurer:XK.treasurerOn, bp:XK.treasurerOn ? Math.max(0, Math.floor(tt / 5)) : 0};
+      var div = S.kingdom.taxdiv === '5' ? 5 : 3;
+      UI.income = {r:rr, e:XK.total.e, u:XK.unrest, tot:tt, treasurer:XK.treasurerOn, bp:XK.treasurerOn ? Math.max(0, Math.floor(tt / div)) : 0, div:div};
       render(); break;
     case 'incomeadd': if (UI.income) { var ibp = UI.income.bp; S.kingdom.incomeBP = (+S.kingdom.incomeBP || 0) + ibp; UI.income = null; refresh(); toast('Daně připsány: +' + ibp + ' BP k BP celkem.'); } break;
     case 'migen': doGenItems(ds.scope === 'kingdom' ? null : city); break;
@@ -1558,6 +1854,88 @@ function act(a, t) {
       break;
     case 'gpadd': S.kingdom.gp.push({src:'', where:'', gp:0, cur:'gp'}); refresh(); break;
     case 'gpdel': S.kingdom.gp.splice(+ds.i, 1); refresh(); break;
+    case 'turnnext': {
+      var K = S.kingdom;
+      K.evLast = K.held === 1 ? 1 : 0; K.held = -1;
+      K.temp = {e:0, l:0, s:0, ec:0, sc:0, lc:0}; K.tempM = {cor:0, cri:0, law:0, lor:0, pro:0, soc:0};
+      K.foodNext = 1; K.lastEv = null; UI.income = null;
+      K.turn.m++; if (K.turn.m > 12) { K.turn.m = 1; K.turn.y++; }
+      tlog('— Nový turn: rok ' + K.turn.y + ', ' + MONTHS[K.turn.m - 1] + ' —');
+      refresh(); toast('Turn dokončen: rok ' + K.turn.y + ', ' + MONTHS[K.turn.m - 1] + '.'); break;
+    }
+    case 'turnreset':
+      if (UI.confirm !== 'turn') { UI.confirm = 'turn'; render(); return; }
+      UI.confirm = null;
+      S.kingdom.turn = {y:1, m:1}; S.kingdom.log = []; S.kingdom.evLast = 0; S.kingdom.held = -1;
+      S.kingdom.temp = {e:0, l:0, s:0, ec:0, sc:0, lc:0}; S.kingdom.tempM = {cor:0, cri:0, law:0, lor:0, pro:0, soc:0};
+      S.kingdom.smods = {cor:0, cri:0, law:0, lor:0, pro:0, soc:0}; S.kingdom.mods = {e:0, l:0, s:0};
+      S.kingdom.foodNext = 1; S.kingdom.lastEv = null; refresh(); toast('Rok resetován.'); break;
+    case 'turnlogclr':
+      if (UI.confirm !== 'log') { UI.confirm = 'log'; render(); return; }
+      UI.confirm = null; S.kingdom.log = []; refresh(); break;
+    case 'turnpay': {
+      var Xp = calcKingdom(), c2 = effCons();
+      S.kingdom.treasury = (+S.kingdom.treasury || 0) - c2;
+      tlog('Upkeep: zaplacena Consumption ' + c2 + ' BP (základ ' + Xp.cons + (Xp.cons !== c2 ? ', food ×' + (+S.kingdom.foodNext || 1) : '') + ').');
+      S.kingdom.foodNext = 1;
+      if ((+S.kingdom.treasury || 0) < 0) { addU(2, 'Treasury je v minusu'); toast('Consumption zaplacena: −' + c2 + ' BP. Treasury záporná → Unrest +2!'); }
+      else toast('Consumption zaplacena: −' + c2 + ' BP.');
+      refresh(); break;
+    }
+    case 'turnstab': {
+      var Xs = calcKingdom(), r = dN(20), tot = r + Xs.total.s - Xs.unrest + (+S.kingdom.temp.sc || 0);
+      var ok = r === 20 ? true : r === 1 ? false : tot >= Xs.ctrl;
+      tlog('Stability check (Upkeep): d20=' + r + ' → ' + tot + ' vs DC ' + Xs.ctrl + ' → ' + (ok ? 'ÚSPĚCH' : 'SELHÁNÍ'));
+      if (ok) { if (Xs.unrest > 0) addU(-1, 'stabilita udržena'); else { EB(1, 'stabilita udržena (Unrest již 0)'); toast('Úspěch: Unrest už je 0 → +1 BP.'); } }
+      else { var df = Xs.ctrl - tot; if (df > 4) { var u4 = rollX(4); addU(u4); toast('Selhání o ' + df + ': Unrest +' + u4 + '.'); } else { addU(1); toast('Selhání o ' + df + ': Unrest +1.'); } }
+      refresh(); break;
+    }
+    case 'turnitems': {
+      var res2 = [];
+      S.cities.forEach(function (cc) {
+        var sl = slotsOf(cc);
+        cc.districts.forEach(function (dd, di) {
+          var open = sl.filter(function (x) { return x.di === di && !getSlot(cc, x.key).name.trim(); });
+          if (!open.length) return;
+          var pick = open[Math.floor(Math.random() * open.length)], st = rollSlot(cc, pick);
+          if (st.roll > 50) {
+            var it = genItem(pick.tier, Math.random() < 0.5, pick.kinds);
+            st.name = it.name; st.url = it.url;
+            res2.push(cc.name + ' D' + (di + 1) + ': ' + it.name + ' [' + st.kind + ' · d% ' + st.roll + ']');
+          }
+        });
+      });
+      tlog('Upkeep: magic item sloty – ' + (res2.length ? res2.join('; ') : 'žádné nové itemy.'));
+      refresh(); toast(res2.length ? res2.join(' · ') : 'Žádné nové itemy.'); break;
+    }
+    case 'turnuneg': {
+      var Xn = calcKingdom(), n2 = ['e','l','s'].filter(function (k) { return Xn.total[k] < 0; }).length;
+      if (n2) addU(n2, 'negativní atributy');
+      refresh(); toast('Unrest +' + n2 + '.'); break;
+    }
+    case 'turnenuf': {
+      var okE = ECHK('l', 'Royal Enforcer – Loyalty check', {});
+      addU(-1, 'Royal Enforcer');
+      if (!okE) EA({l:-1});
+      refresh(); toast('Unrest −1' + (okE ? '' : ', ale Loyalty check selhal → Loyalty −1.') ); break;
+    }
+    case 'turnevent': doEventPhase(); refresh(); break;
+    case 'turnwd': {
+      var w2 = Math.max(0, Math.floor(+S.kingdom.wd || 0));
+      if (w2) { S.kingdom.treasury = (+S.kingdom.treasury || 0) - w2; addU(w2, 'výběr ' + w2 + ' BP pro osobní potřebu (1 BP = 2 000 gp)'); S.kingdom.wd = 0; }
+      refresh(); break;
+    }
+    case 'turndep': {
+      var g2 = Math.max(0, Math.floor(+S.kingdom.dep || 0)), b3 = Math.floor(g2 / 4000);
+      if (b3) { S.kingdom.treasury = (+S.kingdom.treasury || 0) + b3; tlog('Income: vklad ' + g2 + ' gp → +' + b3 + ' BP.'); S.kingdom.dep = 0; }
+      refresh(); break;
+    }
+    case 'turnsell': {
+      var p2 = Math.max(0, Math.floor(+S.kingdom.sellg || 0)), b4 = Math.floor(p2 / 2 / 4000);
+      if (b4) { S.kingdom.treasury = (+S.kingdom.treasury || 0) + b4; tlog('Income: prodej itemu za ' + p2 + ' gp → +' + b4 + ' BP.'); S.kingdom.sellg = 0; }
+      else if (p2) toast('Item za ' + p2 + ' gp = 0 BP (cena ÷ 2 ÷ 4 000, dolů).');
+      refresh(); break;
+    }
     case 'mupkeep':
       var sl = slotsOf(city), res = [];
       city.districts.forEach(function (dd, di) {
