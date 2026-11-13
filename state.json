@@ -1,5 +1,5 @@
 {
- "_savedAt": "2026-11-10T17:24:16.002Z",
+ "_savedAt": "2026-11-13T10:49:24.144Z",
  "cities": [
   {
    "id": "0joobpf",
@@ -681,16 +681,16 @@
  ],
  "cur": "0joobpf",
  "kingdom": {
-  "name": "Moje království",
+  "name": "Technologia",
   "players": "",
   "gm": "",
   "align": "N",
-  "size": 1,
+  "size": 30,
   "treasury": 0,
   "famebase": 1,
   "infbase": 0,
   "tax": "none",
-  "hol": "none",
+  "hol": "h1",
   "pro": "none",
   "consAdj": 0,
   "other": {
@@ -706,7 +706,7 @@
   "roles": {
    "ruler": {
     "on": true,
-    "name": "",
+    "name": "Techi",
     "mod": 0,
     "feat": false
    },
@@ -718,20 +718,20 @@
    },
    "councilor": {
     "on": true,
-    "name": "",
-    "mod": 0,
+    "name": "Světlana ",
+    "mod": 2,
     "feat": false
    },
    "general": {
     "on": true,
-    "name": "",
-    "mod": 0,
+    "name": "Askirot",
+    "mod": 3,
     "feat": false
    },
    "diplomat": {
     "on": true,
-    "name": "",
-    "mod": 0,
+    "name": "Eleriel",
+    "mod": 3,
     "feat": false
    },
    "heir": {
@@ -742,38 +742,38 @@
    },
    "priest": {
     "on": true,
-    "name": "",
-    "mod": 0,
+    "name": "Pharnox",
+    "mod": 4,
     "feat": false
    },
    "magister": {
     "on": true,
-    "name": "",
-    "mod": 0,
+    "name": "Soul cast",
+    "mod": 4,
     "feat": false
    },
    "marshal": {
     "on": true,
-    "name": "",
-    "mod": 0,
+    "name": "Chilis ",
+    "mod": 4,
     "feat": false
    },
    "enforcer": {
-    "on": false,
-    "name": "",
-    "mod": 0,
+    "on": true,
+    "name": "Jožko",
+    "mod": 4,
     "feat": false
    },
    "spymaster": {
     "on": true,
-    "name": "",
-    "mod": 0,
+    "name": "Vanish",
+    "mod": 4,
     "feat": false
    },
    "treasurer": {
     "on": true,
-    "name": "",
-    "mod": 0,
+    "name": "Oleg",
+    "mod": 3,
     "feat": false
    },
    "viceroy": {
@@ -784,12 +784,58 @@
    },
    "warden": {
     "on": true,
-    "name": "",
-    "mod": 0,
+    "name": "Sword lord",
+    "mod": 3,
     "feat": false
    }
   },
   "trade": [],
-  "notes": ""
+  "notes": "",
+  "soldBP": 0,
+  "incomeBP": 0,
+  "bought": 0,
+  "sold": [],
+  "gp": [],
+  "turn": {
+   "y": 1,
+   "m": 1
+  },
+  "evLast": 0,
+  "held": -1,
+  "log": [],
+  "farms": 0,
+  "fish": 0,
+  "mods": {
+   "e": 0,
+   "l": 0,
+   "s": 0
+  },
+  "temp": {
+   "e": 0,
+   "l": 0,
+   "s": 0,
+   "ec": 0,
+   "sc": 0,
+   "lc": 0
+  },
+  "tempM": {
+   "cor": 0,
+   "cri": 0,
+   "law": 0,
+   "lor": 0,
+   "pro": 0,
+   "soc": 0
+  },
+  "smods": {
+   "cor": 0,
+   "cri": 0,
+   "law": 0,
+   "lor": 0,
+   "pro": 0,
+   "soc": 0
+  },
+  "foodNext": 1,
+  "lastEv": null,
+  "taxdiv": "3"
  }
 }
