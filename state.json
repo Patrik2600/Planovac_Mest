@@ -1,5 +1,5 @@
 {
- "_savedAt": "2026-11-13T10:50:18.947Z",
+ "_savedAt": "2026-11-13T10:53:34.018Z",
  "cities": [
   {
    "id": "0joobpf",
@@ -152,6 +152,33 @@
        "c": 2,
        "w": 2,
        "h": 2,
+       "disc": false
+      },
+      {
+       "uid": "z58k2ak",
+       "type": "blackmarket",
+       "r": 5,
+       "c": 1,
+       "w": 1,
+       "h": 1,
+       "disc": false
+      },
+      {
+       "uid": "lpv8f4z",
+       "type": "house",
+       "r": 5,
+       "c": 0,
+       "w": 1,
+       "h": 1,
+       "disc": false
+      },
+      {
+       "uid": "okfx3o3",
+       "type": "house",
+       "r": 4,
+       "c": 1,
+       "w": 1,
+       "h": 1,
        "disc": false
       }
      ],
@@ -679,14 +706,14 @@
    ]
   }
  ],
- "cur": "0joobpf",
+ "cur": "0ombioe",
  "kingdom": {
   "name": "Technologia",
   "players": "",
   "gm": "",
   "align": "N",
   "size": 30,
-  "treasury": 864,
+  "treasury": 865,
   "famebase": 1,
   "infbase": 0,
   "tax": "none",
@@ -697,7 +724,7 @@
    "e": 0,
    "l": 0,
    "s": 0,
-   "u": 0
+   "u": -1
   },
   "ruler": [
    "e"
@@ -801,13 +828,44 @@
    "m": 1
   },
   "evLast": 0,
-  "held": -1,
-  "log": [],
-  "farms": 0,
-  "fish": 0,
+  "held": 0,
+  "log": [
+   {
+    "y": 1,
+    "m": 1,
+    "t": "Stability check (Upkeep): d20=20 → 51 vs DC 59 → ÚSPĚCH"
+   },
+   {
+    "y": 1,
+    "m": 1,
+    "t": "BP +1 — stabilita udržena (Unrest již 0)"
+   },
+   {
+    "y": 1,
+    "m": 1,
+    "t": "Royal Enforcer – Loyalty check: d20=1 → 35 vs DC 59 → SELHÁNÍ"
+   },
+   {
+    "y": 1,
+    "m": 1,
+    "t": "Unrest −1 — Royal Enforcer"
+   },
+   {
+    "y": 1,
+    "m": 1,
+    "t": "Loy −1"
+   },
+   {
+    "y": 1,
+    "m": 1,
+    "t": "Event fáze: žádná událost (hod 82 > 75 %)."
+   }
+  ],
+  "farms": 20,
+  "fish": 1,
   "mods": {
    "e": 0,
-   "l": 0,
+   "l": -1,
    "s": 0
   },
   "temp": {
@@ -836,6 +894,6 @@
   },
   "foodNext": 1,
   "lastEv": null,
-  "taxdiv": "3"
+  "taxdiv": "5"
  }
 }
