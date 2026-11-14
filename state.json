@@ -1,5 +1,5 @@
 {
- "_savedAt": "2026-11-14T09:33:26.065Z",
+ "_savedAt": "2026-11-14T09:33:29.455Z",
  "cities": [
   {
    "id": "0joobpf",
@@ -852,7 +852,7 @@
  "cur": "3qc6jt7",
  "kingdom": {
   "name": "Technologia",
-  "players": "1",
+  "players": "",
   "gm": "Dano",
   "align": "N",
   "size": 20,
@@ -971,7 +971,14 @@
     "bp": 2
    }
   ],
-  "gp": [],
+  "gp": [
+   {
+    "src": "",
+    "where": "",
+    "gp": 0,
+    "cur": "gp"
+   }
+  ],
   "turn": {
    "y": 1,
    "m": 1
