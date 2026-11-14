@@ -1,5 +1,5 @@
 {
- "_savedAt": "2026-11-13T10:53:34.018Z",
+ "_savedAt": "2026-11-14T09:12:34.393Z",
  "cities": [
   {
    "id": "0joobpf",
@@ -115,7 +115,32 @@
    "name": "Rybárna",
    "terrain": "Plains",
    "cd": 0,
-   "mi": {},
+   "mi": {
+    "p3jtbay_minor0": {
+     "name": "Belt of Giant Strength +2 (4000 gp)",
+     "url": "https://www.aonprd.com/MagicWondrousDisplay.aspx?FinalName=Belt%20of%20Giant%20Strength2",
+     "roll": null,
+     "kind": ""
+    },
+    "p3jtbay_minor1": {
+     "name": "Universal Solvent (50 gp)",
+     "url": "https://www.aonprd.com/MagicWondrousDisplay.aspx?FinalName=Universal%20Solvent",
+     "roll": null,
+     "kind": ""
+    },
+    "p3jtbay_medium0": {
+     "name": "Pearl of Power (3rd) (9000 gp)",
+     "url": "https://www.aonprd.com/MagicWondrousDisplay.aspx?FinalName=Pearl%20of%20Power3rd",
+     "roll": null,
+     "kind": ""
+    },
+    "p3jtbay_major0": {
+     "name": "Bracers of Armor +5 (25000 gp)",
+     "url": "https://www.aonprd.com/MagicWondrousDisplay.aspx?FinalName=Bracers%20of%20Armor5",
+     "roll": null,
+     "kind": ""
+    }
+   },
    "districts": [
     {
      "borders": {
@@ -152,33 +177,6 @@
        "c": 2,
        "w": 2,
        "h": 2,
-       "disc": false
-      },
-      {
-       "uid": "z58k2ak",
-       "type": "blackmarket",
-       "r": 5,
-       "c": 1,
-       "w": 1,
-       "h": 1,
-       "disc": false
-      },
-      {
-       "uid": "lpv8f4z",
-       "type": "house",
-       "r": 5,
-       "c": 0,
-       "w": 1,
-       "h": 1,
-       "disc": false
-      },
-      {
-       "uid": "okfx3o3",
-       "type": "house",
-       "r": 4,
-       "c": 1,
-       "w": 1,
-       "h": 1,
        "disc": false
       }
      ],
@@ -292,28 +290,160 @@
    "cd": 0,
    "mi": {
     "4aps6f4_medium0": {
-     "name": "",
-     "url": "",
-     "roll": 68,
-     "kind": "potion"
-    },
-    "4aps6f4_minor0": {
-     "name": "",
-     "url": "",
-     "roll": 91,
-     "kind": "potion"
+     "name": "Pearl of Power (4th) (16000 gp)",
+     "url": "https://www.aonprd.com/MagicWondrousDisplay.aspx?FinalName=Pearl%20of%20Power4th",
+     "roll": null,
+     "kind": ""
     },
     "4aps6f4_minor1": {
-     "name": "",
-     "url": "",
-     "roll": 58,
-     "kind": "wondrous item"
+     "name": "Scroll of Heroism (CL 3) (225 gp)",
+     "url": "https://www.aonprd.com/SpellDisplay.aspx?ItemName=Heroism",
+     "roll": null,
+     "kind": ""
     },
     "4aps6f4_minor2": {
-     "name": "",
-     "url": "",
-     "roll": 70,
-     "kind": "scroll"
+     "name": "Belt of Incredible Dexterity +2 (4000 gp)",
+     "url": "https://www.aonprd.com/MagicWondrousDisplay.aspx?FinalName=Belt%20of%20Incredible%20Dexterity2",
+     "roll": null,
+     "kind": ""
+    },
+    "b2gwcwz_minor0": {
+     "name": "Potion of Fireball (900 gp)",
+     "url": "https://www.aonprd.com/SpellDisplay.aspx?ItemName=Fireball",
+     "roll": null,
+     "kind": ""
+    },
+    "b2gwcwz_minor1": {
+     "name": "Wand of Remove Fear (CL 3) (2250 gp)",
+     "url": "https://www.aonprd.com/SpellDisplay.aspx?ItemName=Remove%20Fear",
+     "roll": null,
+     "kind": ""
+    },
+    "b2gwcwz_minor2": {
+     "name": "Scroll of Fly (CL 4) (300 gp)",
+     "url": "https://www.aonprd.com/SpellDisplay.aspx?ItemName=Fly",
+     "roll": null,
+     "kind": ""
+    },
+    "i7rs5a6_minor0": {
+     "name": "Scroll of Rope Trick (CL 5) (250 gp)",
+     "url": "https://www.aonprd.com/SpellDisplay.aspx?ItemName=Rope%20Trick",
+     "roll": null,
+     "kind": ""
+    },
+    "i7rs5a6_minor1": {
+     "name": "Scroll of Mirror Image (CL 5) (250 gp)",
+     "url": "https://www.aonprd.com/SpellDisplay.aspx?ItemName=Mirror%20Image",
+     "roll": null,
+     "kind": ""
+    },
+    "i7rs5a6_minor2": {
+     "name": "Scroll of Mage Hand (25 gp)",
+     "url": "https://www.aonprd.com/SpellDisplay.aspx?ItemName=Mage%20Hand",
+     "roll": null,
+     "kind": ""
+    },
+    "i7rs5a6_minor3": {
+     "name": "Feather Token (Fan) (200 gp)",
+     "url": "https://www.aonprd.com/MagicWondrousDisplay.aspx?FinalName=Feather%20TokenFan",
+     "roll": null,
+     "kind": ""
+    },
+    "9xfzvzn_minor0": {
+     "name": "Potion of Hide from Undead (50 gp)",
+     "url": "https://www.aonprd.com/SpellDisplay.aspx?ItemName=Hide%20from%20Undead",
+     "roll": null,
+     "kind": ""
+    },
+    "uxgka3k_minor0": {
+     "name": "Potion of Slow (750 gp)",
+     "url": "https://www.aonprd.com/SpellDisplay.aspx?ItemName=Slow",
+     "roll": null,
+     "kind": ""
+    },
+    "i6szl4s_minor0": {
+     "name": "Wand of Chill Touch (CL 1) (750 gp)",
+     "url": "https://www.aonprd.com/SpellDisplay.aspx?ItemName=Chill%20Touch",
+     "roll": null,
+     "kind": ""
+    },
+    "h8chcrg_minor0": {
+     "name": "Wand of Dimension Door (CL 4) (12000 gp)",
+     "url": "https://www.aonprd.com/SpellDisplay.aspx?ItemName=Dimension%20Door",
+     "roll": null,
+     "kind": ""
+    },
+    "h8chcrg_minor1": {
+     "name": "Wand of Daze (375 gp)",
+     "url": "https://www.aonprd.com/SpellDisplay.aspx?ItemName=Daze",
+     "roll": null,
+     "kind": ""
+    },
+    "wq0oe41_minor0": {
+     "name": "Elixir of Hiding (250 gp)",
+     "url": "https://www.aonprd.com/MagicWondrousDisplay.aspx?FinalName=Elixir%20of%20Hiding",
+     "roll": null,
+     "kind": ""
+    },
+    "wq0oe41_minor1": {
+     "name": "Bracers of Armor +2 (4000 gp)",
+     "url": "https://www.aonprd.com/MagicWondrousDisplay.aspx?FinalName=Bracers%20of%20Armor2",
+     "roll": null,
+     "kind": ""
+    },
+    "wq0oe41_minor2": {
+     "name": "Feather Token (Fan) (200 gp)",
+     "url": "https://www.aonprd.com/MagicWondrousDisplay.aspx?FinalName=Feather%20TokenFan",
+     "roll": null,
+     "kind": ""
+    },
+    "wq0oe41_minor3": {
+     "name": "Everburning Lantern (3000 gp)",
+     "url": "https://www.aonprd.com/MagicWondrousDisplay.aspx?FinalName=Everburning%20Lantern",
+     "roll": null,
+     "kind": ""
+    },
+    "b2gwcwz_medium0": {
+     "name": "Potion of Fox’s Cunning (200 gp)",
+     "url": "https://www.aonprd.com/SpellDisplay.aspx?ItemName=Fox%E2%80%99s%20Cunning",
+     "roll": null,
+     "kind": ""
+    },
+    "b2gwcwz_medium1": {
+     "name": "Scroll of Fly (CL 6) (450 gp)",
+     "url": "https://www.aonprd.com/SpellDisplay.aspx?ItemName=Fly",
+     "roll": null,
+     "kind": ""
+    },
+    "i7rs5a6_medium0": {
+     "name": "Elixir of Love (300 gp)",
+     "url": "https://www.aonprd.com/MagicWondrousDisplay.aspx?FinalName=Elixir%20of%20Love",
+     "roll": null,
+     "kind": ""
+    },
+    "i7rs5a6_medium1": {
+     "name": "Bracers of Armor +3 (9000 gp)",
+     "url": "https://www.aonprd.com/MagicWondrousDisplay.aspx?FinalName=Bracers%20of%20Armor3",
+     "roll": null,
+     "kind": ""
+    },
+    "wq0oe41_medium0": {
+     "name": "Cloak of Elvenkind (2500 gp)",
+     "url": "https://www.aonprd.com/MagicWondrousDisplay.aspx?FinalName=Cloak%20of%20Elvenkind",
+     "roll": null,
+     "kind": ""
+    },
+    "wq0oe41_medium1": {
+     "name": "Glove of Storing (10000 gp)",
+     "url": "https://www.aonprd.com/MagicWondrousDisplay.aspx?FinalName=Glove%20of%20Storing",
+     "roll": null,
+     "kind": ""
+    },
+    "wq0oe41_major0": {
+     "name": "Figurine of Wondrous Power (Silver Raven) (6000 gp)",
+     "url": "https://www.aonprd.com/MagicWondrousDisplay.aspx?FinalName=Figurine%20of%20Wondrous%20PowerSilver%20Raven",
+     "roll": null,
+     "kind": ""
     }
    },
    "districts": [
@@ -616,7 +746,20 @@
    "name": "Basgiat",
    "terrain": "Mountains",
    "cd": 0,
-   "mi": {},
+   "mi": {
+    "gtyxyn1_minor0": {
+     "name": "Lance (+1 weapon) (2010 gp)",
+     "url": "https://www.aonprd.com/MagicWeapons.aspx",
+     "roll": null,
+     "kind": ""
+    },
+    "gtyxyn1_medium0": {
+     "name": "+5 Chainmail (25150 gp)",
+     "url": "https://www.aonprd.com/MagicArmor.aspx",
+     "roll": null,
+     "kind": ""
+    }
+   },
    "districts": [
     {
      "borders": {
@@ -706,14 +849,14 @@
    ]
   }
  ],
- "cur": "0ombioe",
+ "cur": "3qc6jt7",
  "kingdom": {
-  "name": "Technologia",
+  "name": "Moje království",
   "players": "",
   "gm": "",
   "align": "N",
-  "size": 30,
-  "treasury": 865,
+  "size": 1,
+  "treasury": 835,
   "famebase": 1,
   "infbase": 0,
   "tax": "none",
@@ -724,7 +867,7 @@
    "e": 0,
    "l": 0,
    "s": 0,
-   "u": -1
+   "u": 0
   },
   "ruler": [
    "e"
@@ -745,13 +888,13 @@
    },
    "councilor": {
     "on": true,
-    "name": "Světlana ",
-    "mod": 2,
+    "name": "",
+    "mod": 0,
     "feat": false
    },
    "general": {
     "on": true,
-    "name": "Askirot",
+    "name": "Swordlord Cápek",
     "mod": 3,
     "feat": false
    },
@@ -775,13 +918,13 @@
    },
    "magister": {
     "on": true,
-    "name": "Soul cast",
+    "name": "Soul Cast",
     "mod": 4,
     "feat": false
    },
    "marshal": {
     "on": true,
-    "name": "Chilis ",
+    "name": "Chilis",
     "mod": 4,
     "feat": false
    },
@@ -794,7 +937,7 @@
    "spymaster": {
     "on": true,
     "name": "Vanish",
-    "mod": 4,
+    "mod": 0,
     "feat": false
    },
    "treasurer": {
@@ -811,61 +954,36 @@
    },
    "warden": {
     "on": true,
-    "name": "Sword lord",
+    "name": "Sword Lord",
     "mod": 3,
     "feat": false
    }
   },
   "trade": [],
   "notes": "",
-  "soldBP": 0,
+  "soldBP": 2,
   "incomeBP": 0,
   "bought": 0,
-  "sold": [],
+  "sold": [
+   {
+    "n": "Headband of Inspired Wisdom +2 (4000 gp)",
+    "tier": "minor",
+    "bp": 2
+   }
+  ],
   "gp": [],
   "turn": {
    "y": 1,
    "m": 1
   },
   "evLast": 0,
-  "held": 0,
-  "log": [
-   {
-    "y": 1,
-    "m": 1,
-    "t": "Stability check (Upkeep): d20=20 → 51 vs DC 59 → ÚSPĚCH"
-   },
-   {
-    "y": 1,
-    "m": 1,
-    "t": "BP +1 — stabilita udržena (Unrest již 0)"
-   },
-   {
-    "y": 1,
-    "m": 1,
-    "t": "Royal Enforcer – Loyalty check: d20=1 → 35 vs DC 59 → SELHÁNÍ"
-   },
-   {
-    "y": 1,
-    "m": 1,
-    "t": "Unrest −1 — Royal Enforcer"
-   },
-   {
-    "y": 1,
-    "m": 1,
-    "t": "Loy −1"
-   },
-   {
-    "y": 1,
-    "m": 1,
-    "t": "Event fáze: žádná událost (hod 82 > 75 %)."
-   }
-  ],
-  "farms": 20,
-  "fish": 1,
+  "held": -1,
+  "log": [],
+  "farms": 0,
+  "fish": 0,
   "mods": {
    "e": 0,
-   "l": -1,
+   "l": 0,
    "s": 0
   },
   "temp": {
@@ -894,6 +1012,6 @@
   },
   "foodNext": 1,
   "lastEv": null,
-  "taxdiv": "5"
+  "taxdiv": "3"
  }
 }
