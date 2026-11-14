@@ -1,5 +1,5 @@
 {
- "_savedAt": "2026-11-14T09:12:34.393Z",
+ "_savedAt": "2026-11-14T09:13:34.065Z",
  "cities": [
   {
    "id": "0joobpf",
@@ -856,7 +856,7 @@
   "gm": "",
   "align": "N",
   "size": 1,
-  "treasury": 835,
+  "treasury": 836,
   "famebase": 1,
   "infbase": 0,
   "tax": "none",
@@ -978,9 +978,20 @@
   },
   "evLast": 0,
   "held": -1,
-  "log": [],
-  "farms": 0,
-  "fish": 0,
+  "log": [
+   {
+    "y": 1,
+    "m": 1,
+    "t": "Stability check (Upkeep): d20=5 → 36 vs DC 30 → ÚSPĚCH"
+   },
+   {
+    "y": 1,
+    "m": 1,
+    "t": "BP +1 — stabilita udržena (Unrest již 0)"
+   }
+  ],
+  "farms": 20,
+  "fish": 1,
   "mods": {
    "e": 0,
    "l": 0,
