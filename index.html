@@ -480,7 +480,22 @@ function load() {
   try { var s = JSON.parse(localStorage.getItem(KEY)); if (s && s.cities && s.cities.length) { HAD_LOCAL = true; return norm(s); } } catch (e) {}
   return norm(sample());
 }
-function save() { try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (e) {} }
+var AUTOS = {timer:null, skip:false, lastPoll:0};
+function autoWanted() { return !!ghToken() && !!ghRepo(); }
+function save() { try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (e) {} scheduleAuto(); }
+function saveQuiet() { AUTOS.skip = true; save(); AUTOS.skip = false; }
+function scheduleAuto() {
+  if (AUTOS.skip || !autoWanted()) return;
+  if (AUTOS.timer) clearTimeout(AUTOS.timer);
+  AUTOS.timer = setTimeout(autoSave, 3000);
+}
+function autoSave() {
+  AUTOS.timer = null;
+  if (!autoWanted() || SH.busy || SH.newer) return;
+  if (SH.loading) { AUTOS.timer = setTimeout(autoSave, 1000); return; }
+  if (SH.cur && JSON.stringify(S) === SH.cur.json) return;
+  ghSave(true);
+}
 function curCity() { for (var i = 0; i < S.cities.length; i++) if (S.cities[i].id === S.cur) return S.cities[i]; S.cur = S.cities[0].id; return S.cities[0]; }
 function curD() { var c = curCity(); if (c.cd >= c.districts.length) c.cd = 0; return c.districts[c.cd]; }
 
@@ -1439,7 +1454,8 @@ function saveHTML() {
   } else {
     var gdirty = !SH.cur || JSON.stringify(S) !== SH.cur.json;
     h += '<button class="btn primary" data-act="save"' + (SH.busy ? ' disabled' : '') + '>' + (SH.busy ? 'Ukládám…' : 'Uložit na GitHub') + '</button>';
-    h += '<span class="sstat">' + (SH.cur ? 'Naposledy uloženo ' + fmtDate(SH.cur.savedAt) + (gdirty ? ' · <b class="dirty">máš neuložené změny</b>' : ' · beze změn') : SH.loading ? 'Načítám uloženou verzi…' : 'Zatím nic uloženo · <b class="dirty">máš neuložené změny</b>') + '</span>';
+    h += '<span class="sstat">' + (SH.cur ? 'Naposledy uloženo ' + fmtDate(SH.cur.savedAt) + (gdirty ? ' · <b class="dirty">máš neuložené změny</b>' : ' · beze změn') : SH.loading ? 'Načítám uloženou verzi…' : 'Zatím nic uloženo · <b class="dirty">máš neuložené změny</b>') + '</span>'
+      + (autoWanted() ? ' <span class="sstat">⚡ Změny se ukládají i načítají automaticky (bez reloadu).</span>' : '');
     if (SH.newer) h += '<button class="btn" data-act="loadnew">Načíst novější uloženou verzi</button>';
     h += '<button class="btn" data-act="ghtoken" title="Token k zápisu do GitHub repozitáře">' + (ghToken() ? 'Změnit token' : 'Nastavit token') + '</button>';
     h += '<button class="btn" data-act="dlstate">Stáhnout state.json</button><label class="btn">Načíst ze souboru<input type="file" id="ldfile" accept=".json,application/json" hidden></label>';
@@ -1450,7 +1466,7 @@ function applyShared() {
   if (!SH.cur || !SH.cur.json) return;
   try {
     var saved = norm(JSON.parse(SH.cur.json)), savedJson = JSON.stringify(saved);
-    if (lsGet(KEY + '-base') !== SH.cur.savedAt) { S = saved; save(); lsSet(KEY + '-base', SH.cur.savedAt); UI.king = false; }
+    if (lsGet(KEY + '-base') !== SH.cur.savedAt) { S = saved; saveQuiet(); lsSet(KEY + '-base', SH.cur.savedAt); UI.king = false; }
     SH.cur = {json:savedJson, savedAt:SH.cur.savedAt};
   } catch (e) {}
 }
@@ -1482,7 +1498,7 @@ function ghRemote() {
   });
 }
 function ghApply(rm) {
-  S = norm(JSON.parse(rm.json)); UI.king = false; save();
+  S = norm(JSON.parse(rm.json)); UI.king = false; saveQuiet();
   lsSet(KEY + '-gh-sha', rm.sha); lsSet(KEY + '-gh-base', rm.json);
   SH.cur = {json:rm.json, savedAt:rm.savedAt, sha:rm.sha}; SH.newer = false;
 }
@@ -1505,7 +1521,7 @@ function ghLoad(initial) {
     render();
   }).catch(function () {
     SH.loading = false;
-    if (initial && !HAD_LOCAL) fetch('state.json', {cache:'no-store'}).then(function (r) { return r.ok ? r.json() : null; }).then(function (j) { if (j && j.cities && j.cities.length) { delete j._savedAt; S = norm(j); save(); } render(); }).catch(function () { render(); });
+    if (initial && !HAD_LOCAL) fetch('state.json', {cache:'no-store'}).then(function (r) { return r.ok ? r.json() : null; }).then(function (j) { if (j && j.cities && j.cities.length) { delete j._savedAt; S = norm(j); saveQuiet(); } render(); }).catch(function () { render(); });
     else render();
   });
 }
@@ -1515,7 +1531,7 @@ function ghSetToken() {
   t = t.trim(); if (t) lsSet(KEY + '-gh-token', t);
   return !!t;
 }
-function ghSave() {
+function ghSave(auto) {
   if (SH.busy) return;
   if (!ghRepo()) { var rp = window.prompt('Repozitář ve tvaru uživatel/repozitář (např. jmeno/planovac-mest):', ''); if (!rp || rp.indexOf('/') < 0) return; lsSet(KEY + '-gh-repo', rp.trim()); }
   if (!ghToken() && !ghSetToken()) return;
@@ -1539,17 +1555,24 @@ function ghSave() {
     var sha = res.content && res.content.sha;
     SH.cur = {json:json, savedAt:now, sha:sha}; SH.newer = false;
     lsSet(KEY + '-gh-sha', sha); lsSet(KEY + '-gh-base', json);
-    toast('Uloženo na GitHub. Kdo stránku otevře (nebo se k ní vrátí), uvidí tuto verzi.');
+    if (!auto) toast('Uloženo na GitHub. Kdo stránku otevře (nebo se k ní vrátí), uvidí tuto verzi.');
   }).catch(function (e) {
     var st = e && e.status;
     if (st === 401) { try { localStorage.removeItem(KEY + '-gh-token'); } catch (x) {} }
-    toast('Uložení se nepovedlo' + (st === 401 ? ': token není platný, nastav nový.' : st === 403 || st === 404 ? ': token nemá právo zapisovat do tohoto repozitáře (Contents: Read and write).' : '.'));
+    toast((auto ? 'Automatické uložení selhalo' : 'Uložení se nepovedlo') + (st === 401 ? ': token není platný, nastav nový.' : st === 403 || st === 404 ? ': token nemá právo zapisovat do tohoto repozitáře (Contents: Read and write).' : '.'));
   }).then(function () { SH.busy = false; render(); });
 }
 function initShared() {
   if (!(window.claude && window.claude.use)) {
     ghLoad(true);
     document.addEventListener('visibilitychange', function () { if (!document.hidden && !SH.busy) ghLoad(false); });
+    setInterval(function () {
+      if (document.hidden || SH.busy || SH.loading || AUTOS.timer) return;
+      var gap = autoWanted() ? 15000 : 75000;
+      if (AUTOS.lastPoll && Date.now() - AUTOS.lastPoll < gap) return;
+      AUTOS.lastPoll = Date.now();
+      ghLoad(false);
+    }, 5000);
     return;
   }
   SH.loading = true;
@@ -1819,7 +1842,7 @@ function act(a, t) {
     case 'save': if (DBN) saveShared(); else ghSave(); break;
     case 'ghtoken': if (ghSetToken()) { toast('Token uložen v tomto prohlížeči.'); render(); } break;
     case 'restore': if (SH.prev) { try { S = norm(JSON.parse(SH.prev.json)); UI.king = false; save(); render(); toast('Načteno předchozí uložení. Pro sdílení klikni na Uložit.'); } catch (e) { toast('Předchozí uložení nejde načíst.'); } } break;
-    case 'loadnew': if (SH.cur) { try { S = norm(JSON.parse(SH.cur.json)); SH.newer = false; lsSet(KEY + '-base', SH.cur.savedAt); if (SH.cur.sha) { lsSet(KEY + '-gh-sha', SH.cur.sha); lsSet(KEY + '-gh-base', SH.cur.json); } save(); render(); } catch (e) {} } break;
+    case 'loadnew': if (SH.cur) { try { S = norm(JSON.parse(SH.cur.json)); SH.newer = false; lsSet(KEY + '-base', SH.cur.savedAt); if (SH.cur.sha) { lsSet(KEY + '-gh-sha', SH.cur.sha); lsSet(KEY + '-gh-base', SH.cur.json); } saveQuiet(); render(); } catch (e) {} } break;
     case 'dlstate': download('state.json', JSON.stringify(S)); toast('Staženo state.json'); break;
     case 'rattr':
       var K = S.kingdom, rn = rulerCount(K), ix = K.ruler.indexOf(ds.k);
