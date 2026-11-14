@@ -279,11 +279,30 @@ textarea.kin { min-height: 90px; resize: vertical; font-family: var(--body); }
 @media (max-width: 640px) { .trow { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); } }
 .tab.king { border-color: var(--accent); }
 .incres { font-family: var(--mono); font-size: 14px; margin-top: 8px; }
+.music { position: fixed; top: max(10px, env(safe-area-inset-top, 0px)); right: max(10px, env(safe-area-inset-right, 0px)); z-index: 70; display: flex; align-items: center; gap: 2px; background: var(--panel); border: 1px solid var(--line); border-radius: 999px; padding: 3px 5px; box-shadow: 0 2px 12px rgba(0,0,0,.18); }
+.music span { display: flex; align-items: center; gap: 2px; }
+.mbtn { border: 0; background: transparent; color: var(--ink); font-size: 17px; line-height: 1; cursor: pointer; padding: 4px 5px; border-radius: 8px; }
+.mbtn:hover { background: var(--panel-2); }
+.mbtn.main { font-size: 19px; }
+#musicvol { width: 86px; accent-color: var(--accent); cursor: pointer; }
+.mtitle { display: block !important; max-width: 170px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 11.5px; color: var(--ink-2); padding: 0 4px; }
+#ytholder { position: fixed; left: -9999px; top: 0; width: 200px; height: 150px; overflow: hidden; pointer-events: none; }
 </style>
 
 <div class="wrap" id="app"></div>
 <div id="modal"></div>
 <div id="toast" class="toast" hidden></div>
+<div id="music" class="music">
+  <button id="musictoggle" class="mbtn main" data-act="musictoggle" title="Hudba: zapnout / vypnout (tavern &amp; kingdom songs)" aria-pressed="false">🎵</button>
+  <span id="musicctrl" hidden>
+    <button class="mbtn" data-act="musicprev" title="Předchozí song">⏮</button>
+    <button class="mbtn" data-act="musicplay" id="musicplay" title="Pauza / Přehrát">⏸</button>
+    <button class="mbtn" data-act="musicnext" title="Další song">⏭</button>
+    <input id="musicvol" type="range" min="0" max="100" value="40" aria-label="Hlasitost" title="Hlasitost">
+    <span id="musictitle" class="mtitle"></span>
+  </span>
+</div>
+<div id="ytholder"><div id="ytframe"></div></div>
 
 <script>
 (function () {
@@ -1466,7 +1485,7 @@ function applyShared() {
   if (!SH.cur || !SH.cur.json) return;
   try {
     var saved = norm(JSON.parse(SH.cur.json)), savedJson = JSON.stringify(saved);
-    if (lsGet(KEY + '-base') !== SH.cur.savedAt) { S = saved; saveQuiet(); lsSet(KEY + '-base', SH.cur.savedAt); UI.king = false; }
+    if (lsGet(KEY + '-base') !== SH.cur.savedAt) { S = saved; if (!S.cities.some(function (c) { return c.id === S.cur; })) S.cur = S.cities[0].id; saveQuiet(); lsSet(KEY + '-base', SH.cur.savedAt); }
     SH.cur = {json:savedJson, savedAt:SH.cur.savedAt};
   } catch (e) {}
 }
@@ -1498,7 +1517,9 @@ function ghRemote() {
   });
 }
 function ghApply(rm) {
-  S = norm(JSON.parse(rm.json)); UI.king = false; saveQuiet();
+  S = norm(JSON.parse(rm.json));
+  if (!S.cities.some(function (c) { return c.id === S.cur; })) S.cur = S.cities[0].id;
+  saveQuiet();
   lsSet(KEY + '-gh-sha', rm.sha); lsSet(KEY + '-gh-base', rm.json);
   SH.cur = {json:rm.json, savedAt:rm.savedAt, sha:rm.sha}; SH.newer = false;
 }
@@ -1841,6 +1862,7 @@ function act(a, t) {
     case 'rolestoggle': UI.rolesOpen = !UI.rolesOpen; render(); break;
     case 'save': if (DBN) saveShared(); else ghSave(); break;
     case 'ghtoken': if (ghSetToken()) { toast('Token uložen v tomto prohlížeči.'); render(); } break;
+    case 'musictoggle': case 'musicplay': case 'musicnext': case 'musicprev': musAct(a); break;
     case 'restore': if (SH.prev) { try { S = norm(JSON.parse(SH.prev.json)); UI.king = false; save(); render(); toast('Načteno předchozí uložení. Pro sdílení klikni na Uložit.'); } catch (e) { toast('Předchozí uložení nejde načíst.'); } } break;
     case 'loadnew': if (SH.cur) { try { S = norm(JSON.parse(SH.cur.json)); SH.newer = false; lsSet(KEY + '-base', SH.cur.savedAt); if (SH.cur.sha) { lsSet(KEY + '-gh-sha', SH.cur.sha); lsSet(KEY + '-gh-base', SH.cur.json); } saveQuiet(); render(); } catch (e) {} } break;
     case 'dlstate': download('state.json', JSON.stringify(S)); toast('Staženo state.json'); break;
@@ -2035,6 +2057,69 @@ document.addEventListener('input', function (e) {
   if (e.target.id === 'q' && UI.modal && UI.modal.type === 'pick') { UI.modal.q = e.target.value; pickInner(); }
 });
 document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && UI.modal) closeModal(); });
+
+/* ---------- hudba (YouTube, jen zvuk – přehrávač je mimo obrazovku) ---------- */
+var MUS = {
+  ids: ['17Kszzcmfv4', 'P0ujwN8_Fj8', 'fmI_Ndrxy14', 'jTsQMceWYIo'],
+  names: ['Skyrim Guard Song (The Chalkeaters)', 'Medieval Tavern Song – Stomp! Clap! Drink!', 'Warriors (LoL Worlds 2014)', 'Pathfinder Kingmaker Theme'],
+  ix: 0, pl: null, on: false, api: false
+};
+function musVol() { var v = parseInt(lsGet(KEY + '-mus-vol'), 10); return isNaN(v) ? 40 : Math.min(100, Math.max(0, v)); }
+function musTitle() { var t = document.getElementById('musictitle'); if (t) t.textContent = MUS.names[MUS.ix]; }
+function musIcon() {
+  var b = document.getElementById('musicplay');
+  if (!b) return;
+  var st = -1; try { st = MUS.pl ? MUS.pl.getPlayerState() : -1; } catch (e) {}
+  b.textContent = st === 1 ? '⏸' : '▶';
+}
+function musCreate() {
+  MUS.pl = new YT.Player('ytframe', {
+    videoId: MUS.ids[MUS.ix],
+    playerVars: { autoplay: 1, controls: 0, disablekb: 1, playsinline: 1, rel: 0, origin: location.origin },
+    events: {
+      onReady: function (e) { e.target.setVolume(musVol()); if (MUS.on) e.target.playVideo(); musTitle(); musIcon(); },
+      onStateChange: function (e) {
+        if (e.data === 0) { MUS.ix = (MUS.ix + 1) % MUS.ids.length; try { MUS.pl.loadVideoById(MUS.ids[MUS.ix]); } catch (x) {} musTitle(); }
+        musIcon();
+      },
+      onError: function () { MUS.ix = (MUS.ix + 1) % MUS.ids.length; try { MUS.pl.loadVideoById(MUS.ids[MUS.ix]); } catch (x) {} musTitle(); toast('Song nejde přehrát, zkouším další…'); }
+    }
+  });
+}
+function musEnsure() {
+  if (MUS.api) { if (MUS.pl) { try { MUS.pl.playVideo(); } catch (e) {} } return; }
+  MUS.api = true;
+  if (window.YT && window.YT.Player) musCreate();
+  else {
+    window.onYouTubeIframeAPIReady = musCreate;
+    var s = document.createElement('script');
+    s.src = 'https://www.youtube.com/iframe_api';
+    s.async = true;
+    document.head.appendChild(s);
+  }
+}
+function musAct(a) {
+  var c = document.getElementById('musicctrl'), tg = document.getElementById('musictoggle');
+  if (a === 'musictoggle') {
+    if (!MUS.on) { MUS.on = true; if (c) c.hidden = false; if (tg) tg.setAttribute('aria-pressed', 'true'); musEnsure(); musTitle(); }
+    else { MUS.on = false; if (c) c.hidden = true; if (tg) tg.setAttribute('aria-pressed', 'false'); if (MUS.pl) { try { MUS.pl.pauseVideo(); } catch (e) {} } }
+  } else if (a === 'musicplay') {
+    if (!MUS.pl) { MUS.on = true; if (c) c.hidden = false; if (tg) tg.setAttribute('aria-pressed', 'true'); musEnsure(); musTitle(); }
+    else { var st = -1; try { st = MUS.pl.getPlayerState(); } catch (e) {} if (st === 1) MUS.pl.pauseVideo(); else MUS.pl.playVideo(); }
+  } else if (a === 'musicnext') {
+    MUS.ix = (MUS.ix + 1) % MUS.ids.length; musTitle();
+    if (MUS.pl) { try { MUS.pl.loadVideoById(MUS.ids[MUS.ix]); MUS.pl.playVideo(); } catch (e) {} }
+  } else if (a === 'musicprev') {
+    MUS.ix = (MUS.ix - 1 + MUS.ids.length) % MUS.ids.length; musTitle();
+    if (MUS.pl) { try { MUS.pl.loadVideoById(MUS.ids[MUS.ix]); MUS.pl.playVideo(); } catch (e) {} }
+  }
+}
+(function musInitVol() {
+  var v = document.getElementById('musicvol');
+  if (!v) return;
+  v.value = musVol();
+  v.addEventListener('input', function () { lsSet(KEY + '-mus-vol', v.value); if (MUS.pl) { try { MUS.pl.setVolume(+v.value); } catch (e) {} } });
+})();
 
 S = load();
 render();
