@@ -1,5 +1,5 @@
 {
- "_savedAt": "2026-11-14T09:33:34.344Z",
+ "_savedAt": "2026-11-14T09:33:44.792Z",
  "cities": [
   {
    "id": "0joobpf",
@@ -975,8 +975,8 @@
    {
     "src": "Awmill",
     "where": "",
-    "gp": 0,
-    "cur": "gp"
+    "gp": 30,
+    "cur": "bp"
    }
   ],
   "turn": {
