@@ -306,7 +306,7 @@ textarea.kin { min-height: 90px; resize: vertical; font-family: var(--body); }
 .hexmap .t-b { fill: #d9c3a3; }
 .hexmap .t-r { fill: #f0e6b4; }
 .hexmap .fog { fill: #2a332c; fill-opacity: .87; pointer-events: none; }
-.hexmap.gmv .fog { fill-opacity: .32; }
+.hexmap.gmv .fog { fill-opacity: .25; }
 .hexmap .cl { fill: none; stroke: var(--accent); stroke-width: 2.6; pointer-events: none; }
 .hexmap .riv { fill: none; stroke: #4d86b0; stroke-width: 3.4; stroke-linecap: round; stroke-linejoin: round; opacity: .75; pointer-events: none; }
 .hexmap .road { fill: none; stroke: #c07a40; stroke-width: 2.6; stroke-linecap: round; stroke-linejoin: round; opacity: .85; pointer-events: none; }
@@ -1499,44 +1499,41 @@ var TERN = {'.':'Pláně', f:'Řídoký les', F:'Hustý les', h:'Kopce', m:'Hory
 var MAP = {
   size: 30, cols: 17, rows: 13,
   terr: [
-    'fffF....hh..hh...',
-    'fFFf.....h...h...',
-    'FFff......h......',
-    'FFff.............',
-    '.Fff....h........',
-    '.ff...ww..h...h..',
-    '.f....ww.hh..m...',
-    '..h...h..hh..mm..',
-    '..h..hh...h.mmm..',
-    '...h.hh....mmm...',
-    '...hh.....m.mm...',
-    '....h...h.mm.mm..',
-    '..........m..mm..'
+    'ffffff...........',
+    'fFFFf............',
+    'fFFFFf...........',
+    'FFFFFf...........',
+    'FFFFff...........',
+    'FFFFf.....m......',
+    'FFFf......mm.....',
+    'ffff.ww....mm....',
+    'ff...ww....mmm...',
+    '..hhhhhhh.mmm....',
+    '..hhhhhh..mmmm...',
+    '...hhhhh..mmmm...',
+    '.........mmmmmm..'
   ],
   rivers: [
-    [[7,0],[7,1],[7,2],[7,3],[7,4],[6,5]],
-    [[6,6],[7,7],[8,8],[9,9],[10,10]],
-    [[7,5],[8,5],[9,6],[10,6]],
-    [[5,6],[4,7],[3,8],[2,9],[1,10],[0,10]]
+    [[8,1],[8,2],[8,3],[8,4],[8,5],[8,6],[7,7]],
+    [[6,8],[8,9],[10,10]],
+    [[4,8],[3,9],[2,10],[0,10]],
+    [[13,4],[16,4]]
   ],
   roads: [
-    [[0,10],[2,10],[4,9],[6,9],[8,8],[10,7],[12,6],[14,4],[16,2]]
+    [[8,1],[10,2],[12,3],[14,4]],
+    [[0,8],[2,9],[4,10],[6,10],[8,10],[10,10],[12,10],[14,10],[16,10]]
   ],
   labels: [
-    {t:'▲ New Stetven (Brevoy)', c:7.4, r:-0.62},
-    {t:'▲ Brunderton', c:13.2, r:-0.62},
-    {t:'Rostov ▶', c:16.3, r:1.1},
-    {t:'◀ Pitax', c:0.9, r:4.3},
-    {t:'▼ Mivon', c:9.6, r:13.6},
-    {t:'▼ Jovvox', c:14.4, r:13.6}
+    {t:'▲ Rostland (Brevoy)', c:8.4, r:-0.62},
+    {t:'Pitax ▶', c:14.6, r:2.9}
   ],
   regions: [
-    {t:'Narlmarches', c:2.6, r:2.6},
-    {t:'Kamelands', c:6.6, r:8.8},
-    {t:'Uismland', c:15.2, r:5.2}
+    {t:'Narlmarches', c:2.7, r:5.4},
+    {t:'Kamelands', c:6.2, r:9.6},
+    {t:'Uismland', c:15.3, r:6.5}
   ],
   rivlbl: [
-    {t:'Lake Namascha', c:6.3, r:5.55}
+    {t:'Lake Namascha', c:7.4, r:7.4}
   ]
 };
 function hxCtr(c, r) { var s = MAP.size; return {x: s*1.7320508*(c + 0.5*(r & 1)) + s, y: s*1.5*r + s*2.35}; }
