@@ -292,6 +292,34 @@ textarea.kin { min-height: 90px; resize: vertical; font-family: var(--body); }
 .mlist button { border: 0; background: transparent; color: var(--ink); text-align: left; font-size: 13px; padding: 5px 8px; border-radius: 6px; cursor: pointer; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .mlist button:hover { background: var(--panel-2); }
 .mlist button.cur { color: var(--accent); font-weight: 600; }
+/* mapa (hexy, fog of war) */
+.mapcard .row { flex-wrap: wrap; gap: 8px; }
+.mapwrap { overflow: auto; background: #eef0e6; border: 1px solid var(--line); border-radius: 8px; margin-top: 10px; }
+.hexmap { display: block; width: 100%; min-width: 700px; height: auto; }
+.hexmap .hx { stroke: #5b6b5f; stroke-width: .7; cursor: pointer; }
+.hexmap .hx:hover { stroke-width: 2.2; }
+.hexmap .t-p { fill: #e9edd9; }
+.hexmap .t-f { fill: #c3d8ac; }
+.hexmap .t-F { fill: #9cc191; }
+.hexmap .t-h { fill: #ddd2a4; }
+.hexmap .t-m { fill: #c2b7a8; }
+.hexmap .t-w { fill: #a9cbdd; }
+.hexmap .t-s { fill: #b3c9ab; }
+.hexmap .t-b { fill: #d9c3a3; }
+.hexmap .t-r { fill: #f0e6b4; }
+.hexmap .fog { fill: #2a332c; fill-opacity: .87; pointer-events: none; }
+.hexmap .gmv .fog { fill-opacity: .32; }
+.hexmap .cl { fill: none; stroke: var(--accent); stroke-width: 2.6; pointer-events: none; }
+.hexmap .riv { fill: none; stroke: #4d86b0; stroke-width: 3.4; stroke-linecap: round; stroke-linejoin: round; opacity: .75; pointer-events: none; }
+.hexmap .lbl { font: 600 11px 'Alegreya Sans', sans-serif; fill: #4a5a4f; pointer-events: none; }
+.hexmap .rgn { font: italic 700 15px 'Alegreya Sans', sans-serif; fill: #6a7a6f; opacity: .55; pointer-events: none; }
+.hexmap .rlbl { font: italic 600 9.5px 'Alegreya Sans', sans-serif; fill: #3d6a8a; pointer-events: none; }
+.hexmap .cty { font: 700 11.5px 'Alegreya Sans', sans-serif; fill: #1c2720; pointer-events: none; }
+.hexmap .feat { font-size: 15px; pointer-events: none; }
+.hexmap .mnote { font: 10px 'Alegreya Sans', sans-serif; fill: #7a4a0a; pointer-events: none; }
+.mapleg { display: flex; flex-wrap: wrap; gap: 6px 14px; margin-top: 8px; font-size: 12px; color: var(--ink-2); }
+.mapleg .sw { display: inline-block; width: 12px; height: 12px; border: 1px solid #5b6b5f; border-radius: 3px; margin-right: 4px; vertical-align: -2px; }
+.mapleg .lg { white-space: nowrap; }
 #ytholder { position: fixed; left: -9999px; top: 0; width: 200px; height: 150px; overflow: hidden; pointer-events: none; }
 </style>
 
@@ -459,7 +487,7 @@ var DISC = {
 
 /* ---------- state ---------- */
 var KEY = 'mestsky-planovac-v1';
-var S, UI = {modal:null, confirm:null, king:false, econ:false, turn:false, miOpen:false, income:null, rolesOpen:true};
+var S, UI = {modal:null, confirm:null, king:false, econ:false, turn:false, map:false, miOpen:false, income:null, rolesOpen:true};
 var DBN = null, HAD_LOCAL = false, SH = {cur:null, prev:null, loading:false, newer:false, busy:false};
 function uid() { return Math.random().toString(36).slice(2, 9); }
 function newDistrict() { return {borders:{n:'land',e:'land',s:'land',w:'land'}, wall:{n:0,e:0,s:0,w:0}, gate:{n:0,e:0,s:0,w:0}, moat:{n:0,e:0,s:0,w:0}, paved:0, sewer:0, buildings:[], overlays:[]}; }
@@ -467,7 +495,7 @@ function newKingdom() {
   var K = {name:'Moje království', players:'', gm:'', align:'N', size:1, treasury:0, famebase:1, infbase:0, tax:'none', hol:'none', pro:'none', consAdj:0,
     other:{e:0, l:0, s:0, u:0}, ruler:['e'], spy:'e', roles:{}, trade:[], notes:'', soldBP:0, incomeBP:0, bought:0, sold:[], gp:[],
     turn:{y:1, m:1}, evLast:0, held:-1, log:[], farms:0, fish:0, mods:{e:0, l:0, s:0}, temp:{e:0, l:0, s:0, ec:0, sc:0, lc:0},
-    tempM:{cor:0, cri:0, law:0, lor:0, pro:0, soc:0}, smods:{cor:0, cri:0, law:0, lor:0, pro:0, soc:0}, foodNext:1, lastEv:null, taxdiv:'3'};
+    tempM:{cor:0, cri:0, law:0, lor:0, pro:0, soc:0}, smods:{cor:0, cri:0, law:0, lor:0, pro:0, soc:0}, foodNext:1, lastEv:null, taxdiv:'3', map:{hexes:{}, gm:0}};
   ROLES.forEach(function (R) { K.roles[R.id] = {on:!R.opt, name:'', mod:0, feat:false}; });
   return K;
 }
@@ -489,6 +517,8 @@ function norm(s) {
   ['ec','sc','lc'].forEach(function (k) { K.temp[k] = +K.temp[k] || 0; });
   ['cor','cri','law','lor','pro','soc'].forEach(function (k) { K.tempM[k] = +K.tempM[k] || 0; K.smods[k] = +K.smods[k] || 0; });
   K.lastEv = K.lastEv || null;
+  K.map = K.map || {hexes:{}, gm:0}; K.map.gm = +K.map.gm || 0; K.map.hexes = K.map.hexes || {};
+  K.size = +K.size || 1;
   s.kingdom = K; return s;
 }
 function newCity(name) { return {id:uid(), name:name, terrain:'Plains', cd:0, mi:{}, districts:[newDistrict()]}; }
@@ -1465,6 +1495,131 @@ function kset(path, v) {
   o[p[p.length - 1]] = v;
 }
 
+/* ---------- mapa (hex grid, fog of war) ---------- */
+var TERN = {'.':'Pláně', f:'Řídoký les', F:'Hustý les', h:'Kopce', m:'Hory', w:'Voda', s:'Mokřad', b:'Pustina', r:'Polní krajina'};
+var MAP = {
+  size: 30, cols: 17, rows: 13,
+  terr: [
+    '..hhf...rrrrrhh..',
+    '..hff...rrrrrhh..',
+    '..fff....h..mm...',
+    '.fff..f..f..mmm..',
+    '..ff..ffFf...mm..',
+    '...f..fFFf...hh..',
+    'b.h.h..fFf..hhh..',
+    'bb.h...fff..hhh..',
+    '.b......sss..hh..',
+    '........sss..hh..',
+    '...hh.....s.h....',
+    '.........s....h..',
+    '..f...s....s.....'
+  ],
+  rivers: [
+    [[7,0],[7,1],[7,2],[7,3],[8,4],[8,5],[8,6],[9,7],[9,8],[9,9],[9,10],[10,11],[10,12]],
+    [[3,4],[4,4],[5,4],[6,4],[7,4],[8,4]],
+    [[1,8],[3,8],[5,8],[7,8],[9,8]],
+    [[2,1],[3,1],[4,2],[4,3],[5,3]],
+    [[14,4],[14,5],[13,6],[13,7],[12,8],[12,9]],
+    [[10,8],[11,8],[11,9],[12,9]],
+    [[13,6],[13,7],[13,8],[13,9],[13,10],[14,11]]
+  ],
+  labels: [
+    {t:'▲ New Stetven (Brevoy)', c:7.4, r:-0.62},
+    {t:'▲ Brunderton', c:13.2, r:-0.62},
+    {t:'Rostov ▶', c:16.3, r:1.1},
+    {t:'◀ Pitax', c:0.9, r:4.3},
+    {t:'▼ Mivon', c:9.6, r:13.6},
+    {t:'▼ Jovvox', c:14.4, r:13.6}
+  ],
+  regions: [
+    {t:'Stolen Lands', c:6.2, r:5.4},
+    {t:'Nomen Heights', c:13.2, r:7.2},
+    {t:'Tors of Levenies', c:14.6, r:2.6}
+  ],
+  rivlbl: [
+    {t:'East Sellen', c:9.4, r:8.6},
+    {t:'Little Sellen', c:4.3, r:3.6},
+    {t:'Shrike', c:2.3, r:8.4},
+    {t:'Gurdin', c:3.2, r:1.5},
+    {t:'Norktanger', c:14.5, r:5.5},
+    {t:'Murque', c:11.3, r:9.4},
+    {t:'Kiravoy', c:13.7, r:9.3}
+  ]
+};
+function hxCtr(c, r) { var s = MAP.size; return {x: s*1.7320508*(c + 0.5*(r & 1)) + s, y: s*1.5*r + s}; }
+function hexPts(c, r) {
+  var p = hxCtr(c, r), s = MAP.size*0.955, a = [];
+  for (var i = 0; i < 6; i++) { var an = Math.PI/180*(60*i - 30); a.push((p.x + s*Math.cos(an)).toFixed(1) + ',' + (p.y + s*Math.sin(an)).toFixed(1)); }
+  return a.join(' ');
+}
+function mapHexes() { var K = S.kingdom; K.map = K.map || {hexes:{}, gm:0}; K.map.hexes = K.map.hexes || {}; return K.map.hexes; }
+function mapCount() {
+  var x = mapHexes(), cl = 0, ex = 0;
+  Object.keys(x).forEach(function (k) { if (x[k].cl) cl++; if (x[k].ex) ex++; });
+  return {cl:cl, ex:ex, tot:MAP.cols*MAP.rows};
+}
+function mapCityName(id) { var c = S.cities.filter(function (x) { return x.id === id; })[0]; return c ? c.name : ''; }
+function mapHTML() {
+  var K = S.kingdom, n = mapCount(), s = MAP.size, gm = !!K.map.gm;
+  var W = s*1.7320508*(MAP.cols + 0.5) + 2*s, H = s*1.5*(MAP.rows - 1) + 2.9*s;
+  var h = '<section class="card mapcard"><div class="h3">🗺️ Královská mapa — Stolen Lands &amp; Nomen Heights</div>';
+  h += '<div class="row"><span class="kpill" title="Zabrané hexy se přičítají do Size (záložka Království)">Zabrané hexy <b>' + n.cl + '</b></span><span class="kpill">Size <b>' + (+K.size || 0) + '</b></span><span class="kpill">Prozkoumáno <b>' + n.ex + '</b> / ' + n.tot + '</span><button class="tg" data-act="hexgm" aria-pressed="' + gm + '">GM zobrazení (ukázat vše)</button></div>';
+  h += '<div class="mapwrap"><svg class="hexmap' + (gm ? ' gmv' : '') + '" viewBox="0 0 ' + W.toFixed(0) + ' ' + H.toFixed(0) + '" role="img" aria-label="Hex mapa království">';
+  var r, c;
+  for (r = 0; r < MAP.rows; r++) for (c = 0; c < MAP.cols; c++) {
+    var t = (MAP.terr[r] || '')[c] || '.', tc = t === '.' ? 'p' : t, k = c + ',' + r, rec = K.map.hexes[k] || {};
+    h += '<polygon class="hx t-' + tc + '" data-act="hex" data-k="' + k + '" points="' + hexPts(c, r) + '"><title>Hex ' + c + ',' + r + ' · ' + TERN[t] + '</title></polygon>';
+    if (rec.cl) h += '<polygon class="cl" points="' + hexPts(c, r) + '"/>';
+    if (!rec.ex) h += '<polygon class="fog" points="' + hexPts(c, r) + '"/>';
+  }
+  MAP.rivers.forEach(function (riv) {
+    var pts = riv.map(function (q) { var p = hxCtr(q[0], q[1]); return p.x.toFixed(1) + ',' + p.y.toFixed(1); }).join(' ');
+    h += '<polyline class="riv" points="' + pts + '"/>';
+  });
+  MAP.regions.forEach(function (L) { var p = hxCtr(L.c, L.r); h += '<text class="rgn" x="' + p.x.toFixed(0) + '" y="' + p.y.toFixed(0) + '" text-anchor="middle">' + esc(L.t) + '</text>'; });
+  MAP.rivlbl.forEach(function (L) { var p = hxCtr(L.c, L.r); h += '<text class="rlbl" x="' + p.x.toFixed(0) + '" y="' + p.y.toFixed(0) + '" text-anchor="middle">' + esc(L.t) + '</text>'; });
+  MAP.labels.forEach(function (L) { var p = hxCtr(L.c, L.r); h += '<text class="lbl" x="' + p.x.toFixed(0) + '" y="' + p.y.toFixed(0) + '" text-anchor="middle">' + esc(L.t) + '</text>'; });
+  Object.keys(K.map.hexes).forEach(function (k) {
+    var rec = K.map.hexes[k], pp = k.split(','), p = hxCtr(+pp[0], +pp[1]), x = p.x.toFixed(0), y = p.y.toFixed(0);
+    if (rec.feat === 'city') {
+      var nm = mapCityName(rec.city);
+      h += '<text class="feat" x="' + x + '" y="' + (p.y - 4).toFixed(0) + '" text-anchor="middle">🏰</text>';
+      if (nm) h += '<text class="cty" x="' + x + '" y="' + (p.y + 15).toFixed(0) + '" text-anchor="middle">' + esc(nm) + '</text>';
+    } else if (rec.feat === 'farm') h += '<text class="feat" x="' + x + '" y="' + (p.y + 5).toFixed(0) + '" text-anchor="middle">🌾</text>';
+    else if (rec.feat === 'sawmill') h += '<text class="feat" x="' + x + '" y="' + (p.y + 5).toFixed(0) + '" text-anchor="middle">🪚</text>';
+    else if (rec.feat === 'mine') h += '<text class="feat" x="' + x + '" y="' + (p.y + 5).toFixed(0) + '" text-anchor="middle">⛏️</text>';
+    if (rec.note) h += '<text class="mnote" x="' + x + '" y="' + (rec.feat === 'city' ? (p.y + 29).toFixed(0) : (p.y + 20).toFixed(0)) + '" text-anchor="middle">✎ ' + esc(rec.note) + '</text>';
+  });
+  h += '</svg></div>';
+  h += '<div class="mapleg">';
+  Object.keys(TERN).forEach(function (t) { var tc = t === '.' ? 'p' : t; h += '<span class="lg"><i class="sw t-' + tc + '"></i>' + TERN[t] + '</span>'; });
+  h += '</div>';
+  h += '<p class="note">Klikni na hex: prozkoumání (odhalí mlhu), zabrání hexu (+Size), značka města / farmy / sawmillu / dolu nebo vlastní poznámka. Šedé hexy ještě nejsou prozkoumané; v GM zobrazení jsou průsvitné. Město k hexu vyber ze svých měst – jeho název se ukáže na mapě.</p></section>';
+  return h;
+}
+function hexRender() {
+  var m = UI.modal, K = S.kingdom, pp = m.k.split(','), c = +pp[0], r = +pp[1];
+  var rec = K.map.hexes[m.k] || {}, t = (MAP.terr[r] || '')[c] || '.';
+  var h = '<div class="shade" data-act="shade"><div class="dlg" role="dialog" aria-modal="true" aria-label="Hex" style="width:min(440px,100%)"><div class="dlg-h"><h2>Hex ' + c + ',' + r + ' · ' + TERN[t] + '</h2><button class="x" data-act="close" aria-label="Zavřít">×</button></div><div class="dlg-b">';
+  h += '<div class="row"><button class="tg" data-act="hexex" aria-pressed="' + !!rec.ex + '">Prozkoumáno' + (rec.ex ? ' ✓' : '') + '</button>';
+  h += (rec.cl ? '<button class="btn" data-act="hexclaim">Uvolnit hex (Size −1)</button>' : '<button class="btn" data-act="hexclaim">Zabrat hex (Size +1)</button>') + '</div>';
+  h += '<div class="h3" style="margin-top:10px">Značka</div><div class="row" style="flex-wrap:wrap">';
+  h += '<button class="tg" data-act="hexfeat" data-f="city" aria-pressed="' + (rec.feat === 'city') + '">🏰 Město</button>';
+  h += '<button class="tg" data-act="hexfeat" data-f="farm" aria-pressed="' + (rec.feat === 'farm') + '">🌾 Farma</button>';
+  h += '<button class="tg" data-act="hexfeat" data-f="sawmill" aria-pressed="' + (rec.feat === 'sawmill') + '">🪚 Sawmill</button>';
+  h += '<button class="tg" data-act="hexfeat" data-f="mine" aria-pressed="' + (rec.feat === 'mine') + '">⛏️ Důl</button></div>';
+  if (rec.feat === 'city') {
+    h += '<label class="field" style="margin-top:8px">Město v tomto hexu (název se ukáže na mapě)<select id="hexcity">';
+    S.cities.forEach(function (x) { h += '<option value="' + x.id + '"' + (x.id === rec.city ? ' selected' : '') + '>' + esc(x.name) + '</option>'; });
+    h += '</select></label>';
+    h += '<div class="row"><button class="btn" data-act="hexcityset">Přiřadit město k hexu</button></div>';
+  }
+  h += '<label class="field" style="margin-top:8px">Vlastní označení / poznámka (ukáže se na mapě)<input id="hexnote" value="' + esc(rec.note || '') + '" maxlength="60"></label>';
+  h += '<div class="row"><button class="btn" data-act="hexnoteset">Uložit poznámku</button><button class="btn danger" data-act="hexclear">Odebrat vše z hexu</button></div>';
+  h += '</div></div></div>';
+  modalEl.innerHTML = h;
+}
+
 /* ---------- shared saving ---------- */
 function lsGet(k) { try { return localStorage.getItem(k); } catch (e) { return null; } }
 function lsSet(k, v) { try { localStorage.setItem(k, v); } catch (e) {} }
@@ -1662,9 +1817,11 @@ function render() {
   h += '<button class="tab king" data-act="kingdom" aria-pressed="' + UI.king + '">♛ Království</button>';
   h += '<button class="tab king" data-act="economy" aria-pressed="' + UI.econ + '">💰 Economy</button>';
   h += '<button class="tab king" data-act="turn" aria-pressed="' + UI.turn + '">📅 Turn</button>';
+  h += '<button class="tab king" data-act="map" aria-pressed="' + UI.map + '">🗺️ Mapa</button>';
   h += '<button class="tab add" data-act="addcity">+ Nové město</button></div>';
   if (UI.econ) { h += econHTML(); commit(h); return; }
   if (UI.turn) { h += turnHTML(); commit(h); return; }
+  if (UI.map) { h += mapHTML(); commit(h); return; }
   if (UI.king) { h += kingdomHTML(); commit(h); return; }
 
   h += '<div class="layout"><div class="col">';
@@ -1761,6 +1918,7 @@ function renderModal() {
     modalEl.innerHTML = h;
     pickInner();
   } else if (m.type === 'insp') { inspRender(); }
+  else if (m.type === 'hex') { hexRender(); }
   else if (m.type === 'brk') { brkRender(); }
 }
 function pickInner() {
@@ -1842,8 +2000,8 @@ function act(a, t) {
   var city = curCity(), d = curD(), ds = t.dataset;
   if (a !== 'delcity' && a !== 'deldist' && a !== 'turnreset' && a !== 'turnlogclr') UI.confirm = null;
   switch (a) {
-    case 'city': S.cur = ds.id; UI.king = false; UI.econ = false; UI.turn = false; refresh(); break;
-    case 'addcity': var c = newCity('Město ' + (S.cities.length + 1)); S.cities.push(c); S.cur = c.id; UI.econ = false; UI.turn = false; refresh(); toast('Nové město přidáno (příprava ' + TERR[c.terrain][1] + ' BP)'); break;
+    case 'city': S.cur = ds.id; UI.king = false; UI.econ = false; UI.turn = false; UI.map = false; refresh(); break;
+    case 'addcity': var c = newCity('Město ' + (S.cities.length + 1)); S.cities.push(c); S.cur = c.id; UI.econ = false; UI.turn = false; UI.map = false; refresh(); toast('Nové město přidáno (příprava ' + TERR[c.terrain][1] + ' BP)'); break;
     case 'delcity':
       if (UI.confirm !== 'city') { UI.confirm = 'city'; render(); return; }
       UI.confirm = null; S.cities = S.cities.filter(function (x) { return x.id !== city.id; }); S.cur = S.cities[0].id; refresh(); break;
@@ -1863,9 +2021,42 @@ function act(a, t) {
     case 'close': closeModal(); break;
     case 'brk': UI.modal = {type:'brk', k:ds.k}; renderModal(); break;
     case 'kbrk': UI.modal = {type:'brk', k:ds.k, scope:'kingdom'}; renderModal(); break;
-    case 'kingdom': UI.king = true; UI.econ = false; UI.turn = false; closeModal(); render(); break;
-    case 'economy': UI.econ = true; UI.king = false; UI.turn = false; refresh(); break;
-    case 'turn': UI.turn = true; UI.king = false; UI.econ = false; refresh(); break;
+    case 'kingdom': UI.king = true; UI.econ = false; UI.turn = false; UI.map = false; closeModal(); render(); break;
+    case 'economy': UI.econ = true; UI.king = false; UI.turn = false; UI.map = false; refresh(); break;
+    case 'turn': UI.turn = true; UI.king = false; UI.econ = false; UI.map = false; refresh(); break;
+    case 'map': UI.map = true; UI.king = false; UI.econ = false; UI.turn = false; closeModal(); render(); break;
+    case 'hex': UI.modal = {type:'hex', k:ds.k}; renderModal(); break;
+    case 'hexgm': S.kingdom.map = S.kingdom.map || {hexes:{}, gm:0}; S.kingdom.map.gm = +S.kingdom.map.gm ? 0 : 1; refresh(); break;
+    case 'hexex': {
+      var Hx = mapHexes(), kx = UI.modal.k, rx = Hx[kx] || (Hx[kx] = {});
+      rx.ex = rx.ex ? 0 : 1; refresh(); hexRender(); break;
+    }
+    case 'hexclaim': {
+      var Hc = mapHexes(), kc = UI.modal.k, rc = Hc[kc] || (Hc[kc] = {}), Kc = S.kingdom;
+      if (!rc.cl) { rc.cl = 1; Kc.size = (+Kc.size || 0) + 1; toast('Hex zabrán: Size +1 (celkem ' + (+Kc.size || 0) + ').'); }
+      else { rc.cl = 0; Kc.size = Math.max(0, (+Kc.size || 0) - 1); toast('Hex uvolněn: Size −1.'); }
+      refresh(); hexRender(); break;
+    }
+    case 'hexfeat': {
+      var Hf = mapHexes(), kf = UI.modal.k, rf = Hf[kf] || (Hf[kf] = {});
+      rf.feat = rf.feat === ds.f ? '' : ds.f;
+      if (rf.feat === 'city' && !rf.cl) { rf.cl = 1; S.kingdom.size = (+S.kingdom.size || 0) + 1; toast('Město na mapě: hex automaticky zabrán (+1 Size).'); }
+      refresh(); hexRender(); break;
+    }
+    case 'hexcityset': {
+      var Hu = mapHexes(), ku = UI.modal.k, ru = Hu[ku] || (Hu[ku] = {}), sel = document.getElementById('hexcity');
+      ru.city = sel ? sel.value : ''; refresh(); hexRender(); toast('Město přiřazeno k hexu – název vidět na mapě.'); break;
+    }
+    case 'hexnoteset': {
+      var Hn = mapHexes(), kn = UI.modal.k, rn = Hn[kn] || (Hn[kn] = {}), inp = document.getElementById('hexnote');
+      rn.note = inp ? inp.value.trim() : ''; refresh(); hexRender(); break;
+    }
+    case 'hexclear': {
+      var Hd = mapHexes(), kd = UI.modal.k, rd2 = Hd[kd];
+      if (rd2 && rd2.cl) S.kingdom.size = Math.max(0, (+S.kingdom.size || 0) - 1);
+      if (rd2) delete Hd[kd];
+      closeModal(); refresh(); toast('Hex vyčištěn.'); break;
+    }
     case 'rolestoggle': UI.rolesOpen = !UI.rolesOpen; render(); break;
     case 'save': if (DBN) saveShared(); else ghSave(); break;
     case 'ghtoken': if (ghSetToken()) { toast('Token uložen v tomto prohlížeči.'); render(); } break;

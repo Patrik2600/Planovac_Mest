@@ -254,7 +254,7 @@
     {
      "borders": {
       "n": "land",
-      "e": "land",
+      "e": "water",
       "s": "land",
       "w": "land"
      },
@@ -278,7 +278,170 @@
      },
      "paved": 0,
      "sewer": 0,
-     "buildings": [],
+     "buildings": [
+      {
+       "uid": "vh01tmp",
+       "type": "temple",
+       "r": 0,
+       "c": 0,
+       "w": 2,
+       "h": 1,
+       "disc": false
+      },
+      {
+       "uid": "vh02gvy",
+       "type": "graveyard",
+       "r": 0,
+       "c": 2,
+       "w": 1,
+       "h": 1,
+       "disc": false
+      },
+      {
+       "uid": "vh03wtw",
+       "type": "watchtower",
+       "r": 0,
+       "c": 3,
+       "w": 1,
+       "h": 1,
+       "disc": false
+      },
+      {
+       "uid": "vh04gar",
+       "type": "garrison",
+       "r": 0,
+       "c": 4,
+       "w": 2,
+       "h": 1,
+       "disc": false
+      },
+      {
+       "uid": "vh05stc",
+       "type": "stockyard",
+       "r": 1,
+       "c": 0,
+       "w": 2,
+       "h": 2,
+       "disc": false
+      },
+      {
+       "uid": "vh06brw",
+       "type": "brewery",
+       "r": 1,
+       "c": 2,
+       "w": 1,
+       "h": 1,
+       "disc": false
+      },
+      {
+       "uid": "vh07inn",
+       "type": "inn",
+       "r": 1,
+       "c": 3,
+       "w": 1,
+       "h": 1,
+       "disc": false
+      },
+      {
+       "uid": "vh08prk",
+       "type": "park",
+       "r": 1,
+       "c": 4,
+       "w": 1,
+       "h": 1,
+       "disc": false
+      },
+      {
+       "uid": "vh09stb",
+       "type": "stable",
+       "r": 1,
+       "c": 5,
+       "w": 1,
+       "h": 1,
+       "disc": false
+      },
+      {
+       "uid": "vh10tan",
+       "type": "tannery",
+       "r": 2,
+       "c": 2,
+       "w": 1,
+       "h": 1,
+       "disc": false
+      },
+      {
+       "uid": "vh11smt",
+       "type": "smithy",
+       "r": 2,
+       "c": 3,
+       "w": 1,
+       "h": 1,
+       "disc": false
+      },
+      {
+       "uid": "vh12grn",
+       "type": "granary",
+       "r": 2,
+       "c": 4,
+       "w": 1,
+       "h": 1,
+       "disc": false
+      },
+      {
+       "uid": "vh13sto",
+       "type": "house",
+       "r": 2,
+       "c": 5,
+       "w": 1,
+       "h": 1,
+       "disc": false
+      },
+      {
+       "uid": "vh14cor",
+       "type": "house",
+       "r": 3,
+       "c": 3,
+       "w": 1,
+       "h": 1,
+       "disc": false
+      },
+      {
+       "uid": "vh15tlr",
+       "type": "house",
+       "r": 3,
+       "c": 4,
+       "w": 1,
+       "h": 1,
+       "disc": false
+      },
+      {
+       "uid": "vh16pot",
+       "type": "house",
+       "r": 3,
+       "c": 5,
+       "w": 1,
+       "h": 1,
+       "disc": false
+      },
+      {
+       "uid": "vh17wvr",
+       "type": "house",
+       "r": 4,
+       "c": 3,
+       "w": 1,
+       "h": 1,
+       "disc": false
+      },
+      {
+       "uid": "vh18gmc",
+       "type": "house",
+       "r": 4,
+       "c": 4,
+       "w": 1,
+       "h": 1,
+       "disc": false
+      }
+     ],
      "overlays": []
     }
    ]
@@ -855,7 +1018,7 @@
   "players": "7",
   "gm": "Dano",
   "align": "N",
-  "size": 20,
+  "size": 21,
   "treasury": 836,
   "famebase": 1,
   "infbase": 0,
@@ -1030,6 +1193,18 @@
   },
   "foodNext": 1,
   "lastEv": null,
-  "taxdiv": "3"
+  "taxdiv": "3",
+  "map": {
+   "gm": 0,
+   "hexes": {
+    "13,10": {
+     "ex": 1,
+     "cl": 1,
+     "city": "fwa3aa9",
+     "feat": "city",
+     "note": "Kiravoy ford / Varnhold Pass na SZ"
+    }
+   }
+  }
  }
 }
