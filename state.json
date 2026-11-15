@@ -363,7 +363,7 @@
       {
        "uid": "vh10tan",
        "type": "tannery",
-       "r": 2,
+       "r": 5,
        "c": 2,
        "w": 1,
        "h": 1,
@@ -373,7 +373,7 @@
        "uid": "vh11smt",
        "type": "smithy",
        "r": 2,
-       "c": 3,
+       "c": 4,
        "w": 1,
        "h": 1,
        "disc": false
@@ -382,12 +382,20 @@
        "uid": "vh12grn",
        "type": "granary",
        "r": 2,
-       "c": 4,
+       "c": 3,
        "w": 1,
        "h": 1,
        "disc": false
       },
-      {
+     {
+      "uid": "vh19hs",
+      "type": "house",
+      "r": 2,
+      "c": 2,
+      "w": 1,
+      "h": 1,
+      "disc": false
+     },      {
        "uid": "vh13sto",
        "type": "house",
        "r": 2,
