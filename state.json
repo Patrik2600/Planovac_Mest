@@ -1,5 +1,5 @@
 {
- "_savedAt": "2026-11-15T13:59:02.621Z",
+ "_savedAt": "2026-11-15T13:59:09.336Z",
  "cities": [
   {
    "id": "0joobpf",
@@ -1027,7 +1027,7 @@
   "players": "7",
   "gm": "Dano",
   "align": "N",
-  "size": 23,
+  "size": 24,
   "treasury": 836,
   "famebase": 1,
   "infbase": 0,
@@ -1221,6 +1221,12 @@
     "21,4": {
      "feat": "city",
      "cl": 1,
+     "city": "0joobpf"
+    },
+    "28,7": {
+     "feat": "city",
+     "cl": 1,
+     "note": "",
      "city": "0joobpf"
     }
    }
