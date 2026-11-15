@@ -1,5 +1,5 @@
 {
- "_savedAt": "2026-11-15T15:53:02.964Z",
+ "_savedAt": "2026-11-15T15:53:14.928Z",
  "cities": [
   {
    "id": "0joobpf",
@@ -46,7 +46,14 @@
        "disc": false
       }
      ],
-     "overlays": []
+     "overlays": [
+      {
+       "uid": "odn12xi",
+       "type": "cistern",
+       "r": 1,
+       "c": 4
+      }
+     ]
     },
     {
      "borders": {
