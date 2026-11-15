@@ -1,6 +1,4 @@
-<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style><link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMiAzMiI+PHBhdGggZmlsbD0iI0UzQTU0NSIgc3Ryb2tlPSIjOGE1ZjBhIiBzdHJva2Utd2lkdGg9IjEuNSIgZD0iTTQgMjQgTDQgMTAgTDEwIDE1IEwxNiA2IEwyMiAxNSBMMjggMTAgTDI4IDI0IFoiLz48cmVjdCB4PSI0IiB5PSIyNC41IiB3aWR0aD0iMjQiIGhlaWdodD0iMy41IiByeD0iMSIgZmlsbD0iI0UzQTU0NSIgc3Ryb2tlPSIjOGE1ZjBhIiBzdHJva2Utd2lkdGg9IjEiLz48L3N2Zz4="></head><body>
-<title>Plánovač měst</title>
-<path fill="%23E3A545" stroke="%238a5f0a" stroke-width="1.5" d="M4 24 L4 10 L10 15 L16 6 L22 15 L28 10 L28 24 Z"/><rect x="4" y="24.5" width="24" height="3.5" rx="1" fill="%23E3A545" stroke="%238a5f0a" stroke-width="1"/></svg>'>
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style><link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMiAzMiI+PHBhdGggZmlsbD0iI0UzQTU0NSIgc3Ryb2tlPSIjOGE1ZjBhIiBzdHJva2Utd2lkdGg9IjEuNSIgZD0iTTQgMjQgTDQgMTAgTDEwIDE1IEwxNiA2IEwyMiAxNSBMMjggMTAgTDI4IDI0IFoiLz48cmVjdCB4PSI0IiB5PSIyNC41IiB3aWR0aD0iMjQiIGhlaWdodD0iMy41IiByeD0iMSIgZmlsbD0iI0UzQTU0NSIgc3Ryb2tlPSIjOGE1ZjBhIiBzdHJva2Utd2lkdGg9IjEiLz48L3N2Zz4="><title>Plánovač měst</title></head><body>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -308,7 +306,7 @@ textarea.kin { min-height: 90px; resize: vertical; font-family: var(--body); }
 .hexmap .t-b { fill: #d9c3a3; }
 .hexmap .t-r { fill: #f0e6b4; }
 .hexmap .fog { fill: #2a332c; fill-opacity: .87; pointer-events: none; }
-.hexmap .gmv .fog { fill-opacity: .32; }
+.hexmap.gmv .fog { fill-opacity: .32; }
 .hexmap .cl { fill: none; stroke: var(--accent); stroke-width: 2.6; pointer-events: none; }
 .hexmap .riv { fill: none; stroke: #4d86b0; stroke-width: 3.4; stroke-linecap: round; stroke-linejoin: round; opacity: .75; pointer-events: none; }
 .hexmap .lbl { font: 600 11px 'Alegreya Sans', sans-serif; fill: #4a5a4f; pointer-events: none; }
@@ -1546,7 +1544,7 @@ var MAP = {
     {t:'Kiravoy', c:13.7, r:9.3}
   ]
 };
-function hxCtr(c, r) { var s = MAP.size; return {x: s*1.7320508*(c + 0.5*(r & 1)) + s, y: s*1.5*r + s}; }
+function hxCtr(c, r) { var s = MAP.size; return {x: s*1.7320508*(c + 0.5*(r & 1)) + s, y: s*1.5*r + s*2.35}; }
 function hexPts(c, r) {
   var p = hxCtr(c, r), s = MAP.size*0.955, a = [];
   for (var i = 0; i < 6; i++) { var an = Math.PI/180*(60*i - 30); a.push((p.x + s*Math.cos(an)).toFixed(1) + ',' + (p.y + s*Math.sin(an)).toFixed(1)); }
@@ -1561,7 +1559,7 @@ function mapCount() {
 function mapCityName(id) { var c = S.cities.filter(function (x) { return x.id === id; })[0]; return c ? c.name : ''; }
 function mapHTML() {
   var K = S.kingdom, n = mapCount(), s = MAP.size, gm = !!K.map.gm;
-  var W = s*1.7320508*(MAP.cols + 0.5) + 2*s, H = s*1.5*(MAP.rows - 1) + 2.9*s;
+  var W = s*1.7320508*(MAP.cols + 0.5) + 2*s, H = s*1.5*(MAP.rows - 1) + 5.4*s;
   var h = '<section class="card mapcard"><div class="h3">🗺️ Královská mapa — Stolen Lands &amp; Nomen Heights</div>';
   h += '<div class="row"><span class="kpill" title="Zabrané hexy se přičítají do Size (záložka Království)">Zabrané hexy <b>' + n.cl + '</b></span><span class="kpill">Size <b>' + (+K.size || 0) + '</b></span><span class="kpill">Prozkoumáno <b>' + n.ex + '</b> / ' + n.tot + '</span><button class="tg" data-act="hexgm" aria-pressed="' + gm + '">GM zobrazení (ukázat vše)</button></div>';
   h += '<div class="mapwrap"><svg class="hexmap' + (gm ? ' gmv' : '') + '" viewBox="0 0 ' + W.toFixed(0) + ' ' + H.toFixed(0) + '" role="img" aria-label="Hex mapa království">';
