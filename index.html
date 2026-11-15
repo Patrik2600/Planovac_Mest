@@ -290,35 +290,18 @@ textarea.kin { min-height: 90px; resize: vertical; font-family: var(--body); }
 .mlist button { border: 0; background: transparent; color: var(--ink); text-align: left; font-size: 13px; padding: 5px 8px; border-radius: 6px; cursor: pointer; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .mlist button:hover { background: var(--panel-2); }
 .mlist button.cur { color: var(--accent); font-weight: 600; }
-/* mapa (hexy, fog of war) */
+/* mapa (obrázek + hexy, fog of war) */
 .mapcard .row { flex-wrap: wrap; gap: 8px; }
-.mapwrap { overflow: auto; background: #eef0e6; border: 1px solid var(--line); border-radius: 8px; margin-top: 10px; }
+.mapwrap { overflow: auto; background: #2a332c; border: 1px solid var(--line); border-radius: 8px; margin-top: 10px; }
 .hexmap { display: block; width: 100%; min-width: 700px; height: auto; }
-.hexmap .hx { stroke: #5b6b5f; stroke-width: .7; cursor: pointer; }
-.hexmap .hx:hover { stroke-width: 2.2; }
-.hexmap .t-p { fill: #e9edd9; }
-.hexmap .t-f { fill: #c3d8ac; }
-.hexmap .t-F { fill: #9cc191; }
-.hexmap .t-h { fill: #ddd2a4; }
-.hexmap .t-m { fill: #c2b7a8; }
-.hexmap .t-w { fill: #a9cbdd; }
-.hexmap .t-s { fill: #b3c9ab; }
-.hexmap .t-b { fill: #d9c3a3; }
-.hexmap .t-r { fill: #f0e6b4; }
-.hexmap .fog { fill: #2a332c; fill-opacity: .87; pointer-events: none; }
+.hexmap .hx { fill: transparent; stroke: rgba(25,35,25,.5); stroke-width: .7; cursor: pointer; pointer-events: all; }
+.hexmap .hx:hover { stroke: var(--accent); stroke-width: 2.4; }
+.hexmap .fog { fill: #1d241f; fill-opacity: .82; pointer-events: none; }
 .hexmap.gmv .fog { fill-opacity: .25; }
-.hexmap .cl { fill: none; stroke: var(--accent); stroke-width: 2.6; pointer-events: none; }
-.hexmap .riv { fill: none; stroke: #4d86b0; stroke-width: 3.4; stroke-linecap: round; stroke-linejoin: round; opacity: .75; pointer-events: none; }
-.hexmap .road { fill: none; stroke: #c07a40; stroke-width: 2.6; stroke-linecap: round; stroke-linejoin: round; opacity: .85; pointer-events: none; }
-.hexmap .lbl { font: 600 11px 'Alegreya Sans', sans-serif; fill: #4a5a4f; pointer-events: none; }
-.hexmap .rgn { font: italic 700 15px 'Alegreya Sans', sans-serif; fill: #6a7a6f; opacity: .55; pointer-events: none; }
-.hexmap .rlbl { font: italic 600 9.5px 'Alegreya Sans', sans-serif; fill: #3d6a8a; pointer-events: none; }
-.hexmap .cty { font: 700 11.5px 'Alegreya Sans', sans-serif; fill: #1c2720; pointer-events: none; }
-.hexmap .feat { font-size: 15px; pointer-events: none; }
-.hexmap .mnote { font: 10px 'Alegreya Sans', sans-serif; fill: #7a4a0a; pointer-events: none; }
-.mapleg { display: flex; flex-wrap: wrap; gap: 6px 14px; margin-top: 8px; font-size: 12px; color: var(--ink-2); }
-.mapleg .sw { display: inline-block; width: 12px; height: 12px; border: 1px solid #5b6b5f; border-radius: 3px; margin-right: 4px; vertical-align: -2px; }
-.mapleg .lg { white-space: nowrap; }
+.hexmap .cl { fill: none; stroke: #d23b3b; stroke-width: 2.8; stroke-dasharray: 7 4; stroke-linecap: round; pointer-events: none; }
+.hexmap .cty { font: 700 12.5px 'Alegreya Sans', sans-serif; fill: #fff; paint-order: stroke; stroke: #1c2720; stroke-width: 3px; stroke-linejoin: round; pointer-events: none; }
+.hexmap .feat { font-size: 16px; pointer-events: none; }
+.hexmap .mnote { font: 11px 'Alegreya Sans', sans-serif; fill: #fff; paint-order: stroke; stroke: #5a3a08; stroke-width: 3px; stroke-linejoin: round; pointer-events: none; }
 #ytholder { position: fixed; left: -9999px; top: 0; width: 200px; height: 150px; overflow: hidden; pointer-events: none; }
 </style>
 
@@ -517,6 +500,7 @@ function norm(s) {
   ['cor','cri','law','lor','pro','soc'].forEach(function (k) { K.tempM[k] = +K.tempM[k] || 0; K.smods[k] = +K.smods[k] || 0; });
   K.lastEv = K.lastEv || null;
   K.map = K.map || {hexes:{}, gm:0}; K.map.gm = +K.map.gm || 0; K.map.hexes = K.map.hexes || {};
+  if (K.map.hexes['13,10'] && !K.map.hexes['29,5']) { K.map.hexes['29,5'] = K.map.hexes['13,10']; delete K.map.hexes['13,10']; }
   K.size = +K.size || 1;
   s.kingdom = K; return s;
 }
@@ -1494,48 +1478,8 @@ function kset(path, v) {
   o[p[p.length - 1]] = v;
 }
 
-/* ---------- mapa (hex grid, fog of war) ---------- */
-var TERN = {'.':'Pláně', f:'Řídoký les', F:'Hustý les', h:'Kopce', m:'Hory', w:'Voda', s:'Mokřad', b:'Pustina', r:'Polní krajina'};
-var MAP = {
-  size: 30, cols: 17, rows: 13,
-  terr: [
-    'ffffff...........',
-    'fFFFf............',
-    'fFFFFf...........',
-    'FFFFFf...........',
-    'FFFFff...........',
-    'FFFFf.....m......',
-    'FFFf......mm.....',
-    'ffff.ww....mm....',
-    'ff...ww....mmm...',
-    '..hhhhhhh.mmm....',
-    '..hhhhhh..mmmm...',
-    '...hhhhh..mmmm...',
-    '.........mmmmmm..'
-  ],
-  rivers: [
-    [[8,1],[8,2],[8,3],[8,4],[8,5],[8,6],[7,7]],
-    [[6,8],[8,9],[10,10]],
-    [[4,8],[3,9],[2,10],[0,10]],
-    [[13,4],[16,4]]
-  ],
-  roads: [
-    [[8,1],[10,2],[12,3],[14,4]],
-    [[0,8],[2,9],[4,10],[6,10],[8,10],[10,10],[12,10],[14,10],[16,10]]
-  ],
-  labels: [
-    {t:'▲ Rostland (Brevoy)', c:8.4, r:-0.62},
-    {t:'Pitax ▶', c:14.6, r:2.9}
-  ],
-  regions: [
-    {t:'Narlmarches', c:2.7, r:5.4},
-    {t:'Kamelands', c:6.2, r:9.6},
-    {t:'Uismland', c:15.3, r:6.5}
-  ],
-  rivlbl: [
-    {t:'Lake Namascha', c:7.4, r:7.4}
-  ]
-};
+/* ---------- mapa (obrázek Stolen Lands + hex grid, fog of war) ---------- */
+var MAP = { size: 35, cols: 33, rows: 12, img: 'assets/stolen_lands.jpg' };
 function hxCtr(c, r) { var s = MAP.size; return {x: s*1.7320508*(c + 0.5*(r & 1)) + s, y: s*1.5*r + s*2.35}; }
 function hexPts(c, r) {
   var p = hxCtr(c, r), s = MAP.size*0.955, a = [];
@@ -1552,27 +1496,17 @@ function mapCityName(id) { var c = S.cities.filter(function (x) { return x.id ==
 function mapHTML() {
   var K = S.kingdom, n = mapCount(), s = MAP.size, gm = !!K.map.gm;
   var W = s*1.7320508*(MAP.cols + 0.5) + 2*s, H = s*1.5*(MAP.rows - 1) + 5.4*s;
-  var h = '<section class="card mapcard"><div class="h3">🗺️ Královská mapa — Stolen Lands</div>';
+  var h = '<section class="card mapcard"><div class="h3">🗺️ Královská mapa — The Stolen Lands</div>';
   h += '<div class="row"><span class="kpill" title="Zabrané hexy se přičítají do Size (záložka Království)">Zabrané hexy <b>' + n.cl + '</b></span><span class="kpill">Size <b>' + (+K.size || 0) + '</b></span><span class="kpill">Prozkoumáno <b>' + n.ex + '</b> / ' + n.tot + '</span><button class="tg" data-act="hexgm" aria-pressed="' + gm + '">GM zobrazení (ukázat vše)</button></div>';
   h += '<div class="mapwrap"><svg class="hexmap' + (gm ? ' gmv' : '') + '" viewBox="0 0 ' + W.toFixed(0) + ' ' + H.toFixed(0) + '" role="img" aria-label="Hex mapa království">';
+  h += '<image href="' + MAP.img + '" x="0" y="0" width="' + W.toFixed(0) + '" height="' + H.toFixed(0) + '" preserveAspectRatio="none"/>';
   var r, c;
   for (r = 0; r < MAP.rows; r++) for (c = 0; c < MAP.cols; c++) {
-    var t = (MAP.terr[r] || '')[c] || '.', tc = t === '.' ? 'p' : t, k = c + ',' + r, rec = K.map.hexes[k] || {};
-    h += '<polygon class="hx t-' + tc + '" data-act="hex" data-k="' + k + '" points="' + hexPts(c, r) + '"><title>Hex ' + c + ',' + r + ' · ' + TERN[t] + '</title></polygon>';
+    var k = c + ',' + r, rec = K.map.hexes[k] || {};
+    h += '<polygon class="hx" data-act="hex" data-k="' + k + '" points="' + hexPts(c, r) + '"><title>Hex ' + c + ',' + r + '</title></polygon>';
     if (rec.cl) h += '<polygon class="cl" points="' + hexPts(c, r) + '"/>';
     if (!rec.ex) h += '<polygon class="fog" points="' + hexPts(c, r) + '"/>';
   }
-  MAP.rivers.forEach(function (riv) {
-    var pts = riv.map(function (q) { var p = hxCtr(q[0], q[1]); return p.x.toFixed(1) + ',' + p.y.toFixed(1); }).join(' ');
-    h += '<polyline class="riv" points="' + pts + '"/>';
-  });
-  (MAP.roads || []).forEach(function (rd) {
-    var pts = rd.map(function (q) { var p = hxCtr(q[0], q[1]); return p.x.toFixed(1) + ',' + p.y.toFixed(1); }).join(' ');
-    h += '<polyline class="road" points="' + pts + '"/>';
-  });
-  MAP.regions.forEach(function (L) { var p = hxCtr(L.c, L.r); h += '<text class="rgn" x="' + p.x.toFixed(0) + '" y="' + p.y.toFixed(0) + '" text-anchor="middle">' + esc(L.t) + '</text>'; });
-  MAP.rivlbl.forEach(function (L) { var p = hxCtr(L.c, L.r); h += '<text class="rlbl" x="' + p.x.toFixed(0) + '" y="' + p.y.toFixed(0) + '" text-anchor="middle">' + esc(L.t) + '</text>'; });
-  MAP.labels.forEach(function (L) { var p = hxCtr(L.c, L.r); h += '<text class="lbl" x="' + p.x.toFixed(0) + '" y="' + p.y.toFixed(0) + '" text-anchor="middle">' + esc(L.t) + '</text>'; });
   Object.keys(K.map.hexes).forEach(function (k) {
     var rec = K.map.hexes[k], pp = k.split(','), p = hxCtr(+pp[0], +pp[1]), x = p.x.toFixed(0), y = p.y.toFixed(0);
     if (rec.feat === 'city') {
@@ -1585,16 +1519,13 @@ function mapHTML() {
     if (rec.note) h += '<text class="mnote" x="' + x + '" y="' + (rec.feat === 'city' ? (p.y + 29).toFixed(0) : (p.y + 20).toFixed(0)) + '" text-anchor="middle">✎ ' + esc(rec.note) + '</text>';
   });
   h += '</svg></div>';
-  h += '<div class="mapleg">';
-  Object.keys(TERN).forEach(function (t) { var tc = t === '.' ? 'p' : t; h += '<span class="lg"><i class="sw t-' + tc + '"></i>' + TERN[t] + '</span>'; });
-  h += '</div>';
-  h += '<p class="note">Klikni na hex: prozkoumání (odhalí mlhu), zabrání hexu (+Size), značka města / farmy / sawmillu / dolu nebo vlastní poznámka. Šedé hexy ještě nejsou prozkoumané; v GM zobrazení jsou průsvitné. Město k hexu vyber ze svých měst – jeho název se ukáže na mapě.</p></section>';
+  h += '<p class="note">Klikni na hex: prozkoumání (odhalí mlhu), zabrání hexu (+Size), značka města / farmy / sawmillu / dolu nebo vlastní poznámka. Zatemněné hexy ještě nejsou prozkoumané; v GM zobrazení jsou průsvitné. Město k hexu vyber ze svých měst – jeho název se ukáže na mapě. Zabraný hex má červený přerušovaný okraj.</p></section>';
   return h;
 }
 function hexRender() {
   var m = UI.modal, K = S.kingdom, pp = m.k.split(','), c = +pp[0], r = +pp[1];
-  var rec = K.map.hexes[m.k] || {}, t = (MAP.terr[r] || '')[c] || '.';
-  var h = '<div class="shade" data-act="shade"><div class="dlg" role="dialog" aria-modal="true" aria-label="Hex" style="width:min(440px,100%)"><div class="dlg-h"><h2>Hex ' + c + ',' + r + ' · ' + TERN[t] + '</h2><button class="x" data-act="close" aria-label="Zavřít">×</button></div><div class="dlg-b">';
+  var rec = K.map.hexes[m.k] || {};
+  var h = '<div class="shade" data-act="shade"><div class="dlg" role="dialog" aria-modal="true" aria-label="Hex" style="width:min(440px,100%)"><div class="dlg-h"><h2>Hex ' + c + ',' + r + '</h2><button class="x" data-act="close" aria-label="Zavřít">×</button></div><div class="dlg-b">';
   h += '<div class="row"><button class="tg" data-act="hexex" aria-pressed="' + !!rec.ex + '">Prozkoumáno' + (rec.ex ? ' ✓' : '') + '</button>';
   h += (rec.cl ? '<button class="btn" data-act="hexclaim">Uvolnit hex (Size −1)</button>' : '<button class="btn" data-act="hexclaim">Zabrat hex (Size +1)</button>') + '</div>';
   h += '<div class="h3" style="margin-top:10px">Značka</div><div class="row" style="flex-wrap:wrap">';
