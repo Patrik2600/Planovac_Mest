@@ -1,5 +1,5 @@
 {
- "_savedAt": "2026-11-22T10:39:01.448Z",
+ "_savedAt": "2026-11-22T10:39:08.545Z",
  "cities": [
   {
    "id": "0joobpf",
@@ -176,6 +176,15 @@
        "type": "shrine",
        "r": 3,
        "c": 3,
+       "w": 1,
+       "h": 1,
+       "disc": false
+      },
+      {
+       "uid": "njho5zm",
+       "type": "magicshop",
+       "r": 3,
+       "c": 0,
        "w": 1,
        "h": 1,
        "disc": false
