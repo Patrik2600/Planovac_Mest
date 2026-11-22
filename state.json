@@ -1,5 +1,5 @@
 {
- "_savedAt": "2026-11-22T10:53:35.774Z",
+ "_savedAt": "2026-11-22T10:53:45.955Z",
  "cities": [
   {
    "id": "0joobpf",
@@ -794,7 +794,44 @@
      },
      "paved": 0,
      "sewer": 0,
-     "buildings": [],
+     "buildings": [
+      {
+       "uid": "4z8vont",
+       "type": "house",
+       "r": 0,
+       "c": 0,
+       "w": 1,
+       "h": 1,
+       "disc": false
+      },
+      {
+       "uid": "ys8fr17",
+       "type": "house",
+       "r": 1,
+       "c": 1,
+       "w": 1,
+       "h": 1,
+       "disc": false
+      },
+      {
+       "uid": "gbmbtrx",
+       "type": "house",
+       "r": 1,
+       "c": 2,
+       "w": 1,
+       "h": 1,
+       "disc": false
+      },
+      {
+       "uid": "v4w6gxo",
+       "type": "house",
+       "r": 0,
+       "c": 5,
+       "w": 1,
+       "h": 1,
+       "disc": false
+      }
+     ],
      "overlays": []
     }
    ]
