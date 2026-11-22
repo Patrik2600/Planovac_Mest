@@ -1,5 +1,5 @@
 {
- "_savedAt": "2026-11-22T10:38:35.678Z",
+ "_savedAt": "2026-11-22T10:38:47.063Z",
  "cities": [
   {
    "id": "0joobpf",
@@ -36,15 +36,6 @@
      "paved": 0,
      "sewer": 0,
      "buildings": [
-      {
-       "uid": "d0ptj2i",
-       "type": "castle",
-       "r": 2,
-       "c": 2,
-       "w": 2,
-       "h": 2,
-       "disc": false
-      },
       {
        "uid": "feb29px",
        "type": "tavern",
@@ -122,15 +113,6 @@
        "type": "jail",
        "r": 4,
        "c": 4,
-       "w": 1,
-       "h": 1,
-       "disc": false
-      },
-      {
-       "uid": "gira4q5",
-       "type": "shrine",
-       "r": 4,
-       "c": 2,
        "w": 1,
        "h": 1,
        "disc": false
