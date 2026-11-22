@@ -1,5 +1,5 @@
 {
- "_savedAt": "2026-11-22T13:15:46.044Z",
+ "_savedAt": "2026-11-22T13:16:13.798Z",
  "cities": [
   {
    "id": "0joobpf",
@@ -1891,7 +1891,7 @@
    "e": 16,
    "l": 6,
    "s": 15,
-   "u": 161
+   "u": 165
   },
   "ruler": [
    "l",
@@ -2015,7 +2015,7 @@
    "m": 1
   },
   "evLast": 0,
-  "held": 0,
+  "held": 1,
   "log": [
    {
     "y": 1,
@@ -2111,6 +2111,71 @@
     "y": 1,
     "m": 1,
     "t": "Unrest +80 — výběr 80 BP pro osobní potřebu (1 BP = 2 000 gp)"
+   },
+   {
+    "y": 1,
+    "m": 1,
+    "t": "Event fáze: žádná událost (hod 93 > 75 %)."
+   },
+   {
+    "y": 1,
+    "m": 1,
+    "t": "Event fáze: žádná událost (hod 95 > 75 %)."
+   },
+   {
+    "y": 1,
+    "m": 1,
+    "t": "Event fáze: hod 54 ≤ 75 % → událost."
+   },
+   {
+    "y": 1,
+    "m": 1,
+    "t": "UDÁLOST: Large disaster"
+   },
+   {
+    "y": 1,
+    "m": 1,
+    "t": "Katastrofa – hex 1/1: d20=2 → 17 vs DC 89 → SELHÁNÍ"
+   },
+   {
+    "y": 1,
+    "m": 1,
+    "t": "Unrest +1"
+   },
+   {
+    "y": 1,
+    "m": 1,
+    "t": "Zničeno vylepšení terénu – uprav Farmy/Doly/Jiné ručně."
+   },
+   {
+    "y": 1,
+    "m": 1,
+    "t": "Event fáze: hod 2 ≤ 75 % → událost."
+   },
+   {
+    "y": 1,
+    "m": 1,
+    "t": "UDÁLOST: Feud"
+   },
+   {
+    "y": 1,
+    "m": 1,
+    "t": "Feud – Loyalty check: d20=11 → 50 vs DC 89 → SELHÁNÍ"
+   },
+   {
+    "y": 1,
+    "m": 1,
+    "t": "Corruption +1"
+   },
+   {
+    "y": 1,
+    "m": 1,
+    "t": "Unrest +3 — Feud"
+   },
+   {
+    "y": 1,
+    "m": 1,
+    "t": "Feud pokračuje i příští Event fázi (kontinuální)."
    }
   ],
   "farms": 27,
@@ -2137,7 +2202,7 @@
    "soc": 0
   },
   "smods": {
-   "cor": 0,
+   "cor": 1,
    "cri": 0,
    "law": 0,
    "lor": 1,
@@ -2146,7 +2211,7 @@
   },
   "foodNext": 1,
   "lastEv": {
-   "id": "impdem",
+   "id": "feud",
    "cid": null
   },
   "taxdiv": "5",
