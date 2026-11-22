@@ -1,5 +1,5 @@
 {
- "_savedAt": "2026-11-22T10:41:53.637Z",
+ "_savedAt": "2026-11-22T10:42:04.201Z",
  "cities": [
   {
    "id": "0joobpf",
@@ -213,12 +213,6 @@
        "uid": "odn12xi",
        "type": "cistern",
        "r": 1,
-       "c": 4
-      },
-      {
-       "uid": "krp1t6y",
-       "type": "cistern",
-       "r": 0,
        "c": 4
       }
      ]
