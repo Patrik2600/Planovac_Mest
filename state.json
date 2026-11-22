@@ -1,5 +1,5 @@
 {
- "_savedAt": "2026-11-22T10:36:43.884Z",
+ "_savedAt": "2026-11-22T10:36:47.570Z",
  "cities": [
   {
    "id": "0joobpf",
@@ -113,6 +113,15 @@
        "type": "graveyard",
        "r": 5,
        "c": 5,
+       "w": 1,
+       "h": 1,
+       "disc": false
+      },
+      {
+       "uid": "zhe4c4p",
+       "type": "dump",
+       "r": 5,
+       "c": 4,
        "w": 1,
        "h": 1,
        "disc": false
