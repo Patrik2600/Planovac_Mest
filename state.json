@@ -1,5 +1,5 @@
 {
- "_savedAt": "2026-11-22T10:34:20.699Z",
+ "_savedAt": "2026-11-22T10:34:26.276Z",
  "cities": [
   {
    "id": "0joobpf",
@@ -145,7 +145,17 @@
      },
      "paved": 0,
      "sewer": 0,
-     "buildings": [],
+     "buildings": [
+      {
+       "uid": "g7bs0on",
+       "type": "temple",
+       "r": 3,
+       "c": 2,
+       "w": 2,
+       "h": 1,
+       "disc": false
+      }
+     ],
      "overlays": []
     },
     {
