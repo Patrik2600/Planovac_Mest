@@ -1,5 +1,5 @@
 {
- "_savedAt": "2026-11-22T15:34:25.503Z",
+ "_savedAt": "2026-11-22T19:38:00.481Z",
  "cities": [
   {
    "id": "0joobpf",
@@ -549,6 +549,15 @@
        "disc": false
       },
       {
+       "uid": "g62w2y1",
+       "type": "house",
+       "r": 2,
+       "c": 3,
+       "w": 1,
+       "h": 1,
+       "disc": false
+      },
+      {
        "uid": "t3002bn",
        "type": "tavern",
        "r": 2,
@@ -588,24 +597,6 @@
        "uid": "cxu79vo",
        "type": "house",
        "r": 0,
-       "c": 1,
-       "w": 1,
-       "h": 1,
-       "disc": false
-      },
-      {
-       "uid": "a5luebh",
-       "type": "house",
-       "r": 2,
-       "c": 3,
-       "w": 1,
-       "h": 1,
-       "disc": false
-      },
-      {
-       "uid": "p4vw8le",
-       "type": "house",
-       "r": 2,
        "c": 1,
        "w": 1,
        "h": 1,
@@ -687,7 +678,7 @@
    "id": "fwa3aa9",
    "name": "Varnhold",
    "terrain": "Plains",
-   "cd": 0,
+   "cd": 1,
    "mi": {
     "vh01tmp_minor0": {
      "name": "Headband of Alluring Charisma +2 (4000 gp)",
@@ -1882,25 +1873,25 @@
    ]
   }
  ],
- "cur": "3qc6jt7",
+ "cur": "0joobpf",
  "kingdom": {
   "name": "Technologia",
   "players": "7",
   "gm": "Dano",
   "align": "CN",
   "size": 59,
-  "treasury": 1751,
+  "treasury": 1708,
   "famebase": 1,
   "infbase": 0,
   "tax": "none",
   "hol": "h6",
   "pro": "token",
-  "consAdj": 0,
+  "consAdj": -66,
   "other": {
    "e": 16,
    "l": 6,
    "s": 15,
-   "u": 0
+   "u": 2
   },
   "ruler": [
    "l",
@@ -2024,7 +2015,7 @@
    "m": 1
   },
   "evLast": 0,
-  "held": 1,
+  "held": -1,
   "log": [
    {
     "y": 1,
@@ -2040,173 +2031,13 @@
     "y": 1,
     "m": 1,
     "t": "Unrest +2 — výběr 2 BP pro osobní potřebu (1 BP = 2 000 gp)"
-   },
-   {
-    "y": 1,
-    "m": 1,
-    "t": "Event fáze: hod 44 ≤ 75 % → událost."
-   },
-   {
-    "y": 1,
-    "m": 1,
-    "t": "UDÁLOST: Noblesse oblige · Basgiat"
-   },
-   {
-    "y": 1,
-    "m": 1,
-    "t": "Do města Basgiat přidej zdarma Park."
-   },
-   {
-    "y": 1,
-    "m": 1,
-    "t": "Event fáze: hod 27 ≤ 75 % → událost."
-   },
-   {
-    "y": 1,
-    "m": 1,
-    "t": "UDÁLOST: Archaeological find"
-   },
-   {
-    "y": 1,
-    "m": 1,
-    "t": "Lore +1"
-   },
-   {
-    "y": 1,
-    "m": 1,
-    "t": "Museum: artefakty za 10 000 gp do sbírky."
-   },
-   {
-    "y": 1,
-    "m": 1,
-    "t": "Event fáze: hod 16 ≤ 75 % → událost."
-   },
-   {
-    "y": 1,
-    "m": 1,
-    "t": "UDÁLOST: Improvement demand"
-   },
-   {
-    "y": 1,
-    "m": 1,
-    "t": "Improvement demand – potlačit?: d20=11 → 131 vs DC 89 → ÚSPĚCH"
-   },
-   {
-    "y": 1,
-    "m": 1,
-    "t": "Loy −2"
-   },
-   {
-    "y": 1,
-    "m": 1,
-    "t": "Unrest +1"
-   },
-   {
-    "y": 1,
-    "m": 1,
-    "t": "Požadavek potlačen."
-   },
-   {
-    "y": 1,
-    "m": 1,
-    "t": "Event fáze: žádná událost (hod 98 > 75 %)."
-   },
-   {
-    "y": 1,
-    "m": 1,
-    "t": "Unrest +80 — výběr 80 BP pro osobní potřebu (1 BP = 2 000 gp)"
-   },
-   {
-    "y": 1,
-    "m": 1,
-    "t": "Unrest +80 — výběr 80 BP pro osobní potřebu (1 BP = 2 000 gp)"
-   },
-   {
-    "y": 1,
-    "m": 1,
-    "t": "Event fáze: žádná událost (hod 93 > 75 %)."
-   },
-   {
-    "y": 1,
-    "m": 1,
-    "t": "Event fáze: žádná událost (hod 95 > 75 %)."
-   },
-   {
-    "y": 1,
-    "m": 1,
-    "t": "Event fáze: hod 54 ≤ 75 % → událost."
-   },
-   {
-    "y": 1,
-    "m": 1,
-    "t": "UDÁLOST: Large disaster"
-   },
-   {
-    "y": 1,
-    "m": 1,
-    "t": "Katastrofa – hex 1/1: d20=2 → 17 vs DC 89 → SELHÁNÍ"
-   },
-   {
-    "y": 1,
-    "m": 1,
-    "t": "Unrest +1"
-   },
-   {
-    "y": 1,
-    "m": 1,
-    "t": "Zničeno vylepšení terénu – uprav Farmy/Doly/Jiné ručně."
-   },
-   {
-    "y": 1,
-    "m": 1,
-    "t": "Event fáze: hod 2 ≤ 75 % → událost."
-   },
-   {
-    "y": 1,
-    "m": 1,
-    "t": "UDÁLOST: Feud"
-   },
-   {
-    "y": 1,
-    "m": 1,
-    "t": "Feud – Loyalty check: d20=11 → 50 vs DC 89 → SELHÁNÍ"
-   },
-   {
-    "y": 1,
-    "m": 1,
-    "t": "Corruption +1"
-   },
-   {
-    "y": 1,
-    "m": 1,
-    "t": "Unrest +3 — Feud"
-   },
-   {
-    "y": 1,
-    "m": 1,
-    "t": "Feud pokračuje i příští Event fázi (kontinuální)."
-   },
-   {
-    "y": 1,
-    "m": 1,
-    "t": "Royal Enforcer – Loyalty check: d20=14 → 50 vs DC 89 → SELHÁNÍ"
-   },
-   {
-    "y": 1,
-    "m": 1,
-    "t": "Unrest −1 — Royal Enforcer"
-   },
-   {
-    "y": 1,
-    "m": 1,
-    "t": "Loy −1"
    }
   ],
-  "farms": 37,
+  "farms": 27,
   "fish": 1,
   "mods": {
    "e": 0,
-   "l": -3,
+   "l": 0,
    "s": 0
   },
   "temp": {
@@ -2226,18 +2057,15 @@
    "soc": 0
   },
   "smods": {
-   "cor": 1,
+   "cor": 0,
    "cri": 0,
    "law": 0,
-   "lor": 1,
+   "lor": 0,
    "pro": 0,
    "soc": 0
   },
   "foodNext": 1,
-  "lastEv": {
-   "id": "feud",
-   "cid": null
-  },
+  "lastEv": null,
   "taxdiv": "5",
   "map": {
    "gm": 1,
