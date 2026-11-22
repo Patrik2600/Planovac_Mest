@@ -1,5 +1,5 @@
 {
- "_savedAt": "2026-11-22T11:12:31.004Z",
+ "_savedAt": "2026-11-22T11:12:58.582Z",
  "cities": [
   {
    "id": "0joobpf",
@@ -2066,7 +2066,7 @@
   },
   "foodNext": 1,
   "lastEv": null,
-  "taxdiv": "3",
+  "taxdiv": "5",
   "map": {
    "gm": 1,
    "hexes": {
