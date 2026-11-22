@@ -1,5 +1,5 @@
 {
- "_savedAt": "2026-11-22T10:55:08.323Z",
+ "_savedAt": "2026-11-22T10:55:12.004Z",
  "cities": [
   {
    "id": "0joobpf",
@@ -926,6 +926,15 @@
        "type": "smithy",
        "r": 3,
        "c": 0,
+       "w": 1,
+       "h": 1,
+       "disc": false
+      },
+      {
+       "uid": "gawgfi1",
+       "type": "monument",
+       "r": 2,
+       "c": 1,
        "w": 1,
        "h": 1,
        "disc": false
