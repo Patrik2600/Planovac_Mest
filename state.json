@@ -1,5 +1,5 @@
 {
- "_savedAt": "2026-11-22T10:48:50.796Z",
+ "_savedAt": "2026-11-22T10:48:58.559Z",
  "cities": [
   {
    "id": "0joobpf",
@@ -420,6 +420,15 @@
        "r": 4,
        "c": 5,
        "w": 1,
+       "h": 1,
+       "disc": false
+      },
+      {
+       "uid": "y4atwk4",
+       "type": "guildhall",
+       "r": 3,
+       "c": 2,
+       "w": 2,
        "h": 1,
        "disc": false
       }
