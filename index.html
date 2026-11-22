@@ -331,68 +331,71 @@ var CAT_ORDER = ['res','trade','fun','faith','edu','civic','mil','water','util']
 var MODN = {cor:'Corruption', cri:'Crime', law:'Law', lor:'Lore', pro:'Productivity', soc:'Society'};
 var DEFS = [], DEF = {};
 function def(id, name, cat, bp, size, o) { var d = {id:id, name:name, cat:cat, bp:bp, size:size}; o = o || {}; for (var k in o) d[k] = o[k]; DEFS.push(d); DEF[id] = d; }
-var H1 = {of:['house'], n:1}, H2 = {of:['house'], n:2}, HM = {of:['house','mansion'], n:1};
+var H1 = {of:['house'], n:1}, H2 = {of:['house'], n:2};
+var UCN = 'Ultimate Campaign — mimo AP pravidla (zůstává kvůli existujícím městům)';
 
-def('academy','Academy','edu',52,2,{e:2,l:2,lor:2,pro:1,soc:2});
+/* Budovy přesně podle Kingmaker AP #35 „Of Cities and Kings" (str. 58–61, PDF pravidla království) */
+def('academy','Academy','edu',52,2,{e:2,l:2,note:'Sleva ½ na Caster’s Tower, Library a Magic Shop ve městě.'});
 def('alchemist','Alchemist','trade',18,1,{e:1,bv:1000,adj:H1});
-def('arena','Arena','fun',40,4,{s:4,f:1,cri:1,max:1});
-def('bank','Bank','trade',28,1,{e:4,bv:2000});
-def('bardic','Bardic College','edu',40,2,{e:1,l:3,s:1,f:1});
-def('barracks','Barracks','mil',6,1,{u:-1,d:2,law:1});
-def('blackmarket','Black Market','trade',50,1,{e:2,s:1,u:1,bv:2000,cor:2,cri:2,adj:H2});
+def('arena','Arena','fun',40,4,{s:4,max:1,note:'Sleva ½ na Garrison nebo Theater ve městě; poloviční nárůst Consumption u festivalových ediktů.'});
+def('barracks','Barracks','mil',12,1,{u:-1,d:2});
+def('blackmarket','Black Market','trade',50,1,{e:2,s:1,u:1,bv:2000,adj:H2});
 def('brewery','Brewery','trade',6,1,{l:1,s:1});
-def('bureau','Bureau','civic',10,2,{e:1,l:-1,s:1,cor:1,law:1});
 def('caster','Caster’s Tower','edu',30,1,{e:1,l:1});
-def('castle','Castle','civic',54,4,{e:2,l:2,s:2,u:-4,f:1,d:8,max:1});
-def('cathedral','Cathedral','faith',58,4,{l:4,s:4,u:-4,f:1,law:2,max:1});
-def('dance','Dance Hall','fun',4,1,{e:1,l:2,u:1,cor:1,cri:1,adj:H1});
-def('dump','Dump','util',4,1,{s:1,noadj:['house','mansion','villa']});
-def('artisan','Exotic Artisan','trade',10,1,{e:1,s:1,adj:H1});
-def('foreign','Foreign Quarter','trade',30,4,{e:3,s:-1,cri:1,lor:1,soc:2});
-def('foundry','Foundry','trade',16,2,{e:1,s:1,u:1,pro:1,water:true});
-def('garrison','Garrison','mil',28,2,{l:2,s:2,u:-2});
+def('castle','Castle','civic',54,4,{e:2,l:2,s:2,u:-4,d:8,max:1,note:'Sleva ½ na Noble Villa nebo Town Hall ve městě.'});
+def('cathedral','Cathedral','faith',58,4,{l:4,u:-4,max:1,note:'Sleva ½ na Temple nebo Academy ve městě; poloviční nárůst Consumption u promotion ediktů.'});
+def('dance','Brothel','fun',4,1,{e:1,l:2,u:1,adj:H1});
+def('dump','Dump','util',4,1,{l:1,s:1});
+def('artisan','Exotic Craftsman','trade',10,1,{l:1,s:1,adj:H1});
+def('garrison','Garrison','mil',28,2,{l:2,s:2,u:-2,note:'Sleva ½ na City Wall, Granary a Jail ve městě.'});
 def('granary','Granary','util',12,1,{l:1,s:1});
-def('graveyard','Graveyard','faith',4,1,{l:1});
-def('guildhall','Guildhall','trade',34,2,{e:2,l:2,bv:1000,law:1,pro:2});
+def('graveyard','Graveyard','faith',4,1,{e:1,l:1});
+def('guildhall','Guildhall','trade',34,2,{e:2,l:2,bv:1000,adj:H1,note:'Sleva ½ na Piers, Stable a Tradesman ve městě.'});
 def('herbalist','Herbalist','trade',10,1,{l:1,s:1,adj:H1});
-def('hospital','Hospital','civic',30,2,{l:1,s:2,lor:1,pro:2});
-def('house','House','res',3,1,{u:-1});
-def('inn','Inn','fun',10,1,{e:1,l:1,bv:500,soc:1,adj:H1});
-def('jail','Jail','civic',14,1,{l:2,s:2,u:-2,cri:-1,law:1});
-def('library','Library','edu',6,1,{e:1,l:1,lor:1});
+def('house','House','res',3,1,{u:-1,note:'První House v každé Improvement fázi se nepočítá do limitu nových budov.'});
+def('inn','Inn','fun',10,1,{e:1,l:1,bv:500,adj:H1});
+def('jail','Jail','civic',14,1,{l:2,s:2,u:-2});
+def('library','Library','edu',6,1,{e:1,l:1});
 def('luxury','Luxury Store','trade',28,1,{e:1,bv:2000,adj:H1});
 def('magicshop','Magic Shop','trade',68,1,{e:1,bv:2000,adj:H2});
-def('magacad','Magical Academy','edu',58,2,{e:2,f:1,lor:2,soc:1});
-def('mansion','Mansion','res',10,1,{s:1,law:1,soc:1});
-def('market','Market','trade',48,2,{e:2,s:2,bv:2000,adj:H2});
-def('menagerie','Menagerie','fun',16,4,{e:1,f:1,note:'Loyalty +¼ CR nejsilnější příšery (přičti ručně).'});
-def('milacad','Military Academy','mil',36,2,{l:2,s:1,f:1,law:1,lor:1,max:1});
-def('mill','Mill','trade',6,1,{e:1,s:1,pro:1,water:true});
-def('mint','Mint','civic',30,1,{e:3,l:3,s:1,f:1});
-def('monastery','Monastery','faith',16,2,{s:1,law:1,lor:1});
-def('monument','Monument','fun',6,1,{l:1,u:-1});
-def('museum','Museum','fun',30,2,{e:1,l:1,f:1,lor:2,soc:1});
-def('villa','Noble Villa','res',24,2,{e:1,l:1,s:1,f:1,soc:1});
-def('observatory','Observatory','edu',12,1,{s:1,lor:2});
-def('orphanage','Orphanage','civic',6,1,{s:1,u:-1});
-def('palace','Palace','civic',108,4,{e:2,l:6,s:2,f:1,bv:1000,law:2});
+def('mansion','Mansion','res',10,1,{s:1});
+def('market','Market','trade',48,2,{e:2,s:2,bv:2000,adj:H2,note:'Sleva ½ na Black Market, Inn a Shop ve městě.'});
+def('mill','Mill','trade',6,1,{e:1,s:1,water:true});
+def('monument','Monument','fun',6,1,{l:3,u:-1});
+def('villa','Noble Villa','res',24,2,{e:1,l:1,s:1,note:'Sleva ½ na Exotic Craftsman, Luxury Store a Mansion ve městě.'});
 def('park','Park','fun',4,1,{l:1,u:-1});
-def('pier','Pier','water',16,1,{e:1,s:1,bv:1000,cri:1,water:true});
-def('shop','Shop','trade',8,1,{e:1,bv:500,pro:1,adj:HM});
+def('pier','Piers','water',16,1,{e:1,s:1,bv:1000,water:true});
+def('shop','Shop','trade',8,1,{e:1,bv:500,adj:H1});
 def('shrine','Shrine','faith',8,1,{l:1,u:-1});
-def('smithy','Smithy','trade',6,1,{e:1,s:1});
-def('stable','Stable','trade',10,1,{e:1,l:1,bv:500,adj:{of:['house','mansion','villa'],n:1}});
-def('stockyard','Stockyard','trade',20,4,{e:1,s:-1,pro:1});
-def('tannery','Tannery','trade',6,1,{e:1,s:1,soc:-1,noadj:['house','mansion','villa','tenement']});
-def('tavern','Tavern','fun',12,1,{e:1,l:1,bv:500,cor:1,adj:HM});
-def('temple','Temple','faith',32,2,{l:2,s:2,u:-2});
-def('tenement','Tenement','res',1,1,{u:2});
-def('theater','Theater','fun',24,2,{e:2,s:2});
-def('townhall','Town Hall','civic',22,2,{e:1,l:1,s:1,law:1});
-def('tradeshop','Trade Shop','trade',10,1,{e:1,s:1,bv:500,pro:1,adj:H1});
-def('university','University','edu',78,4,{e:3,l:3,f:1,lor:4,soc:3});
-def('watchtower','Watchtower','mil',12,1,{s:1,u:-1,d:2});
-def('waterfront','Waterfront','water',90,4,{e:4,bv:4000,pro:2,water:true,max:1});
+def('smithy','Smith','trade',6,1,{e:1,s:1});
+def('stable','Stable','trade',10,1,{e:1,l:1,bv:500,adj:H1});
+def('tannery','Tannery','trade',6,1,{e:1,s:1,noadj:['house','tenement']});
+def('tavern','Tavern','fun',12,1,{e:1,l:1,bv:500,adj:H1});
+def('temple','Temple','faith',32,2,{l:2,s:2,u:-2,note:'Sleva ½ na Graveyard, Monument a Shrine ve městě.'});
+def('tenement','Tenement','res',1,1,{u:2,note:'Počítá se jako House pro splnění požadavků; House lze postavit přes Tenement za 2 BP.'});
+def('theater','Theater','fun',24,2,{e:2,s:2,note:'Sleva ½ na Brothel, Park a Tavern ve městě.'});
+def('townhall','Town Hall','civic',22,2,{e:1,l:1,s:1,note:'Sleva ½ na Barracks, Dump a Watchtower ve městě.'});
+def('tradeshop','Tradesman','trade',10,1,{e:1,s:1,bv:500,adj:H1});
+def('watchtower','Watchtower','mil',6,1,{s:1,u:-1,d:2});
+def('waterfront','Waterfront','water',90,4,{e:4,bv:4000,water:true,max:1,note:'Sleva ½ na Guildhall a Market ve městě; poloviční Loyalty penalta u daňových ediktů.'});
+/* doplňkové budovy z Ultimate Campaign (AP je nezná, ale existující města je používají) */
+def('bank','Bank','trade',28,1,{e:4,bv:2000,note:UCN});
+def('bardic','Bardic College','edu',40,2,{e:1,l:3,s:1,f:1,note:UCN});
+def('bureau','Bureau','civic',10,2,{e:1,l:-1,s:1,cor:1,law:1,note:UCN});
+def('foreign','Foreign Quarter','trade',30,4,{e:3,s:-1,cri:1,lor:1,soc:2,note:UCN});
+def('foundry','Foundry','trade',16,2,{e:1,s:1,u:1,pro:1,water:true,note:UCN});
+def('hospital','Hospital','civic',30,2,{l:1,s:2,lor:1,pro:2,note:UCN});
+def('magacad','Magical Academy','edu',58,2,{e:2,f:1,lor:2,soc:1,note:UCN});
+def('menagerie','Menagerie','fun',16,4,{e:1,f:1,note:'UC budova (mimo AP). Loyalty +¼ CR nejsilnější příšery (přičti ručně).'});
+def('milacad','Military Academy','mil',36,2,{l:2,s:1,f:1,law:1,lor:1,max:1,note:UCN});
+def('mint','Mint','civic',30,1,{e:3,l:3,s:1,f:1,note:UCN});
+def('monastery','Monastery','faith',16,2,{s:1,law:1,lor:1,note:UCN});
+def('museum','Museum','fun',30,2,{e:1,l:1,f:1,lor:2,soc:1,note:UCN});
+def('observatory','Observatory','edu',12,1,{s:1,lor:2,note:UCN});
+def('orphanage','Orphanage','civic',6,1,{s:1,u:-1,note:UCN});
+def('palace','Palace','civic',108,4,{e:2,l:6,s:2,f:1,bv:1000,law:2,note:UCN});
+def('stockyard','Stockyard','trade',20,4,{e:1,s:-1,pro:1,note:UCN});
+def('university','University','edu',78,4,{e:3,l:3,f:1,lor:4,soc:3,note:UCN});
 def('waterway1','Waterway (1 lot)','water',3,1,{kind:'waterway'});
 def('waterway2','Waterway (2 lots)','water',3,2,{kind:'waterway'});
 def('cistern','Cistern','util',6,1,{s:1,kind:'overlay',ab:'Ci',noadj:['dump','graveyard','stable','stockyard','tannery']});
@@ -407,7 +410,7 @@ var STAT = ['e','l','s','u','d','f','cor','cri','law','lor','pro','soc'];
 var LAB = {e:'Eco', l:'Loy', s:'Stab', u:'Unrest', d:'Def', f:'Fame'};
 var LET = {e:'E', l:'L', s:'S', u:'U', d:'D'};
 var PAVED = {bp:24, e:2, s:1, pro:2}, SEWER = {bp:24, l:1, s:2, cri:1, pro:1};
-var WALLBP = 2, GATEBP = 2;
+var WALLBP = 8, GATEBP = 2, MOATBP = 2;
 var ATT3 = {e:'Economy', l:'Loyalty', s:'Stability'};
 var ALIGN = {LG:{e:2,l:2}, NG:{l:2,s:2}, CG:{l:4}, LN:{e:2,s:2}, N:{s:4}, CN:{l:2,s:2}, LE:{e:4}, NE:{e:2,s:2}, CE:{e:2,l:2}};
 var ALNAME = {LG:'Lawful Good', NG:'Neutral Good', CG:'Chaotic Good', LN:'Lawful Neutral', N:'Neutral', CN:'Chaotic Neutral', LE:'Lawful Evil', NE:'Neutral Evil', CE:'Chaotic Evil'};
@@ -437,34 +440,40 @@ var GOODNEG = {u:1, cor:1, cri:1};
 var TIERS = [['minor','Minor'],['medium','Medium'],['major','Major']];
 var KINDS = ['weapon','armor','potion','ring','rod','scroll','staff','wand','wondrous item'];
 /* Magic item sloty budov (Ultimate Campaign): [tier, počet, povolené typy] */
+/* Magic item sloty budov podle AP (PDF): jen počty, typ libovolný; UC budovy mají své typy */
 var MI = {
-  academy:[['minor',3,'scroll, wondrous item'],['medium',2,'scroll, wondrous item']],
-  alchemist:[['minor',1,'potion, wondrous item']],
-  bardic:[['minor',2,'scroll, wondrous item']],
+  academy:[['minor',3,'any'],['medium',2,'any']],
+  alchemist:[['minor',1,'any']],
+  artisan:[['minor',1,'any']],
   blackmarket:[['minor',2,'any'],['medium',1,'any'],['major',1,'any']],
   caster:[['minor',3,'any'],['medium',2,'any']],
-  cathedral:[['minor',3,'potion, wondrous item'],['medium',2,'potion, wondrous item']],
-  artisan:[['minor',1,'ring, wand, wondrous item']],
-  herbalist:[['minor',1,'potion, wondrous item']],
-  luxury:[['minor',2,'ring, wand, wondrous item']],
-  magicshop:[['minor',4,'wondrous item'],['medium',2,'wondrous item'],['major',1,'wondrous item']],
+  cathedral:[['minor',3,'any'],['medium',2,'any']],
+  herbalist:[['minor',1,'any']],
+  luxury:[['minor',2,'any']],
+  magicshop:[['minor',4,'any'],['medium',2,'any'],['major',1,'any']],
+  market:[['minor',2,'any']],
+  shrine:[['minor',1,'any']],
+  temple:[['minor',2,'any']],
+  waterfront:[['minor',3,'any'],['medium',2,'any'],['major',1,'any']],
+  /* UC doplňky */
+  bardic:[['minor',2,'scroll, wondrous item']],
   magacad:[['minor',3,'potion, scroll, wondrous item'],['medium',1,'potion, scroll, wondrous item']],
-  market:[['minor',2,'wondrous item']],
   milacad:[['minor',1,'armor, weapon'],['medium',1,'armor, weapon']],
   observatory:[['minor',1,'scroll, wondrous item']],
-  shrine:[['minor',1,'potion, scroll, wondrous item']],
-  temple:[['minor',2,'any']],
-  university:[['minor',4,'scroll, wondrous item'],['medium',2,'scroll, wondrous item']],
-  waterfront:[['minor',2,'wondrous item'],['medium',1,'wondrous item'],['major',1,'wondrous item']]
+  university:[['minor',4,'scroll, wondrous item'],['medium',2,'scroll, wondrous item']]
 };
-/* Budovy, které dávají slevu ½ BP, pokud už ve městě stojí */
+/* Budovy, které dávají slevu ½ BP, pokud už ve městě stojí (podle PDF) */
 var DISC = {
-  academy:['caster','library','magicshop'], arena:['dance','garrison','inn','stable','theater'], bardic:['library','museum','theater'],
-  blackmarket:['dance'], castle:['villa','townhall'], cathedral:['academy','temple'], foundry:['smithy'], garrison:['jail','granary'],
-  guildhall:['pier','stable','tradeshop'], magacad:['caster','library','magicshop'], market:['blackmarket','inn','shop'], milacad:['barracks'],
-  villa:['artisan','luxury','mansion'], palace:['mansion','mint','villa'], stockyard:['stable','tannery'], temple:['graveyard','monument','shrine'],
-  theater:['dance','artisan','inn','park','tavern'], townhall:['barracks','cistern','dump','jail','watchtower'],
-  university:['academy','bardic','library','magacad','milacad','museum'], waterfront:['blackmarket','guildhall','market','pier']
+  academy:['caster','library','magicshop'], arena:['garrison','theater'],
+  castle:['villa','townhall'], cathedral:['temple','academy'],
+  garrison:['jail','granary'], guildhall:['pier','stable','tradeshop'],
+  market:['blackmarket','inn','shop'], temple:['graveyard','monument','shrine'],
+  theater:['dance','park','tavern'], townhall:['barracks','dump','watchtower'],
+  villa:['artisan','luxury','mansion'], waterfront:['guildhall','market'],
+  /* UC doplňky */
+  bardic:['library','museum','theater'], foundry:['smithy'], magacad:['caster','library','magicshop'],
+  milacad:['barracks'], palace:['mansion','mint','villa'], stockyard:['stable','tannery'],
+  university:['academy','bardic','library','magacad','milacad','museum']
 };
 
 /* ---------- state ---------- */
@@ -573,7 +582,7 @@ function findFit(d, D, r, c, orient) {
     for (var dr = 0; dr < h; dr++) for (var dc = 0; dc < w; dc++) {
       var r0 = r - dr, c0 = c - dc;
       if (r0 < 0 || c0 < 0 || r0 + h > 6 || c0 + w > 6) continue;
-      if ((r0 >> 1) !== ((r0 + h - 1) >> 1) || (c0 >> 1) !== ((c0 + w - 1) >> 1)) continue; /* stavba nesmí přesáhnout přes cestu: zůstane v bloku 2×2 lotů */
+      /* PDF: dvou- a čtyřblokové stavby se nesmí dělit, ale mohou přes ulici */
       var ok = true;
       for (var i = 0; i < h && ok; i++) for (var j = 0; j < w; j++) if (g[r0 + i][c0 + j]) { ok = false; break; }
       if (ok) return {r:r0, c:c0, w:w, h:h};
@@ -957,11 +966,11 @@ function calcCity(city) {
       if (d.borders[sd] !== 'land') return;
       var sn = dn + ' ' + SIDEN[sd];
       if (d.wall[sd]) {
-        fBP += WALLBP; A.d += 1; wallAny = true; rec('bp', 'City Wall', WALLBP, sn); rec('d', 'City Wall', 1, sn);
+        fBP += WALLBP; A.d += 4; wallAny = true; rec('bp', 'City Wall', WALLBP, sn); rec('d', 'City Wall', 4, sn);
         if (d.gate && d.gate[sd]) { fBP += GATEBP; rec('bp', 'Watergate', GATEBP, sn); }
         else d.buildings.forEach(function (b) { if (DEF[b.type].kind === 'waterway' && touchesEdge(b, sd)) warn(di, b.uid, b.r, b.c, 'Waterway', 'Waterway prochází City Wall (' + SIDEN[sd] + '): potřebuje Watergate (2 BP).'); });
       }
-      if (d.moat[sd]) { fBP += WALLBP; A.d += 1; moatAny = true; rec('bp', 'Moat', WALLBP, sn); rec('d', 'Moat', 1, sn); }
+      if (d.moat[sd]) { fBP += MOATBP; A.d += 1; moatAny = true; rec('bp', 'Moat', MOATBP, sn); rec('d', 'Moat', 1, sn); }
     });
     if (d.paved) { iBP += PAVED.bp; add(PAVED, 'Paved Streets', dn); rec('bp', 'Paved Streets', PAVED.bp, dn); }
     if (d.sewer) { iBP += SEWER.bp; add(SEWER, 'Sewer System', dn); rec('bp', 'Sewer System', SEWER.bp, dn); }
@@ -1816,14 +1825,14 @@ function render() {
   SIDES.forEach(function (sd) {
     var k = sd[0], land = d.borders[k] === 'land';
     h += '<div class="brow"><span class="bl">' + sd[1] + '</span><div class="seg"><button data-act="bord" data-side="' + k + '" data-v="land" aria-pressed="' + land + '">Land</button><button data-act="bord" data-side="' + k + '" data-v="water" aria-pressed="' + !land + '">Water</button></div>';
-    h += '<button class="tg" data-act="fort" data-side="' + k + '" data-k="wall" aria-pressed="' + !!d.wall[k] + '"' + (land ? '' : ' disabled') + '>City Wall · 2 BP</button>';
+    h += '<button class="tg" data-act="fort" data-side="' + k + '" data-k="wall" aria-pressed="' + !!d.wall[k] + '"' + (land ? '' : ' disabled') + '>City Wall · 8 BP</button>';
     h += '<button class="tg" data-act="fort" data-side="' + k + '" data-k="moat" aria-pressed="' + !!d.moat[k] + '"' + (land ? '' : ' disabled') + '>Moat · 2 BP</button>';
     h += '<button class="tg" data-act="fort" data-side="' + k + '" data-k="gate" aria-pressed="' + !!d.gate[k] + '"' + (land && d.wall[k] ? '' : ' disabled') + ' title="Sdílí místo s City Wall; pustí do města vodu (řeku, Waterway)">Watergate · 2 BP</button></div>';
   });
   h += '</div><div class="row" style="margin-top:12px"><span class="h3">Celý district</span>';
   h += '<button class="tg" data-act="infra" data-k="paved" aria-pressed="' + !!d.paved + '">Paved Streets · 24 BP</button>';
   h += '<button class="tg" data-act="infra" data-k="sewer" aria-pressed="' + !!d.sewer + '">Sewer System · 24 BP</button></div>';
-  h += '<p class="note">Paved Streets: Eco +2, Stab +1. Sewer System: Loy +1, Stab +2. Zeď: Defense +1, Unrest −2 (jednou za město). Příkop: Defense +1, Unrest −1 (jednou za město). Watergate (jen na zdi) pustí do města vodu; Waterway, který dojde ke zdi bez něj, se hlásí jako chyba.</p></div>';
+  h += '<p class="note">Paved Streets: Eco +2, Stab +1. Sewer System: Loy +1, Stab +2. City Wall (8 BP za hranici): Defense +4, Unrest −2 (jednou za město). Příkop: Defense +1, Unrest −1 (jednou za město). Watergate (jen na zdi) pustí do města vodu; Waterway, který dojde ke zdi bez něj, se hlásí jako chyba.</p></div>';
   h += magicHTML(city, cc);
 
   h += '<div class="legend">' + CAT_ORDER.map(function (k) { return '<span class="cat-' + k + '"><i></i>' + CATS[k] + '</span>'; }).join('') + '<span>Kroužek na lotu = sdílí parcelu (Cistern, Lamps, Spring, Bridge)</span></div>';
@@ -1846,7 +1855,7 @@ function render() {
     h += '<ul class="warns">' + cc.warns.map(function (w) { return '<li><span><span class="lotn">D' + (w.di + 1) + ' ' + lotName(w.r, w.c) + '</span> ' + esc(w.text) + '</span></li>'; }).join('') + '</ul>';
   } else h += '<p class="ok">Žádné porušení omezení u sousedů, vody ani počtu staveb.</p>';
   h += '</section>';
-  h += '<p class="foot">Hodnoty podle <a href="https://www.d20pfsrd.com/gamemastering/other-rules/kingdom-building/settlements/buildings" target="_blank" rel="noopener">d20pfsrd Kingdom Building</a>. Slevu za související budovy zapneš v detailu stavby (tam uvidíš, které budovy ji dávají). Sloty magic itemů podle Ultimate Campaign, ověř je u svého GM. Tlačítko Uložit (v Claude) sdílí stav všem, kdo stránku otevřou; jinak se stav průběžně ukládá jen v tomto prohlížeči.</p>';
+  h += '<p class="foot">Hodnoty podle <a href="https://paizo.com/products/btpy8nbs" target="_blank" rel="noopener">Kingmaker AP #35 — Of Cities and Kings</a> (pravidla království, str. 54–65). Slevu za související budovy zapneš v detailu stavby (tam uvidíš, které budovy ji dávají). Budovy označené „Ultimate Campaign" nejsou v AP pravidlech — zůstávají kvůli existujícím městům. Tlačítko Uložit (v Claude) sdílí stav všem, kdo stránku otevřou; jinak se stav průběžně ukládá jen v tomto prohlížeči.</p>';
   h += '</aside></div>';
   commit(h);
 }
