@@ -1,5 +1,5 @@
 {
- "_savedAt": "2026-11-22T13:19:03.137Z",
+ "_savedAt": "2026-11-22T13:19:18.416Z",
  "cities": [
   {
    "id": "0joobpf",
@@ -687,7 +687,7 @@
    "id": "fwa3aa9",
    "name": "Varnhold",
    "terrain": "Plains",
-   "cd": 0,
+   "cd": 1,
    "mi": {
     "vh01tmp_minor0": {
      "name": "Headband of Alluring Charisma +2 (4000 gp)",
