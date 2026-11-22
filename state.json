@@ -1,5 +1,5 @@
 {
- "_savedAt": "2026-11-22T10:30:13.755Z",
+ "_savedAt": "2026-11-22T10:30:41.119Z",
  "cities": [
   {
    "id": "0joobpf",
@@ -318,7 +318,7 @@
    "id": "fwa3aa9",
    "name": "Varnhold",
    "terrain": "Plains",
-   "cd": 0,
+   "cd": 1,
    "mi": {},
    "districts": [
     {
@@ -521,6 +521,36 @@
        "disc": false
       }
      ],
+     "overlays": []
+    },
+    {
+     "borders": {
+      "n": "land",
+      "e": "land",
+      "s": "land",
+      "w": "land"
+     },
+     "wall": {
+      "n": 0,
+      "e": 0,
+      "s": 0,
+      "w": 0
+     },
+     "gate": {
+      "n": 0,
+      "e": 0,
+      "s": 0,
+      "w": 0
+     },
+     "moat": {
+      "n": 0,
+      "e": 0,
+      "s": 0,
+      "w": 0
+     },
+     "paved": 0,
+     "sewer": 0,
+     "buildings": [],
      "overlays": []
     }
    ]
