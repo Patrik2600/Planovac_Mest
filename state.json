@@ -1,5 +1,5 @@
 {
- "_savedAt": "2026-11-22T10:54:38.833Z",
+ "_savedAt": "2026-11-22T10:54:47.353Z",
  "cities": [
   {
    "id": "0joobpf",
@@ -814,15 +814,6 @@
        "disc": false
       },
       {
-       "uid": "gbmbtrx",
-       "type": "house",
-       "r": 1,
-       "c": 2,
-       "w": 1,
-       "h": 1,
-       "disc": false
-      },
-      {
        "uid": "v4w6gxo",
        "type": "house",
        "r": 0,
@@ -877,8 +868,17 @@
        "disc": false
       },
       {
-       "uid": "z8x8i4t",
+       "uid": "gshxz1k",
        "type": "tradeshop",
+       "r": 1,
+       "c": 2,
+       "w": 1,
+       "h": 1,
+       "disc": false
+      },
+      {
+       "uid": "4d2gfcm",
+       "type": "house",
        "r": 1,
        "c": 3,
        "w": 1,
