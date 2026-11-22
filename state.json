@@ -1,5 +1,5 @@
 {
- "_savedAt": "2026-11-22T10:55:52.920Z",
+ "_savedAt": "2026-11-22T10:55:56.513Z",
  "cities": [
   {
    "id": "0joobpf",
@@ -1019,6 +1019,15 @@
        "w": 1,
        "h": 1,
        "disc": false
+      },
+      {
+       "uid": "cbpio2d",
+       "type": "garrison",
+       "r": 5,
+       "c": 0,
+       "w": 2,
+       "h": 1,
+       "disc": true
       }
      ],
      "overlays": []
