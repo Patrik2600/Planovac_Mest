@@ -1,5 +1,5 @@
 {
- "_savedAt": "2026-11-22T13:15:06.334Z",
+ "_savedAt": "2026-11-22T13:15:11.825Z",
  "cities": [
   {
    "id": "0joobpf",
@@ -2015,7 +2015,7 @@
    "m": 1
   },
   "evLast": 0,
-  "held": 1,
+  "held": 0,
   "log": [
    {
     "y": 1,
@@ -2096,6 +2096,11 @@
     "y": 1,
     "m": 1,
     "t": "Požadavek potlačen."
+   },
+   {
+    "y": 1,
+    "m": 1,
+    "t": "Event fáze: žádná událost (hod 98 > 75 %)."
    }
   ],
   "farms": 27,
