@@ -1,5 +1,5 @@
 {
- "_savedAt": "2026-11-22T10:48:25.460Z",
+ "_savedAt": "2026-11-22T10:48:29.800Z",
  "cities": [
   {
    "id": "0joobpf",
@@ -312,32 +312,7 @@
    "name": "Rybárna",
    "terrain": "Plains",
    "cd": 0,
-   "mi": {
-    "p3jtbay_minor0": {
-     "name": "Belt of Giant Strength +2 (4000 gp)",
-     "url": "https://www.aonprd.com/MagicWondrousDisplay.aspx?FinalName=Belt%20of%20Giant%20Strength2",
-     "roll": null,
-     "kind": ""
-    },
-    "p3jtbay_minor1": {
-     "name": "Universal Solvent (50 gp)",
-     "url": "https://www.aonprd.com/MagicWondrousDisplay.aspx?FinalName=Universal%20Solvent",
-     "roll": null,
-     "kind": ""
-    },
-    "p3jtbay_medium0": {
-     "name": "Pearl of Power (3rd) (9000 gp)",
-     "url": "https://www.aonprd.com/MagicWondrousDisplay.aspx?FinalName=Pearl%20of%20Power3rd",
-     "roll": null,
-     "kind": ""
-    },
-    "p3jtbay_major0": {
-     "name": "Bracers of Armor +5 (25000 gp)",
-     "url": "https://www.aonprd.com/MagicWondrousDisplay.aspx?FinalName=Bracers%20of%20Armor5",
-     "roll": null,
-     "kind": ""
-    }
-   },
+   "mi": {},
    "districts": [
     {
      "borders": {
@@ -367,15 +342,6 @@
      "paved": 0,
      "sewer": 0,
      "buildings": [
-      {
-       "uid": "p3jtbay",
-       "type": "waterfront",
-       "r": 4,
-       "c": 2,
-       "w": 2,
-       "h": 2,
-       "disc": false
-      },
       {
        "uid": "dj5pk6v",
        "type": "house",
