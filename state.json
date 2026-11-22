@@ -1,11 +1,11 @@
 {
- "_savedAt": "2026-11-22T10:34:26.276Z",
+ "_savedAt": "2026-11-22T10:34:33.346Z",
  "cities": [
   {
    "id": "0joobpf",
    "name": "Techiov",
    "terrain": "Plains",
-   "cd": 1,
+   "cd": 0,
    "mi": {},
    "districts": [
     {
