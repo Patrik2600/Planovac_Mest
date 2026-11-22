@@ -1,5 +1,5 @@
 {
- "_savedAt": "2026-11-22T10:54:56.921Z",
+ "_savedAt": "2026-11-22T10:55:03.573Z",
  "cities": [
   {
    "id": "0joobpf",
@@ -889,6 +889,24 @@
        "uid": "l1dxv8t",
        "type": "park",
        "r": 1,
+       "c": 0,
+       "w": 1,
+       "h": 1,
+       "disc": false
+      },
+      {
+       "uid": "5b8hwp8",
+       "type": "herbalist",
+       "r": 0,
+       "c": 1,
+       "w": 1,
+       "h": 1,
+       "disc": false
+      },
+      {
+       "uid": "fgmyr0a",
+       "type": "house",
+       "r": 2,
        "c": 0,
        "w": 1,
        "h": 1,
