@@ -1,5 +1,5 @@
 {
- "_savedAt": "2026-11-22T10:55:41.467Z",
+ "_savedAt": "2026-11-22T10:55:45.111Z",
  "cities": [
   {
    "id": "0joobpf",
@@ -992,6 +992,15 @@
        "w": 1,
        "h": 1,
        "disc": false
+      },
+      {
+       "uid": "snfwmy6",
+       "type": "temple",
+       "r": 2,
+       "c": 4,
+       "w": 2,
+       "h": 1,
+       "disc": true
       }
      ],
      "overlays": []
