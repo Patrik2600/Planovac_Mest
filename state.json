@@ -1,5 +1,5 @@
 {
- "_savedAt": "2026-11-22T10:27:55.492Z",
+ "_savedAt": "2026-11-22T10:28:02.345Z",
  "cities": [
   {
    "id": "0joobpf",
@@ -1162,7 +1162,7 @@
    "magister": {
     "on": true,
     "name": "Soul Cast",
-    "mod": 4,
+    "mod": 6,
     "feat": false
    },
    "marshal": {
