@@ -1,5 +1,5 @@
 {
- "_savedAt": "2026-11-22T10:55:03.573Z",
+ "_savedAt": "2026-11-22T10:55:08.323Z",
  "cities": [
   {
    "id": "0joobpf",
@@ -907,6 +907,24 @@
        "uid": "fgmyr0a",
        "type": "house",
        "r": 2,
+       "c": 0,
+       "w": 1,
+       "h": 1,
+       "disc": false
+      },
+      {
+       "uid": "eef1h3j",
+       "type": "house",
+       "r": 3,
+       "c": 1,
+       "w": 1,
+       "h": 1,
+       "disc": false
+      },
+      {
+       "uid": "f9kwtkt",
+       "type": "smithy",
+       "r": 3,
        "c": 0,
        "w": 1,
        "h": 1,
