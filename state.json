@@ -1,5 +1,5 @@
 {
- "_savedAt": "2026-11-22T10:39:08.545Z",
+ "_savedAt": "2026-11-22T10:39:51.607Z",
  "cities": [
   {
    "id": "0joobpf",
@@ -185,6 +185,15 @@
        "type": "magicshop",
        "r": 3,
        "c": 0,
+       "w": 1,
+       "h": 1,
+       "disc": false
+      },
+      {
+       "uid": "c90bgc3",
+       "type": "brewery",
+       "r": 1,
+       "c": 4,
        "w": 1,
        "h": 1,
        "disc": false
