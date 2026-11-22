@@ -1,5 +1,5 @@
 {
- "_savedAt": "2026-11-22T10:22:21.330Z",
+ "_savedAt": "2026-11-22T10:23:27.389Z",
  "cities": [
   {
    "id": "0joobpf",
@@ -1098,7 +1098,7 @@
   "gm": "Dano",
   "align": "CN",
   "size": 36,
-  "treasury": 836,
+  "treasury": 1111,
   "famebase": 1,
   "infbase": 0,
   "tax": "none",
