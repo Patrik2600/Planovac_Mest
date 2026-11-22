@@ -1,5 +1,5 @@
 {
- "_savedAt": "2026-11-22T10:36:47.570Z",
+ "_savedAt": "2026-11-22T10:36:51.578Z",
  "cities": [
   {
    "id": "0joobpf",
@@ -121,6 +121,15 @@
        "uid": "zhe4c4p",
        "type": "dump",
        "r": 5,
+       "c": 4,
+       "w": 1,
+       "h": 1,
+       "disc": false
+      },
+      {
+       "uid": "vffijic",
+       "type": "jail",
+       "r": 4,
        "c": 4,
        "w": 1,
        "h": 1,
