@@ -1,5 +1,5 @@
 {
- "_savedAt": "2026-11-22T10:25:52.993Z",
+ "_savedAt": "2026-11-22T10:26:39.815Z",
  "cities": [
   {
    "id": "0joobpf",
@@ -1104,7 +1104,7 @@
   "tax": "none",
   "hol": "h6",
   "pro": "token",
-  "consAdj": 0,
+  "consAdj": -4,
   "other": {
    "e": 0,
    "l": 0,
