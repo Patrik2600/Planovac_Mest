@@ -1,5 +1,5 @@
 {
- "_savedAt": "2026-11-22T10:31:57.347Z",
+ "_savedAt": "2026-11-22T10:32:10.288Z",
  "cities": [
   {
    "id": "0joobpf",
@@ -1111,15 +1111,6 @@
        "type": "tavern",
        "r": 4,
        "c": 5,
-       "w": 1,
-       "h": 1,
-       "disc": false
-      },
-      {
-       "uid": "l8f9rqr",
-       "type": "house",
-       "r": 4,
-       "c": 4,
        "w": 1,
        "h": 1,
        "disc": false
