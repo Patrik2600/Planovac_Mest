@@ -1,12 +1,67 @@
 {
- "_savedAt": "2026-11-22T11:03:49.233Z",
+ "_savedAt": "2026-11-22T11:05:15.867Z",
  "cities": [
   {
    "id": "0joobpf",
    "name": "Techiov",
    "terrain": "Plains",
    "cd": 0,
-   "mi": {},
+   "mi": {
+    "njho5zm_minor0": {
+     "name": "Belt of Incredible Dexterity +2 (4000 gp)",
+     "url": "https://www.aonprd.com/MagicWondrousDisplay.aspx?FinalName=Belt%20of%20Incredible%20Dexterity2",
+     "roll": null,
+     "kind": ""
+    },
+    "njho5zm_minor1": {
+     "name": "Feather Token (Anchor) (50 gp)",
+     "url": "https://www.aonprd.com/MagicWondrousDisplay.aspx?FinalName=Feather%20TokenAnchor",
+     "roll": null,
+     "kind": ""
+    },
+    "njho5zm_minor2": {
+     "name": "Periapt of Health (7500 gp)",
+     "url": "https://www.aonprd.com/MagicWondrousDisplay.aspx?FinalName=Periapt%20of%20Health",
+     "roll": null,
+     "kind": ""
+    },
+    "njho5zm_minor3": {
+     "name": "Feather Token (Anchor) (50 gp)",
+     "url": "https://www.aonprd.com/MagicWondrousDisplay.aspx?FinalName=Feather%20TokenAnchor",
+     "roll": null,
+     "kind": ""
+    },
+    "g7bs0on_minor0": {
+     "name": "+2 Padded Armor (4005 gp)",
+     "url": "https://www.aonprd.com/MagicArmor.aspx",
+     "roll": null,
+     "kind": ""
+    },
+    "g7bs0on_minor1": {
+     "name": "+1 Full Plate (2500 gp)",
+     "url": "https://www.aonprd.com/MagicArmor.aspx",
+     "roll": null,
+     "kind": ""
+    },
+    "njho5zm_medium0": {
+     "name": "Robe of Useful Items (9000 gp)",
+     "url": "https://www.aonprd.com/MagicWondrousDisplay.aspx?FinalName=Robe%20of%20Useful%20Items",
+     "roll": null,
+     "kind": ""
+    },
+    "njho5zm_medium1": {
+     "name": "Boots of Elvenkind (2500 gp)",
+     "url": "https://www.aonprd.com/MagicWondrousDisplay.aspx?FinalName=Boots%20of%20Elvenkind",
+     "roll": null,
+     "kind": ""
+    },
+    "njho5zm_major0": {
+     "name": "Figurine of Wondrous Power (Silver Raven) (6000 gp)",
+     "url": "https://www.aonprd.com/MagicWondrousDisplay.aspx?FinalName=Figurine%20of%20Wondrous%20PowerSilver%20Raven",
+     "roll": null,
+     "kind": ""
+    }
+   },
    "districts": [
     {
      "borders": {
@@ -312,7 +367,68 @@
    "name": "Rybárna",
    "terrain": "Plains",
    "cd": 0,
-   "mi": {},
+   "mi": {
+    "s9ktlew_minor0": {
+     "name": "Potion of Summon Nature’s Ally II (400 gp)",
+     "url": "https://www.aonprd.com/SpellDisplay.aspx?ItemName=Summon%20Nature%E2%80%99s%20Ally%202",
+     "roll": null,
+     "kind": ""
+    },
+    "s9ktlew_minor1": {
+     "name": "Wand of Freedom of Movement (CL 5) (15000 gp)",
+     "url": "https://www.aonprd.com/SpellDisplay.aspx?ItemName=Freedom%20of%20Movement",
+     "roll": null,
+     "kind": ""
+    },
+    "vmotcpc_minor0": {
+     "name": "Belt of Incredible Dexterity +2 (4000 gp)",
+     "url": "https://www.aonprd.com/MagicWondrousDisplay.aspx?FinalName=Belt%20of%20Incredible%20Dexterity2",
+     "roll": null,
+     "kind": ""
+    },
+    "vmotcpc_minor1": {
+     "name": "Feather Token (Anchor) (50 gp)",
+     "url": "https://www.aonprd.com/MagicWondrousDisplay.aspx?FinalName=Feather%20TokenAnchor",
+     "roll": null,
+     "kind": ""
+    },
+    "ycsmnlr_minor0": {
+     "name": "Rope of Climbing (3000 gp)",
+     "url": "https://www.aonprd.com/MagicWondrousDisplay.aspx?FinalName=Rope%20of%20Climbing",
+     "roll": null,
+     "kind": ""
+    },
+    "ycsmnlr_minor1": {
+     "name": "Feather Token (Fan) (200 gp)",
+     "url": "https://www.aonprd.com/MagicWondrousDisplay.aspx?FinalName=Feather%20TokenFan",
+     "roll": null,
+     "kind": ""
+    },
+    "s9ktlew_medium0": {
+     "name": "Wand of Mount (CL 2) (1500 gp)",
+     "url": "https://www.aonprd.com/SpellDisplay.aspx?ItemName=Mount",
+     "roll": null,
+     "kind": ""
+    },
+    "vmotcpc_medium0": {
+     "name": "Everburning Lantern (3000 gp)",
+     "url": "https://www.aonprd.com/MagicWondrousDisplay.aspx?FinalName=Everburning%20Lantern",
+     "roll": null,
+     "kind": ""
+    },
+    "s9ktlew_major0": {
+     "name": "Wand of Owl’s Wisdom (CL 2) (3000 gp)",
+     "url": "https://www.aonprd.com/SpellDisplay.aspx?ItemName=Owl%E2%80%99s%20Wisdom",
+     "roll": null,
+     "kind": ""
+    },
+    "vmotcpc_major0": {
+     "name": "Bag of Holding (Type I) (2500 gp)",
+     "url": "https://www.aonprd.com/MagicWondrousDisplay.aspx?FinalName=Bag%20of%20HoldingType%20I",
+     "roll": null,
+     "kind": ""
+    }
+   },
    "districts": [
     {
      "borders": {
@@ -1304,6 +1420,12 @@
      "url": "https://www.aonprd.com/MagicWondrousDisplay.aspx?FinalName=Figurine%20of%20Wondrous%20PowerSilver%20Raven",
      "roll": null,
      "kind": ""
+    },
+    "4aps6f4_minor0": {
+     "name": "Potion of Silent Image (150 gp)",
+     "url": "https://www.aonprd.com/SpellDisplay.aspx?ItemName=Silent%20Image",
+     "roll": null,
+     "kind": ""
     }
    },
    "districts": [
@@ -1616,6 +1738,12 @@
     "gtyxyn1_medium0": {
      "name": "+5 Chainmail (25150 gp)",
      "url": "https://www.aonprd.com/MagicArmor.aspx",
+     "roll": null,
+     "kind": ""
+    },
+    "b2sl12c_minor0": {
+     "name": "Potion of Dispel Magic (600 gp)",
+     "url": "https://www.aonprd.com/SpellDisplay.aspx?ItemName=Dispel%20Magic",
      "roll": null,
      "kind": ""
     }
