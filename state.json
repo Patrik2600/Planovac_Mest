@@ -1,5 +1,5 @@
 {
- "_savedAt": "2026-11-22T10:38:47.063Z",
+ "_savedAt": "2026-11-22T10:38:52.683Z",
  "cities": [
   {
    "id": "0joobpf",
@@ -160,6 +160,15 @@
        "c": 1,
        "w": 1,
        "h": 1,
+       "disc": false
+      },
+      {
+       "uid": "qmuzzs2",
+       "type": "castle",
+       "r": 4,
+       "c": 2,
+       "w": 2,
+       "h": 2,
        "disc": false
       }
      ],
