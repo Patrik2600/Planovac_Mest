@@ -1,5 +1,5 @@
 {
- "_savedAt": "2026-11-22T11:11:04.754Z",
+ "_savedAt": "2026-11-22T11:11:29.178Z",
  "cities": [
   {
    "id": "0joobpf",
@@ -2028,7 +2028,7 @@
     "t": "BP +1 — stabilita udržena (Unrest již 0)"
    }
   ],
-  "farms": 20,
+  "farms": 27,
   "fish": 1,
   "mods": {
    "e": 0,
