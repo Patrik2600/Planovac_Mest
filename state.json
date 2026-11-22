@@ -1,5 +1,5 @@
 {
- "_savedAt": "2026-11-22T13:17:33.110Z",
+ "_savedAt": "2026-11-22T13:17:47.190Z",
  "cities": [
   {
    "id": "0joobpf",
@@ -678,7 +678,7 @@
    "id": "fwa3aa9",
    "name": "Varnhold",
    "terrain": "Plains",
-   "cd": 0,
+   "cd": 2,
    "mi": {
     "vh01tmp_minor0": {
      "name": "Headband of Alluring Charisma +2 (4000 gp)",
@@ -1255,6 +1255,36 @@
        "disc": false
       }
      ],
+     "overlays": []
+    },
+    {
+     "borders": {
+      "n": "land",
+      "e": "land",
+      "s": "land",
+      "w": "land"
+     },
+     "wall": {
+      "n": 0,
+      "e": 0,
+      "s": 0,
+      "w": 0
+     },
+     "gate": {
+      "n": 0,
+      "e": 0,
+      "s": 0,
+      "w": 0
+     },
+     "moat": {
+      "n": 0,
+      "e": 0,
+      "s": 0,
+      "w": 0
+     },
+     "paved": 0,
+     "sewer": 0,
+     "buildings": [],
      "overlays": []
     }
    ]
@@ -1873,7 +1903,7 @@
    ]
   }
  ],
- "cur": "0joobpf",
+ "cur": "fwa3aa9",
  "kingdom": {
   "name": "Technologia",
   "players": "7",
