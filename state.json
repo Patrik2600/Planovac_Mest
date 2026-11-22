@@ -1,5 +1,5 @@
 {
- "_savedAt": "2026-11-22T10:31:49.661Z",
+ "_savedAt": "2026-11-22T10:31:57.347Z",
  "cities": [
   {
    "id": "0joobpf",
@@ -1110,6 +1110,33 @@
        "uid": "nxbwut4",
        "type": "tavern",
        "r": 4,
+       "c": 5,
+       "w": 1,
+       "h": 1,
+       "disc": false
+      },
+      {
+       "uid": "l8f9rqr",
+       "type": "house",
+       "r": 4,
+       "c": 4,
+       "w": 1,
+       "h": 1,
+       "disc": false
+      },
+      {
+       "uid": "jfm8w2m",
+       "type": "house",
+       "r": 5,
+       "c": 4,
+       "w": 1,
+       "h": 1,
+       "disc": false
+      },
+      {
+       "uid": "0wv191f",
+       "type": "house",
+       "r": 5,
        "c": 5,
        "w": 1,
        "h": 1,
