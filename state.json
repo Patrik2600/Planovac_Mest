@@ -1,5 +1,5 @@
 {
- "_savedAt": "2026-11-15T15:54:01.241Z",
+ "_savedAt": "2026-11-22T10:22:21.330Z",
  "cities": [
   {
    "id": "0joobpf",
@@ -1096,7 +1096,7 @@
   "name": "Technologia",
   "players": "7",
   "gm": "Dano",
-  "align": "N",
+  "align": "CN",
   "size": 36,
   "treasury": 836,
   "famebase": 1,
