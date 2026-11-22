@@ -1,5 +1,5 @@
 {
- "_savedAt": "2026-11-22T11:10:57.765Z",
+ "_savedAt": "2026-11-22T11:11:04.754Z",
  "cities": [
   {
    "id": "0joobpf",
@@ -2007,7 +2007,7 @@
     "src": "Quarry",
     "where": "",
     "gp": 2,
-    "cur": "gp"
+    "cur": "bp"
    }
   ],
   "turn": {
