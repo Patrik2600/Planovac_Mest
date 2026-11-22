@@ -1,5 +1,5 @@
 {
- "_savedAt": "2026-11-22T10:32:14.692Z",
+ "_savedAt": "2026-11-22T10:33:40.633Z",
  "cities": [
   {
    "id": "0joobpf",
@@ -1137,6 +1137,15 @@
        "uid": "b2sl12c",
        "type": "herbalist",
        "r": 4,
+       "c": 4,
+       "w": 1,
+       "h": 1,
+       "disc": false
+      },
+      {
+       "uid": "fa0ymnu",
+       "type": "granary",
+       "r": 1,
        "c": 4,
        "w": 1,
        "h": 1,
