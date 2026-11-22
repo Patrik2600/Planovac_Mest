@@ -1,5 +1,5 @@
 {
- "_savedAt": "2026-11-22T10:56:14.610Z",
+ "_savedAt": "2026-11-22T10:57:49.290Z",
  "cities": [
   {
    "id": "0joobpf",
@@ -563,7 +563,44 @@
    "name": "Varnhold",
    "terrain": "Plains",
    "cd": 1,
-   "mi": {},
+   "mi": {
+    "vh01tmp_minor0": {
+     "name": "Headband of Alluring Charisma +2 (4000 gp)",
+     "url": "https://www.aonprd.com/MagicWondrousDisplay.aspx?FinalName=Headband%20of%20Alluring%20Charisma2",
+     "roll": null,
+     "kind": ""
+    },
+    "vh01tmp_minor1": {
+     "name": "Potion of Sleep (50 gp)",
+     "url": "https://www.aonprd.com/SpellDisplay.aspx?ItemName=Sleep",
+     "roll": null,
+     "kind": ""
+    },
+    "hjne1oz_minor0": {
+     "name": "Wand of Invisibility (CL 4) (6000 gp)",
+     "url": "https://www.aonprd.com/SpellDisplay.aspx?ItemName=Invisibility",
+     "roll": null,
+     "kind": ""
+    },
+    "5b8hwp8_minor0": {
+     "name": "Feather Token (Fan) (200 gp)",
+     "url": "https://www.aonprd.com/MagicWondrousDisplay.aspx?FinalName=Feather%20TokenFan",
+     "roll": null,
+     "kind": ""
+    },
+    "snfwmy6_minor0": {
+     "name": "+2 Buckler (4015 gp)",
+     "url": "https://www.aonprd.com/MagicArmor.aspx",
+     "roll": null,
+     "kind": ""
+    },
+    "snfwmy6_minor1": {
+     "name": "Scroll of Touch of Idiocy (CL 4) (200 gp)",
+     "url": "https://www.aonprd.com/SpellDisplay.aspx?ItemName=Touch%20of%20Idiocy",
+     "roll": null,
+     "kind": ""
+    }
+   },
    "districts": [
     {
      "borders": {
