@@ -1,5 +1,5 @@
 {
- "_savedAt": "2026-11-22T10:28:11.454Z",
+ "_savedAt": "2026-11-22T10:28:21.355Z",
  "cities": [
   {
    "id": "0joobpf",
@@ -1174,7 +1174,7 @@
    "enforcer": {
     "on": true,
     "name": "Jožko",
-    "mod": 4,
+    "mod": 6,
     "feat": false
    },
    "spymaster": {
