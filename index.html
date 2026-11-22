@@ -1035,10 +1035,10 @@ function calcKingdom() {
   sums.u += +K.other.u || 0; rec('u', 'Ruční úprava', +K.other.u || 0);
   var fame = (+K.famebase || 0) + sums.f; rec('f', 'Základ (ručně)', +K.famebase || 0);
   var size = Math.max(0, Math.floor(+K.size || 0));
-  var consRaw = size + S.cities.length + ho[1] + pr[1] + (+K.consAdj || 0) - 2 * (+K.farms || 0) - (+K.fish || 0);
+  var consRaw = size + districts + ho[1] + pr[1] + (+K.consAdj || 0) - 2 * (+K.farms || 0) - (+K.fish || 0);
   var cons = Math.max(0, consRaw);
   return {base:base, mod:mod, total:{e:base.e + mod.e, l:base.l + mod.l, s:base.s + mod.s}, unrest:Math.max(0, sums.u), unrestRaw:sums.u, upUp:upUp, vac:vac,
-    ctrl:20 + size + districts, cons:cons, consRaw:consRaw, fame:fame, inf:+K.infbase || 0, pop:pop, spent:spent, districts:districts, mods:sums, src:SRC, tx:tx, ho:ho, pr:pr,
+    ctrl:20 + size + districts, cons:cons, consRaw:consRaw, consAdj:+K.consAdj || 0, fame:fame, inf:+K.infbase || 0, pop:pop, spent:spent, districts:districts, mods:sums, src:SRC, tx:tx, ho:ho, pr:pr,
     treasurerOn:trOn, councilorOn:coOn, rulerN:rn, size:size, cs:cs};
 }
 function kin(path, val, o) {
@@ -1081,7 +1081,7 @@ function kingdomHTML() {
   h += '<div><div class="h3">Unrest</div><button class="tot big2" data-act="kbrk" data-k="u" style="background:none;border:0;padding:0;color:' + (X.unrest >= 11 ? 'var(--bad)' : 'inherit') + '">' + X.unrest + ' ▸</button>' + (X.unrest >= 20 ? '<div class="note">Anarchie!</div>' : X.unrest >= 11 ? '<div class="note" style="color:var(--bad)">11+: království ztrácí hexy.</div>' : '') + (X.upUp ? '<div class="note">Neobsazené role: při Upkeepu Unrest +' + X.upUp + '.</div>' : '') + '<label class="field" style="margin-top:6px">Ruční úprava ' + kin('other.u', K.other.u, {t:'n', label:'Ruční úprava Unrest'}) + '</label></div>';
   var left = bpTotal(X);
   h += '<div><div class="h3">Aktuální BP</div><input class="kin" data-kf="bpcur" data-t="n" type="number" step="1" value="' + esc(left) + '" aria-label="Aktuální BP"><div class="note">Tady uprav aktuální BP. Stavba −' + fmt(X.spent) + ', prodané itemy +' + fmt(+K.soldBP || 0) + ', daně +' + fmt(+K.incomeBP || 0) + ', zdroje +' + fmt(srcBP()) + ' → rozpad v záložce Economy.</div></div>';
-  h += '<div><div class="h3">Consumption</div><div class="big2">' + X.cons + '</div><label class="field" style="margin-top:6px">Úprava (Farmy −2…) ' + kin('consAdj', K.consAdj, {t:'n', label:'Úprava Consumption'}) + '</label><div class="note">Size + Holiday + Promotion + úprava, min. 0.</div></div>';
+  h += '<div><div class="h3">Consumption</div><div class="big2">' + X.cons + '</div><label class="field" style="margin-top:6px">Úprava (Farmy −2…) ' + kin('consAdj', K.consAdj, {t:'n', label:'Úprava Consumption'}) + '</label><div class="note">Size + districty ve všech městech + Holiday + Promotion + úprava − farmy, min. 0.</div></div>';
   h += '<div><div class="h3">Fame</div><button class="tot big2" data-act="kbrk" data-k="f" style="background:none;border:0;padding:0;color:inherit">' + X.fame + ' ▸</button><label class="field" style="margin-top:6px">Základ ' + kin('famebase', K.famebase, {t:'n', label:'Základ Fame'}) + '</label></div>';
   h += '<div><div class="h3">Infamy</div><div class="big2">' + X.inf + '</div><label class="field" style="margin-top:6px">Základ ' + kin('infbase', K.infbase, {t:'n', label:'Základ Infamy'}) + '</label></div>';
   h += '<div><div class="h3">Population</div><div class="big2">' + X.pop.toLocaleString('cs-CZ') + '</div><div class="note">Součet měst.</div></div>';
@@ -1428,7 +1428,7 @@ function turnHTML() {
 
   /* Upkeep */
   h += '<section class="card"><div class="h3">Fáze 1 — Upkeep</div><div style="margin-top:8px">';
-  h += '<div class="kv"><span>Consumption: Size ' + X.size + ' + města ' + S.cities.length + ' + Holiday +' + X.ho[1] + ' + Promotion +' + X.pr[1] + (X.consAdj ? ' + jiné ' + X.consAdj : '') + ' − farmy −' + 2 * K.farms + ' − rybníky −' + K.fish + '</span><b>' + X.cons + '</b></div>';
+  h += '<div class="kv"><span>Consumption: Size ' + X.size + ' + districty ' + X.districts + ' + Holiday +' + X.ho[1] + ' + Promotion +' + X.pr[1] + (X.consAdj ? ' + jiné ' + X.consAdj : '') + ' − farmy −' + 2 * K.farms + ' − rybníky −' + K.fish + '</span><b>' + X.cons + '</b></div>';
   if ((+K.foodNext || 1) !== 1) h += '<div class="kv"><span>× Food efekt (příští upkeep)</span><b>×' + K.foodNext + ' → ' + effCons() + ' BP</b></div>';
   h += '<div class="row" style="margin-top:6px"><button class="btn primary" data-act="turnpay">Zaplatit Consumption (−' + effCons() + ' BP)</button>';
   h += '<span class="note" style="margin:0">Záporný Treasury → Unrest +2.</span></div>';
