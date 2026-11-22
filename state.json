@@ -1,5 +1,5 @@
 {
- "_savedAt": "2026-11-22T10:28:02.345Z",
+ "_savedAt": "2026-11-22T10:28:11.454Z",
  "cities": [
   {
    "id": "0joobpf",
@@ -1168,7 +1168,7 @@
    "marshal": {
     "on": true,
     "name": "Chilis",
-    "mod": 4,
+    "mod": 6,
     "feat": false
    },
    "enforcer": {
