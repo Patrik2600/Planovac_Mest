@@ -1,5 +1,5 @@
 {
- "_savedAt": "2026-11-22T10:53:56.914Z",
+ "_savedAt": "2026-11-22T10:54:26.037Z",
  "cities": [
   {
    "id": "0joobpf",
@@ -845,6 +845,15 @@
        "type": "smithy",
        "r": 1,
        "c": 5,
+       "w": 1,
+       "h": 1,
+       "disc": false
+      },
+      {
+       "uid": "hjne1oz",
+       "type": "artisan",
+       "r": 0,
+       "c": 4,
        "w": 1,
        "h": 1,
        "disc": false
