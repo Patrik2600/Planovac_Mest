@@ -1,5 +1,5 @@
 {
- "_savedAt": "2026-11-22T10:55:12.004Z",
+ "_savedAt": "2026-11-22T10:55:17.646Z",
  "cities": [
   {
    "id": "0joobpf",
@@ -935,6 +935,33 @@
        "type": "monument",
        "r": 2,
        "c": 1,
+       "w": 1,
+       "h": 1,
+       "disc": false
+      },
+      {
+       "uid": "gc47j7o",
+       "type": "monument",
+       "r": 2,
+       "c": 2,
+       "w": 1,
+       "h": 1,
+       "disc": false
+      },
+      {
+       "uid": "7e29kv2",
+       "type": "monument",
+       "r": 2,
+       "c": 3,
+       "w": 1,
+       "h": 1,
+       "disc": false
+      },
+      {
+       "uid": "tin4u3v",
+       "type": "monument",
+       "r": 3,
+       "c": 2,
        "w": 1,
        "h": 1,
        "disc": false
