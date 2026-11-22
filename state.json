@@ -1,5 +1,5 @@
 {
- "_savedAt": "2026-11-22T10:55:56.513Z",
+ "_savedAt": "2026-11-22T10:56:05.855Z",
  "cities": [
   {
    "id": "0joobpf",
@@ -1028,6 +1028,42 @@
        "w": 2,
        "h": 1,
        "disc": true
+      },
+      {
+       "uid": "8aoxprm",
+       "type": "graveyard",
+       "r": 5,
+       "c": 2,
+       "w": 1,
+       "h": 1,
+       "disc": false
+      },
+      {
+       "uid": "g37h2jt",
+       "type": "graveyard",
+       "r": 4,
+       "c": 2,
+       "w": 1,
+       "h": 1,
+       "disc": false
+      },
+      {
+       "uid": "pax8uwe",
+       "type": "graveyard",
+       "r": 4,
+       "c": 3,
+       "w": 1,
+       "h": 1,
+       "disc": false
+      },
+      {
+       "uid": "desdbjk",
+       "type": "graveyard",
+       "r": 5,
+       "c": 3,
+       "w": 1,
+       "h": 1,
+       "disc": false
       }
      ],
      "overlays": []
