@@ -1,5 +1,5 @@
 {
- "_savedAt": "2026-11-22T13:15:36.359Z",
+ "_savedAt": "2026-11-22T13:15:46.044Z",
  "cities": [
   {
    "id": "0joobpf",
@@ -1880,7 +1880,7 @@
   "gm": "Dano",
   "align": "CN",
   "size": 59,
-  "treasury": 1668,
+  "treasury": 1588,
   "famebase": 1,
   "infbase": 0,
   "tax": "none",
@@ -1891,7 +1891,7 @@
    "e": 16,
    "l": 6,
    "s": 15,
-   "u": 81
+   "u": 161
   },
   "ruler": [
    "l",
@@ -2101,6 +2101,11 @@
     "y": 1,
     "m": 1,
     "t": "Event fáze: žádná událost (hod 98 > 75 %)."
+   },
+   {
+    "y": 1,
+    "m": 1,
+    "t": "Unrest +80 — výběr 80 BP pro osobní potřebu (1 BP = 2 000 gp)"
    },
    {
     "y": 1,
