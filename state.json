@@ -1,5 +1,5 @@
 {
- "_savedAt": "2026-11-22T10:27:10.526Z",
+ "_savedAt": "2026-11-22T10:27:26.815Z",
  "cities": [
   {
    "id": "0joobpf",
@@ -1137,7 +1137,7 @@
    },
    "general": {
     "on": true,
-    "name": "Swordlord Cápek",
+    "name": "",
     "mod": 3,
     "feat": false
    },
