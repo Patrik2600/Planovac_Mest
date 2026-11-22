@@ -1,5 +1,5 @@
 {
- "_savedAt": "2026-11-22T10:48:22.334Z",
+ "_savedAt": "2026-11-22T10:48:25.460Z",
  "cities": [
   {
    "id": "0joobpf",
@@ -390,6 +390,15 @@
        "type": "house",
        "r": 3,
        "c": 1,
+       "w": 1,
+       "h": 1,
+       "disc": false
+      },
+      {
+       "uid": "s9ktlew",
+       "type": "blackmarket",
+       "r": 3,
+       "c": 0,
        "w": 1,
        "h": 1,
        "disc": false
